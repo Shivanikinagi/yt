@@ -1,13 +1,13 @@
-# Demo run 2026-10-11
+# Daily run 2026-10-11
 
-- Started: 2026-10-11T13:04:36+05:30  
-- Finished: 2026-10-11T13:06:24+05:30  
-- Elapsed: 1.8 min (budget 115 min)  
-- Produced: 1 / target 1  
-- Uploaded: 1  
+- Started: 2026-10-11T16:49:19+05:30  
+- Finished: 2026-10-11T17:12:19+05:30  
+- Elapsed: 23.0 min (budget 115 min)  
+- Produced: 0 / target 5  
+- Uploaded: 0  
 - Publish mode: private  
-- LLM providers used: groq  
-- TTS engines used: piper  
+- LLM providers used: none  
+- TTS engines used: none  
 - YouTube quota units used today: 1600  
 - Recurring cost of this run: ₹0 (free tiers / local compute only)
 
@@ -15,35 +15,42 @@
 
 | # | Title | Duration | Theme | Status | YouTube | Publish at | QC warnings |
 |---|---|---|---|---|---|---|---|
-| 1 | Why 128‑bit hashes only give 64‑bit collision security | 45s | neon | uploaded | [EAQrZrhexs8](https://youtube.com/shorts/EAQrZrhexs8) | - | - |
+| 1 | When AI Says No: The Hidden Risks Behind Refusals and Weight‑Loss Drugs | 49s | neon | held | - | - | - |
+
+## Failures
+
+- **Learning to use local AI is exciting, overwhelming, and frustrating** — render: render: ValueError: flush of closed file
+- **We’re putting too much faith in AI’s ability to say no** — render: render: ValueError: flush of closed file
+- **Job titles of the future: Delivery drone air traffic controller** — render: render: ValueError: flush of closed file
+- **Dwarf Fortress uses version control now** — render: render: ValueError: flush of closed file
+- **Satya Nadella says we should assume all AI models are ‘compromised’** — render: render: ValueError: flush of closed file
+- **A new feature for my blog, built using my voice** — render: render: ValueError: flush of closed file
+- **Secret protection must scale with software** — render: render: ValueError: flush of closed file
+- **How Does Life Unfold? A Landscape Metaphor Comes Into Its Own.** — render: render: ValueError: flush of closed file
+- **Agent Lightning v1.0: A 3,500-Line Lightweight Agentic RL Framework for Training Agents with Real Harnesses** — render: render: ValueError: flush of closed file
+- **PC shipments fall 20.1 percent in “sharpest decline” since Q1 2023** — render: render: ValueError: flush of closed file
+- **Hackers obtain counterfeit TLS certificates for Google and other large services** — render: render: ValueError: flush of closed file
+- **Sophos cuts threat investigation time by 96% with OpenAI Daybreak** — render: render: ValueError: flush of closed file
+- **Asana cuts model costs 76x in browser tests with GPT-6.1 Sol** — render: render: ValueError: flush of closed file
+- **What AI gets wrong and what failure teaches us** — render: render: ValueError: flush of closed file
 
 ## Topics considered
 
-- The birthday paradox behind hash collisions (Evergreen library, evergreen)
-- The Y2K bug and why two digits nearly broke the world (Evergreen library, evergreen)
-- Why passwords are stored as salted hashes (Evergreen library, evergreen)
-- What a token actually is in a large language model (Evergreen library, evergreen)
-- Reinforcement learning from human feedback, explained (Evergreen library, evergreen)
-- Why floating point says 0.1 + 0.2 is not 0.3 (Evergreen library, evergreen)
-- Why UTF-8 won the encoding wars (Evergreen library, evergreen)
-- How diffusion models paint images out of noise (Evergreen library, evergreen)
-- Moore's law: the prediction that shaped 60 years of chips (Evergreen library, evergreen)
-- Why quicksort is fast even though it can be slow (Evergreen library, evergreen)
-- How public-key cryptography lets strangers share secrets (Evergreen library, evergreen)
-- What a context window really limits (Evergreen library, evergreen)
-- The Turing test and what it was really about (Evergreen library, evergreen)
-- How one bit flip from space can crash a computer (Evergreen library, evergreen)
-- Why transformers replaced recurrent networks (Evergreen library, evergreen)
-- The first computer bug was a real moth (Evergreen library, evergreen)
-- Why the internet still runs on a protocol from 1981 (Evergreen library, evergreen)
-- What CAPTCHAs quietly taught machines (Evergreen library, evergreen)
-- How Git stores your history as a graph of hashes (Evergreen library, evergreen)
-- How error-correcting codes let CDs survive scratches (Evergreen library, evergreen)
-- Why neural networks need non-linear activation functions (Evergreen library, evergreen)
-- How GPS satellites must correct for Einstein's relativity (Evergreen library, evergreen)
-- Why your program is slow: the cost of a cache miss (Evergreen library, evergreen)
-- The halting problem: a question no program can answer (Evergreen library, evergreen)
+- Learning to use local AI is exciting, overwhelming, and frustrating (The Verge - AI, news)
+- We’re putting too much faith in AI’s ability to say no (MIT Technology Review, news)
+- Job titles of the future: Delivery drone air traffic controller (MIT Technology Review, news)
+- Dwarf Fortress uses version control now (Simon Willison, news)
+- Satya Nadella says we should assume all AI models are ‘compromised’ (The Verge - AI, news)
+- A new feature for my blog, built using my voice (Simon Willison, news)
+- Secret protection must scale with software (GitHub Blog - AI, news)
+- How Does Life Unfold? A Landscape Metaphor Comes Into Its Own. (Quanta Magazine, concepts)
+- Agent Lightning v1.0: A 3,500-Line Lightweight Agentic RL Framework for Training Agents with Real Harnesses (Microsoft Research Blog, research)
+- PC shipments fall 20.1 percent in “sharpest decline” since Q1 2023 (Ars Technica - Technology Lab, news)
+- Hackers obtain counterfeit TLS certificates for Google and other large services (Ars Technica - Technology Lab, news)
+- Sophos cuts threat investigation time by 96% with OpenAI Daybreak (OpenAI News, news)
+- Asana cuts model costs 76x in browser tests with GPT-6.1 Sol (OpenAI News, news)
+- What AI gets wrong and what failure teaches us (Microsoft Research Blog, research)
 
 ## Sources used
 
-- Why 128‑bit hashes only give 64‑bit collision security: https://en.wikipedia.org/wiki/Birthday_problem
+- When AI Says No: The Hidden Risks Behind Refusals and Weight‑Loss Drugs: https://www.technologyreview.com/2026/10/09/1146250/the-download-ai-refusal-problem-weight-loss-drug-side-effects/
