@@ -15,10 +15,8 @@ state, unit tests, local demo videos, and the code is pushed to the private repo
 
 Not done, because each needs your Google or GitHub account in a browser:
 
-1. **Create the YouTube OAuth client** (Google Cloud Console) and run `python -m shorts_factory auth`
-   once. See "YouTube authorization" below. Until then every run renders videos but uploads nothing.
-2. **Run the first private test upload**: `python -m shorts_factory demo --upload`. It uploads only
-   the video rendered by that command, as *private*, and writes the video ID and URL to `reports/latest.md`.
+1. ~~Create the YouTube OAuth client and run `auth`~~ Done 2026-10-11, channel TechDecoded.
+2. ~~Run the first private test upload~~ Done: https://youtube.com/shorts/EAQrZrhexs8 (private).
 3. **Add the GitHub Actions secrets** `GROQ_API_KEY`, `YOUTUBE_CLIENT_SECRET_JSON`, `YOUTUBE_TOKEN_JSON`
    (repository Settings → Secrets and variables → Actions) and set workflow permissions to
    *Read and write*. Without `GROQ_API_KEY` the cloud run falls back to the plainer template writer.
@@ -164,7 +162,7 @@ Change `brand.channel_name` and `brand.handle` before your first upload. Drop a 
 
 - **Claude is not used.** Claude Max has no API; the pipeline uses Groq's free models and documented fallbacks.
 - **YouTube authorization is manual** (OAuth consent in a browser) and may need repeating every 7 days while the Google OAuth app is in "testing" mode. The run reports this and keeps rendering; uploads resume once re-authorized.
-- **The first private test upload has not been performed here** because no Google OAuth client existed in this environment. The upload code is implemented and unit-tested for metadata, slot logic and the upload queue; follow "YouTube authorization" and run `demo --upload`.
+- **First private test upload done (2026-10-11 13:06 IST).** `demo --upload` rendered and uploaded "Why 128-bit hashes only give 64-bit collision security" to the TechDecoded channel as private: https://youtube.com/shorts/EAQrZrhexs8. The API accepted `containsSyntheticMedia` without error but does not return it when the video is read back, so confirm "Altered or synthetic content" in YouTube Studio for the first few uploads.
 - **GitHub Actions secrets are not set yet.** The repository exists and the workflow is committed, but adding secrets needs your GitHub login in a browser (or the `gh` CLI, which is not installed here). Until `GROQ_API_KEY` is added, cloud runs use the template writer; until the YouTube secrets are added, cloud runs upload nothing.
 - **The project lives inside OneDrive.** OneDrive syncs `output/` (hundreds of MB of MP4 and WAV files per week) and `.venv/`, and can lock files while syncing. If a local run fails with a file-in-use error, pause OneDrive or move the folder outside it. The cloud run is unaffected.
 - **No AI video generation.** No GPU locally or on the free runner; visuals are motion graphics and diagrams, which is the documented fallback. The "voxel" theme is an original blocky look, not Minecraft assets.

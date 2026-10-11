@@ -129,6 +129,35 @@
       "created": "2026-10-11T12:36:52",
       "render_seconds": 127,
       "demo": true
+    },
+    {
+      "id": "2026-10-11-01-565eadc1",
+      "date": "2026-10-11",
+      "title": "Why 128‑bit hashes only give 64‑bit collision security",
+      "topic_id": "565eadc1cd4ca813d6003e3b4a6569b3e4974e7d",
+      "topic_title": "The birthday paradox behind hash collisions",
+      "source": "Evergreen library",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Birthday_problem"
+      ],
+      "theme": "neon",
+      "provider": "groq",
+      "tts_engine": "piper",
+      "duration": 45.28,
+      "path": "C:\\Users\\ShivaniKinagi\\OneDrive - Trinamix Systems Pvt Ltd\\Desktop\\project\\trial\\output\\2026-10-11\\01-the-birthday-paradox-behind-hash-collisions\\video.mp4",
+      "srt": "C:\\Users\\ShivaniKinagi\\OneDrive - Trinamix Systems Pvt Ltd\\Desktop\\project\\trial\\output\\2026-10-11\\01-the-birthday-paradox-behind-hash-collisions\\captions.srt",
+      "captions": 34,
+      "caption_method": "whisper",
+      "status": "uploaded",
+      "qc_warnings": [],
+      "created": "2026-10-11T13:06:17",
+      "render_seconds": 70,
+      "demo": true,
+      "youtube_id": "EAQrZrhexs8",
+      "url": "https://youtube.com/shorts/EAQrZrhexs8",
+      "privacy": "private",
+      "publish_at": null,
+      "mode": "private"
     }
   ],
   "runs": [
@@ -227,9 +256,31 @@
       "quota_used": 0,
       "failures": 1,
       "demo": true
+    },
+    {
+      "date": "2026-10-11",
+      "started": "2026-10-11T13:04:36+05:30",
+      "finished": "2026-10-11T13:06:24+05:30",
+      "elapsed_minutes": 1.7879428516665938,
+      "budget_minutes": 115.0,
+      "produced": 1,
+      "target": 1,
+      "uploaded": 1,
+      "publish_mode": "private",
+      "providers": [
+        "groq"
+      ],
+      "tts_engines": [
+        "piper"
+      ],
+      "quota_used": 1600,
+      "failures": 0,
+      "demo": true
     }
   ],
-  "quota": {},
+  "quota": {
+    "2026-10-11": 1600
+  },
   "schedule": [],
   "failed_topics": {
     "d09c87ea160471f56d846441449944f04e97fed5": 1,

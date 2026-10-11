@@ -1,63 +1,122 @@
 {
   "run": {
     "date": "2026-10-11",
-    "started": "2026-10-11T12:33:40+05:30",
-    "finished": "2026-10-11T12:36:52+05:30",
-    "elapsed_minutes": 3.2010598866676445,
+    "started": "2026-10-11T13:04:36+05:30",
+    "finished": "2026-10-11T13:06:24+05:30",
+    "elapsed_minutes": 1.7879428516665938,
     "budget_minutes": 115.0,
     "produced": 1,
     "target": 1,
-    "uploaded": 0,
-    "publish_mode": "skipped (--no-upload)",
+    "uploaded": 1,
+    "publish_mode": "private",
     "providers": [
       "groq"
     ],
     "tts_engines": [
       "piper"
     ],
-    "quota_used": 0,
-    "failures": 1,
+    "quota_used": 1600,
+    "failures": 0,
     "demo": true
   },
   "videos": [
     {
-      "id": "2026-10-11-01-68052d30",
+      "id": "2026-10-11-01-565eadc1",
       "date": "2026-10-11",
-      "title": "Why Large Language Models Forget Anything Beyond Their Window",
-      "topic_id": "68052d301e5eac14acf3ab0f77ed4b52f1d8aaeb",
-      "topic_title": "What a context window really limits",
+      "title": "Why 128‑bit hashes only give 64‑bit collision security",
+      "topic_id": "565eadc1cd4ca813d6003e3b4a6569b3e4974e7d",
+      "topic_title": "The birthday paradox behind hash collisions",
       "source": "Evergreen library",
       "sources": [
-        "https://en.wikipedia.org/wiki/Large_language_model"
+        "https://en.wikipedia.org/wiki/Birthday_problem"
       ],
       "theme": "neon",
       "provider": "groq",
       "tts_engine": "piper",
-      "duration": 42.26,
-      "path": "C:\\Users\\ShivaniKinagi\\OneDrive - Trinamix Systems Pvt Ltd\\Desktop\\project\\trial\\output\\2026-10-11\\01-what-a-context-window-really-limits\\video.mp4",
-      "srt": "C:\\Users\\ShivaniKinagi\\OneDrive - Trinamix Systems Pvt Ltd\\Desktop\\project\\trial\\output\\2026-10-11\\01-what-a-context-window-really-limits\\captions.srt",
-      "captions": 33,
+      "duration": 45.28,
+      "path": "C:\\Users\\ShivaniKinagi\\OneDrive - Trinamix Systems Pvt Ltd\\Desktop\\project\\trial\\output\\2026-10-11\\01-the-birthday-paradox-behind-hash-collisions\\video.mp4",
+      "srt": "C:\\Users\\ShivaniKinagi\\OneDrive - Trinamix Systems Pvt Ltd\\Desktop\\project\\trial\\output\\2026-10-11\\01-the-birthday-paradox-behind-hash-collisions\\captions.srt",
+      "captions": 34,
       "caption_method": "whisper",
-      "status": "rendered",
+      "status": "uploaded",
       "qc_warnings": [],
-      "created": "2026-10-11T12:36:52",
-      "render_seconds": 127,
-      "demo": true
+      "created": "2026-10-11T13:06:17",
+      "render_seconds": 70,
+      "demo": true,
+      "youtube_id": "EAQrZrhexs8",
+      "url": "https://youtube.com/shorts/EAQrZrhexs8",
+      "privacy": "private",
+      "publish_at": null,
+      "mode": "private"
     }
   ],
-  "failures": [
-    {
-      "topic": "Why UTF-8 won the encoding wars",
-      "stage": "render",
-      "error": "render: video too long: 62.0s > 59s"
-    }
-  ],
+  "failures": [],
   "candidates": [
+    {
+      "title": "The birthday paradox behind hash collisions",
+      "source": "Evergreen library",
+      "kind": "evergreen",
+      "url": "https://en.wikipedia.org/wiki/Birthday_problem"
+    },
+    {
+      "title": "The Y2K bug and why two digits nearly broke the world",
+      "source": "Evergreen library",
+      "kind": "evergreen",
+      "url": "https://en.wikipedia.org/wiki/Year_2000_problem"
+    },
+    {
+      "title": "Why passwords are stored as salted hashes",
+      "source": "Evergreen library",
+      "kind": "evergreen",
+      "url": "https://en.wikipedia.org/wiki/Salt_(cryptography)"
+    },
+    {
+      "title": "What a token actually is in a large language model",
+      "source": "Evergreen library",
+      "kind": "evergreen",
+      "url": "https://platform.openai.com/tokenizer"
+    },
+    {
+      "title": "Reinforcement learning from human feedback, explained",
+      "source": "Evergreen library",
+      "kind": "evergreen",
+      "url": "https://arxiv.org/abs/2203.02155"
+    },
+    {
+      "title": "Why floating point says 0.1 + 0.2 is not 0.3",
+      "source": "Evergreen library",
+      "kind": "evergreen",
+      "url": "https://en.wikipedia.org/wiki/IEEE_754"
+    },
     {
       "title": "Why UTF-8 won the encoding wars",
       "source": "Evergreen library",
       "kind": "evergreen",
       "url": "https://en.wikipedia.org/wiki/UTF-8"
+    },
+    {
+      "title": "How diffusion models paint images out of noise",
+      "source": "Evergreen library",
+      "kind": "evergreen",
+      "url": "https://arxiv.org/abs/2006.11239"
+    },
+    {
+      "title": "Moore's law: the prediction that shaped 60 years of chips",
+      "source": "Evergreen library",
+      "kind": "evergreen",
+      "url": "https://en.wikipedia.org/wiki/Moore%27s_law"
+    },
+    {
+      "title": "Why quicksort is fast even though it can be slow",
+      "source": "Evergreen library",
+      "kind": "evergreen",
+      "url": "https://en.wikipedia.org/wiki/Quicksort"
+    },
+    {
+      "title": "How public-key cryptography lets strangers share secrets",
+      "source": "Evergreen library",
+      "kind": "evergreen",
+      "url": "https://en.wikipedia.org/wiki/Public-key_cryptography"
     },
     {
       "title": "What a context window really limits",
@@ -72,100 +131,10 @@
       "url": "https://en.wikipedia.org/wiki/Turing_test"
     },
     {
-      "title": "How Git stores your history as a graph of hashes",
+      "title": "How one bit flip from space can crash a computer",
       "source": "Evergreen library",
       "kind": "evergreen",
-      "url": "https://git-scm.com/book/en/v2/Git-Internals-Git-Objects"
-    },
-    {
-      "title": "The halting problem: a question no program can answer",
-      "source": "Evergreen library",
-      "kind": "evergreen",
-      "url": "https://en.wikipedia.org/wiki/Halting_problem"
-    },
-    {
-      "title": "How public-key cryptography lets strangers share secrets",
-      "source": "Evergreen library",
-      "kind": "evergreen",
-      "url": "https://en.wikipedia.org/wiki/Public-key_cryptography"
-    },
-    {
-      "title": "The birthday paradox behind hash collisions",
-      "source": "Evergreen library",
-      "kind": "evergreen",
-      "url": "https://en.wikipedia.org/wiki/Birthday_problem"
-    },
-    {
-      "title": "The first computer bug was a real moth",
-      "source": "Evergreen library",
-      "kind": "evergreen",
-      "url": "https://en.wikipedia.org/wiki/Software_bug#History"
-    },
-    {
-      "title": "Why floating point says 0.1 + 0.2 is not 0.3",
-      "source": "Evergreen library",
-      "kind": "evergreen",
-      "url": "https://en.wikipedia.org/wiki/IEEE_754"
-    },
-    {
-      "title": "Moore's law: the prediction that shaped 60 years of chips",
-      "source": "Evergreen library",
-      "kind": "evergreen",
-      "url": "https://en.wikipedia.org/wiki/Moore%27s_law"
-    },
-    {
-      "title": "What a token actually is in a large language model",
-      "source": "Evergreen library",
-      "kind": "evergreen",
-      "url": "https://platform.openai.com/tokenizer"
-    },
-    {
-      "title": "Why neural networks need non-linear activation functions",
-      "source": "Evergreen library",
-      "kind": "evergreen",
-      "url": "https://en.wikipedia.org/wiki/Activation_function"
-    },
-    {
-      "title": "Reinforcement learning from human feedback, explained",
-      "source": "Evergreen library",
-      "kind": "evergreen",
-      "url": "https://arxiv.org/abs/2203.02155"
-    },
-    {
-      "title": "What CAPTCHAs quietly taught machines",
-      "source": "Evergreen library",
-      "kind": "evergreen",
-      "url": "https://en.wikipedia.org/wiki/ReCAPTCHA"
-    },
-    {
-      "title": "The Y2K bug and why two digits nearly broke the world",
-      "source": "Evergreen library",
-      "kind": "evergreen",
-      "url": "https://en.wikipedia.org/wiki/Year_2000_problem"
-    },
-    {
-      "title": "How GPS satellites must correct for Einstein's relativity",
-      "source": "Evergreen library",
-      "kind": "evergreen",
-      "url": "https://en.wikipedia.org/wiki/Error_analysis_for_the_Global_Positioning_System"
-    },
-    {
-      "title": "How error-correcting codes let CDs survive scratches",
-      "source": "Evergreen library",
-      "kind": "evergreen",
-      "url": "https://en.wikipedia.org/wiki/Reed%E2%80%93Solomon_error_correction"
-    },
-    {
-      "title": "Why quicksort is fast even though it can be slow",
-      "source": "Evergreen library",
-      "kind": "evergreen",
-      "url": "https://en.wikipedia.org/wiki/Quicksort"
-    },
-    {
-      "title": "Why your program is slow: the cost of a cache miss",
-      "source": "Evergreen library",
-      "kind": "evergreen",
-      "url": "https://en.wikipedia.org/wiki/CPU_cache"
+      "url": "https://en.wikipedia.org/wiki/Soft_error"
     },
     {
       "title": "Why transformers replaced recurrent networks",
@@ -174,16 +143,10 @@
       "url": "https://arxiv.org/abs/1706.03762"
     },
     {
-      "title": "How one bit flip from space can crash a computer",
+      "title": "The first computer bug was a real moth",
       "source": "Evergreen library",
       "kind": "evergreen",
-      "url": "https://en.wikipedia.org/wiki/Soft_error"
-    },
-    {
-      "title": "Why passwords are stored as salted hashes",
-      "source": "Evergreen library",
-      "kind": "evergreen",
-      "url": "https://en.wikipedia.org/wiki/Salt_(cryptography)"
+      "url": "https://en.wikipedia.org/wiki/Software_bug#History"
     },
     {
       "title": "Why the internet still runs on a protocol from 1981",
@@ -192,10 +155,46 @@
       "url": "https://en.wikipedia.org/wiki/IPv4_address_exhaustion"
     },
     {
-      "title": "How diffusion models paint images out of noise",
+      "title": "What CAPTCHAs quietly taught machines",
       "source": "Evergreen library",
       "kind": "evergreen",
-      "url": "https://arxiv.org/abs/2006.11239"
+      "url": "https://en.wikipedia.org/wiki/ReCAPTCHA"
+    },
+    {
+      "title": "How Git stores your history as a graph of hashes",
+      "source": "Evergreen library",
+      "kind": "evergreen",
+      "url": "https://git-scm.com/book/en/v2/Git-Internals-Git-Objects"
+    },
+    {
+      "title": "How error-correcting codes let CDs survive scratches",
+      "source": "Evergreen library",
+      "kind": "evergreen",
+      "url": "https://en.wikipedia.org/wiki/Reed%E2%80%93Solomon_error_correction"
+    },
+    {
+      "title": "Why neural networks need non-linear activation functions",
+      "source": "Evergreen library",
+      "kind": "evergreen",
+      "url": "https://en.wikipedia.org/wiki/Activation_function"
+    },
+    {
+      "title": "How GPS satellites must correct for Einstein's relativity",
+      "source": "Evergreen library",
+      "kind": "evergreen",
+      "url": "https://en.wikipedia.org/wiki/Error_analysis_for_the_Global_Positioning_System"
+    },
+    {
+      "title": "Why your program is slow: the cost of a cache miss",
+      "source": "Evergreen library",
+      "kind": "evergreen",
+      "url": "https://en.wikipedia.org/wiki/CPU_cache"
+    },
+    {
+      "title": "The halting problem: a question no program can answer",
+      "source": "Evergreen library",
+      "kind": "evergreen",
+      "url": "https://en.wikipedia.org/wiki/Halting_problem"
     }
   ],
   "warnings": []
