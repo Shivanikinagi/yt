@@ -9,7 +9,9 @@ from .utils import REPORT_DIR, write_json
 def write_report(run: dict, videos: list[dict], failures: list[dict], candidates: list[dict], warnings: list[str]) -> Path:
     REPORT_DIR.mkdir(parents=True, exist_ok=True)
     date = run["date"]
-    lines = [f"# Daily run {date}", ""]
+    demo = bool(run.get("demo"))
+    stem = f"demo-{date}" if demo else date   # a demo must not overwrite the real daily report
+    lines = [f"# {'Demo' if demo else 'Daily'} run {date}", ""]
     lines += [f"- Started: {run['started']}  ", f"- Finished: {run['finished']}  ",
               f"- Elapsed: {run['elapsed_minutes']:.1f} min (budget {run['budget_minutes']:.0f} min)  ",
               f"- Produced: {run['produced']} / target {run['target']}  ",
@@ -39,9 +41,9 @@ def write_report(run: dict, videos: list[dict], failures: list[dict], candidates
             lines.append(f"- {v['title']}: {s}")
     lines.append("")
     md = "\n".join(lines)
-    path = REPORT_DIR / f"{date}.md"
+    path = REPORT_DIR / f"{stem}.md"
     path.write_text(md, encoding="utf-8")
     (REPORT_DIR / "latest.md").write_text(md, encoding="utf-8")
-    write_json(REPORT_DIR / f"{date}.json", {"run": run, "videos": videos, "failures": failures,
+    write_json(REPORT_DIR / f"{stem}.json", {"run": run, "videos": videos, "failures": failures,
                                              "candidates": candidates, "warnings": warnings})
     return path

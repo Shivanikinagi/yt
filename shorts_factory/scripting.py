@@ -102,7 +102,7 @@ def build_prompt(topic: Topic, theme: str) -> tuple[str, str]:
     text = topic.source_text()[:2600]
     user = USER_TEMPLATE.format(title=topic.title, source=topic.source, url=topic.url, text=text,
                                 style=STYLE_HINTS.get(theme, "motion graphics"),
-                                min_w=MIN_WORDS + 15, max_w=MAX_WORDS - 10)
+                                min_w=MIN_WORDS + 15, max_w=MAX_WORDS - 20)   # ~145 words ≈ 53 s of Piper speech
     return SYSTEM_PROMPT, user
 
 

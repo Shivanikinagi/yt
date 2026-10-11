@@ -7,6 +7,26 @@ Runs for ₹0 in the cloud on GitHub Actions, or locally on Windows as a fallbac
 
 This folder is a standalone project. It does not depend on anything outside `trial/`.
 
+## Status and what you still have to do (2026-10-11)
+
+Done and verified: research, scripting (Groq), narration (Piper), rendering, captions, QC, reports,
+state, unit tests, local demo videos, and the code is pushed to the private repository
+`github.com/Shivanikinagi/yt` with the daily workflow in place.
+
+Not done, because each needs your Google or GitHub account in a browser:
+
+1. **Create the YouTube OAuth client** (Google Cloud Console) and run `python -m shorts_factory auth`
+   once. See "YouTube authorization" below. Until then every run renders videos but uploads nothing.
+2. **Run the first private test upload**: `python -m shorts_factory demo --upload`. It uploads only
+   the video rendered by that command, as *private*, and writes the video ID and URL to `reports/latest.md`.
+3. **Add the GitHub Actions secrets** `GROQ_API_KEY`, `YOUTUBE_CLIENT_SECRET_JSON`, `YOUTUBE_TOKEN_JSON`
+   (repository Settings → Secrets and variables → Actions) and set workflow permissions to
+   *Read and write*. Without `GROQ_API_KEY` the cloud run falls back to the plainer template writer.
+4. **Trigger the workflow once by hand** (Actions → Daily Shorts → Run workflow, tick *no_upload*
+   for a dry run) and check the job summary, which now shows the daily report.
+5. Only when you are satisfied: set the repository variables `SHORTS_PUBLISH_MODE=scheduled` and
+   `ALLOW_PUBLIC_SCHEDULING=true` to let videos go public on the schedule.
+
 ## What was inspected and decided
 
 | Component | Choice | Why |
@@ -68,13 +88,8 @@ only you use with these scopes, Google just shows an "unverified app" warning on
 `auth` whenever the report says the token is not refreshable.
 
 ### Deploy to GitHub Actions
-1. Create a GitHub repository (private is fine) and push this folder as its root:
-   ```powershell
-   git add -A
-   git commit -m "Tech Shorts Factory"
-   git remote add origin https://github.com/<you>/<repo>.git
-   git push -u origin main
-   ```
+1. The code is already pushed to the private repository `https://github.com/Shivanikinagi/yt`
+   (branch `main`). After any local change: `git add -A; git commit -m "..."; git push`.
 2. Repository **Settings → Secrets and variables → Actions → Secrets**:
    - `GROQ_API_KEY` (required for LLM scripts; without it the template writer is used)
    - `YOUTUBE_CLIENT_SECRET_JSON` (contents of the client JSON) and `YOUTUBE_TOKEN_JSON` (the base64 printed by `auth`)
@@ -82,6 +97,11 @@ only you use with these scopes, Google just shows an "unverified app" warning on
 3. **Variables** (not secrets): `SHORTS_PUBLISH_MODE` = `private` (default) and later `scheduled`; `ALLOW_PUBLIC_SCHEDULING` = `false` until you are ready.
 4. Settings → Actions → General → Workflow permissions: **Read and write** (needed to commit state/reports).
 5. Run it once by hand: Actions → Daily Shorts → Run workflow (tick *no_upload* for a dry run). Check the artifact and `reports/latest.md`.
+
+### Monitoring (free)
+- Every run writes the daily report into the GitHub **job summary** (Actions → the run), commits it to `reports/`, and attaches the MP4s, SRTs, scripts, QC results and logs as a 7-day artifact.
+- The job is marked **failed** when a run produces zero videos. GitHub emails the repository owner when a scheduled workflow fails (Settings → Notifications → Actions), so a broken day is reported without any extra service.
+- `python -m shorts_factory report` prints the latest report locally; `state/state.json` holds every video, its upload status, YouTube ID, publish time and quota use.
 
 ### Go public (your explicit decision)
 Public scheduling is refused unless **both** `SHORTS_PUBLISH_MODE=scheduled` and
@@ -124,6 +144,9 @@ remain and stops everything at 115 minutes; the workflow kills the job at 125.
 - `config/evergreen_topics.yaml`: fallback topics with canonical sources.
 - `.env` / GitHub secrets: keys only. Never committed (`.gitignore`).
 
+To keep a rendered video from ever being uploaded, change its `status` in `state/state.json` from
+`rendered` to `held` (the 2026-10-11 newsletter-style video is held this way).
+
 Change `brand.channel_name` and `brand.handle` before your first upload. Drop a TTF into
 `assets/fonts/` as `Bold.ttf` / `Regular.ttf` / `Mono.ttf` to change typography.
 
@@ -141,7 +164,9 @@ Change `brand.channel_name` and `brand.handle` before your first upload. Drop a 
 
 - **Claude is not used.** Claude Max has no API; the pipeline uses Groq's free models and documented fallbacks.
 - **YouTube authorization is manual** (OAuth consent in a browser) and may need repeating every 7 days while the Google OAuth app is in "testing" mode. The run reports this and keeps rendering; uploads resume once re-authorized.
-- **The first private test upload has not been performed here** because no Google OAuth client existed in this environment. The upload code is implemented and unit-tested for metadata and slot logic; follow "YouTube authorization" and run `demo --upload`.
+- **The first private test upload has not been performed here** because no Google OAuth client existed in this environment. The upload code is implemented and unit-tested for metadata, slot logic and the upload queue; follow "YouTube authorization" and run `demo --upload`.
+- **GitHub Actions secrets are not set yet.** The repository exists and the workflow is committed, but adding secrets needs your GitHub login in a browser (or the `gh` CLI, which is not installed here). Until `GROQ_API_KEY` is added, cloud runs use the template writer; until the YouTube secrets are added, cloud runs upload nothing.
+- **The project lives inside OneDrive.** OneDrive syncs `output/` (hundreds of MB of MP4 and WAV files per week) and `.venv/`, and can lock files while syncing. If a local run fails with a file-in-use error, pause OneDrive or move the folder outside it. The cloud run is unaffected.
 - **No AI video generation.** No GPU locally or on the free runner; visuals are motion graphics and diagrams, which is the documented fallback. The "voxel" theme is an original blocky look, not Minecraft assets.
 - **Accuracy is bounded by the sources.** The LLM is confined to the feed text and article excerpt, numbers are cross-checked, and sources are linked in the description, but no automated system verifies claims against the wider world. Research-paper topics describe the abstract only.
 - **Synthetic media flag.** The API field `status.containsSyntheticMedia` is sent; if the API rejects it the upload is retried without it and the description still carries the disclosure. Confirm the "altered or synthetic content" setting in YouTube Studio for the first few uploads.
@@ -153,7 +178,9 @@ Change `brand.channel_name` and `brand.handle` before your first upload. Drop a 
 
 ## Verification performed in this environment (2026-10-11)
 
-- `pytest`: 9 tests pass (template writer on all evergreen topics, validation, JSON extraction, captions/SRT, timeline, every scene type renders, QC number check, deadline, publish slot/metadata).
+- `pytest`: 11 tests pass (template writer on all evergreen topics, validation, JSON extraction, captions/SRT, timeline, every scene type renders, QC number check, deadline, publish slot/metadata, upload queue scoping, narration speed-up maths).
+- Second audit pass (12:30 IST): Groq key re-verified against the models endpoint (`gpt-oss-120b`, `gpt-oss-20b`, `whisper-large-v3-turbo` all listed); live research produced 14 verified candidates with the newsletter penalty working; a fresh `demo` rendered "Why Large Language Models Forget Anything Beyond Their Window" (42 s, neon, Whisper captions, QC clean, 3.2 min total). One evergreen topic in that run was lost because a 164-word script spoke for 60 s; the pipeline now re-synthesizes narration up to 20 % faster instead of dropping the topic, and the prompt asks for at most 145 words.
+- Fixed in that pass: `demo --upload` now uploads only the video it just rendered (it previously would have uploaded every old demo); demo runs write `reports/demo-<date>.md` instead of overwriting the daily report; the GitHub job fails (and so notifies you) when a run produces nothing, and the daily report is published to the job summary.
 - Groq chat, Whisper word timestamps and Piper synthesis each verified live.
 - Live research: 14 fresh, URL-verified candidates from 12 of 14 feeds (Hacker News timed out once; arXiv feeds were empty on a weekend).
 - `demo`: three evergreen Shorts rendered in `output/2026-10-11/` (44-49 s each, 1080x1920 h264/aac, Whisper-aligned captions): one by the template writer, two by Groq `gpt-oss-120b`, themes neon/voxel/blueprint. All passed QC; reports and `state/state.json` written. Render time on this laptop: 100-200 s per video.

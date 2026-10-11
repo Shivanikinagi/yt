@@ -72,7 +72,14 @@ jobs:
           ARGS=""
           if [ -n "${{ inputs.limit }}" ]; then ARGS="$ARGS --limit ${{ inputs.limit }}"; fi
           if [ "${{ inputs.no_upload }}" = "true" ]; then ARGS="$ARGS --no-upload"; fi
-          python -m shorts_factory run $ARGS || echo "run exited with $? (see report)"
+          set +e
+          python -m shorts_factory run $ARGS
+          echo "RUN_EXIT=$?" >> "$GITHUB_ENV"
+
+      - name: Publish report to the job summary
+        if: always()
+        run: |
+          if [ -f reports/latest.md ]; then cat reports/latest.md >> "$GITHUB_STEP_SUMMARY"; else echo "no report written" >> "$GITHUB_STEP_SUMMARY"; fi
 
       - name: Upload videos and logs as artifacts
         if: always()
@@ -97,3 +104,12 @@ jobs:
           git commit -m "chore: daily run $(date -u +%Y-%m-%d)" || echo "nothing to commit"
           git pull --rebase origin ${{ github.ref_name }} || true
           git push || echo "push failed (check branch protection)"
+
+      # Fail the job when the run produced nothing, so GitHub's built-in notifications
+      # (email on failed scheduled workflows) act as free monitoring. Artifacts, the summary
+      # and the state commit above still happen because they run with `if: always()`.
+      - name: Fail job if the run produced no video
+        if: always()
+        run: |
+          echo "run exit code: ${RUN_EXIT:-unknown}"
+          if [ "${RUN_EXIT:-1}" != "0" ]; then exit 1; fi

@@ -1,8 +1,8 @@
-# Daily run 2026-10-11
+# Demo run 2026-10-11
 
-- Started: 2026-10-11T11:55:51+05:30  
-- Finished: 2026-10-11T12:01:05+05:30  
-- Elapsed: 5.2 min (budget 115 min)  
+- Started: 2026-10-11T12:33:40+05:30  
+- Finished: 2026-10-11T12:36:52+05:30  
+- Elapsed: 3.2 min (budget 115 min)  
 - Produced: 1 / target 1  
 - Uploaded: 0  
 - Publish mode: skipped (--no-upload)  
@@ -15,25 +15,39 @@
 
 | # | Title | Duration | Theme | Status | YouTube | Publish at | QC warnings |
 |---|---|---|---|---|---|---|---|
-| 1 | When AI Says No: The Hidden Risks Behind Refusals and Weight‑Loss Drugs | 49s | neon | rendered | - | - | - |
+| 1 | Why Large Language Models Forget Anything Beyond Their Window | 42s | neon | rendered | - | - | - |
+
+## Failures
+
+- **Why UTF-8 won the encoding wars** — render: render: video too long: 62.0s > 59s
 
 ## Topics considered
 
-- The Download: AI’s refusal problem and weight-loss drug side effects (MIT Technology Review, news)
-- We’re putting too much faith in AI’s ability to say no (MIT Technology Review, news)
-- Dwarf Fortress uses version control now (Simon Willison, news)
-- Satya Nadella says we should assume all AI models are ‘compromised’ (The Verge - AI, news)
-- A new feature for my blog, built using my voice (Simon Willison, news)
-- Anthropic is cutting off its internal evaluations from the internet (The Verge - AI, news)
-- Secret protection must scale with software (GitHub Blog - AI, news)
-- How Does Life Unfold? A Landscape Metaphor Comes Into Its Own. (Quanta Magazine, concepts)
-- Agent Lightning v1.0: A 3,500-Line Lightweight Agentic RL Framework for Training Agents with Real Harnesses (Microsoft Research Blog, research)
-- Sophos cuts threat investigation time by 96% with OpenAI Daybreak (OpenAI News, news)
-- What AI gets wrong and what failure teaches us (Microsoft Research Blog, research)
-- Asana cuts model costs 76x in browser tests with GPT-6.1 Sol (OpenAI News, news)
-- As AI Closed In on ‘Unique Games’ Proof, Researchers Raced to Beat the Machines (Quanta Magazine, concepts)
-- Impactful scheduling for GPU clusters (Hugging Face Blog, news)
+- Why UTF-8 won the encoding wars (Evergreen library, evergreen)
+- What a context window really limits (Evergreen library, evergreen)
+- The Turing test and what it was really about (Evergreen library, evergreen)
+- How Git stores your history as a graph of hashes (Evergreen library, evergreen)
+- The halting problem: a question no program can answer (Evergreen library, evergreen)
+- How public-key cryptography lets strangers share secrets (Evergreen library, evergreen)
+- The birthday paradox behind hash collisions (Evergreen library, evergreen)
+- The first computer bug was a real moth (Evergreen library, evergreen)
+- Why floating point says 0.1 + 0.2 is not 0.3 (Evergreen library, evergreen)
+- Moore's law: the prediction that shaped 60 years of chips (Evergreen library, evergreen)
+- What a token actually is in a large language model (Evergreen library, evergreen)
+- Why neural networks need non-linear activation functions (Evergreen library, evergreen)
+- Reinforcement learning from human feedback, explained (Evergreen library, evergreen)
+- What CAPTCHAs quietly taught machines (Evergreen library, evergreen)
+- The Y2K bug and why two digits nearly broke the world (Evergreen library, evergreen)
+- How GPS satellites must correct for Einstein's relativity (Evergreen library, evergreen)
+- How error-correcting codes let CDs survive scratches (Evergreen library, evergreen)
+- Why quicksort is fast even though it can be slow (Evergreen library, evergreen)
+- Why your program is slow: the cost of a cache miss (Evergreen library, evergreen)
+- Why transformers replaced recurrent networks (Evergreen library, evergreen)
+- How one bit flip from space can crash a computer (Evergreen library, evergreen)
+- Why passwords are stored as salted hashes (Evergreen library, evergreen)
+- Why the internet still runs on a protocol from 1981 (Evergreen library, evergreen)
+- How diffusion models paint images out of noise (Evergreen library, evergreen)
 
 ## Sources used
 
-- When AI Says No: The Hidden Risks Behind Refusals and Weight‑Loss Drugs: https://www.technologyreview.com/2026/10/09/1146250/the-download-ai-refusal-problem-weight-loss-drug-side-effects/
+- Why Large Language Models Forget Anything Beyond Their Window: https://en.wikipedia.org/wiki/Large_language_model

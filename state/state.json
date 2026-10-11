@@ -105,6 +105,30 @@
       "created": "2026-10-11T12:01:05",
       "render_seconds": 163,
       "hold_reason": "newsletter digest topic (mixed stories); set status back to \"rendered\" to upload"
+    },
+    {
+      "id": "2026-10-11-01-68052d30",
+      "date": "2026-10-11",
+      "title": "Why Large Language Models Forget Anything Beyond Their Window",
+      "topic_id": "68052d301e5eac14acf3ab0f77ed4b52f1d8aaeb",
+      "topic_title": "What a context window really limits",
+      "source": "Evergreen library",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Large_language_model"
+      ],
+      "theme": "neon",
+      "provider": "groq",
+      "tts_engine": "piper",
+      "duration": 42.26,
+      "path": "C:\\Users\\ShivaniKinagi\\OneDrive - Trinamix Systems Pvt Ltd\\Desktop\\project\\trial\\output\\2026-10-11\\01-what-a-context-window-really-limits\\video.mp4",
+      "srt": "C:\\Users\\ShivaniKinagi\\OneDrive - Trinamix Systems Pvt Ltd\\Desktop\\project\\trial\\output\\2026-10-11\\01-what-a-context-window-really-limits\\captions.srt",
+      "captions": 33,
+      "caption_method": "whisper",
+      "status": "rendered",
+      "qc_warnings": [],
+      "created": "2026-10-11T12:36:52",
+      "render_seconds": 127,
+      "demo": true
     }
   ],
   "runs": [
@@ -183,11 +207,32 @@
       "quota_used": 0,
       "failures": 0,
       "demo": false
+    },
+    {
+      "date": "2026-10-11",
+      "started": "2026-10-11T12:33:40+05:30",
+      "finished": "2026-10-11T12:36:52+05:30",
+      "elapsed_minutes": 3.2010598866676445,
+      "budget_minutes": 115.0,
+      "produced": 1,
+      "target": 1,
+      "uploaded": 0,
+      "publish_mode": "skipped (--no-upload)",
+      "providers": [
+        "groq"
+      ],
+      "tts_engines": [
+        "piper"
+      ],
+      "quota_used": 0,
+      "failures": 1,
+      "demo": true
     }
   ],
   "quota": {},
   "schedule": [],
   "failed_topics": {
-    "d09c87ea160471f56d846441449944f04e97fed5": 1
+    "d09c87ea160471f56d846441449944f04e97fed5": 1,
+    "f96a3fa2f81fb6468cfb622e75de2c29be725608": 1
   }
 }

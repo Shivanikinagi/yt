@@ -13,7 +13,8 @@ from shorts_factory.utils import extract_json  # noqa: E402
 from shorts_factory.visuals import Renderer  # noqa: E402
 from shorts_factory.qc import check_script  # noqa: E402
 from shorts_factory.render import build_timeline  # noqa: E402
-from shorts_factory.runner import Deadline  # noqa: E402
+from shorts_factory.runner import Deadline, tts_speedup_factor, upload_queue  # noqa: E402
+from shorts_factory.utils import PipelineError  # noqa: E402
 from shorts_factory.youtube import build_metadata, next_publish_slot  # noqa: E402
 
 cfg = load_settings()
@@ -91,6 +92,33 @@ def test_deadline():
     import time
     time.sleep(0.02)
     assert d.remaining() < 0
+
+
+def test_tts_speedup_factor():
+    assert tts_speedup_factor(45.0, 7, cfg) is None                 # fits, no change
+    f = tts_speedup_factor(60.1, 7, cfg)                            # the case seen in a real demo run
+    assert f is not None and 0.80 <= f < 1.0
+    assert 60.1 * f + cfg.video.lead_in_seconds + 0.15 * 6 + 0.5 <= cfg.video.max_seconds
+    try:
+        tts_speedup_factor(90.0, 7, cfg)
+        assert False, "should refuse an extreme speed-up"
+    except PipelineError:
+        pass
+
+
+def test_upload_queue_scopes_demo_uploads_to_this_run(tmp_path):
+    st = State(tmp_path / "state.json")
+    mp4 = tmp_path / "v.mp4"
+    mp4.write_bytes(b"x")
+    old_demo = {"id": "old-demo", "status": "rendered", "demo": True, "path": str(mp4)}
+    new_demo = {"id": "new-demo", "status": "rendered", "demo": True, "path": str(mp4)}
+    real_old = {"id": "real-old", "status": "rendered", "path": str(mp4)}
+    held = {"id": "held", "status": "held", "path": str(mp4)}
+    uploaded = {"id": "done", "status": "uploaded", "youtube_id": "abc", "path": str(mp4)}
+    for v in (old_demo, new_demo, real_old, held, uploaded):
+        st.add_video(v)
+    assert [v["id"] for v in upload_queue(st, [new_demo], demo=True)] == ["new-demo"]
+    assert [v["id"] for v in upload_queue(st, [], demo=False)] == ["real-old"]
 
 
 def test_publish_slot_and_metadata(tmp_path):

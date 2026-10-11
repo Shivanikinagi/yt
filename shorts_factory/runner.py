@@ -32,6 +32,31 @@ class Deadline:
             raise TimeBudgetExceeded(f"time budget exhausted during {label}")
 
 
+MIN_SPEEDUP_FACTOR = 0.80   # never speed narration up by more than 20 %, it becomes hard to follow
+
+
+def tts_speedup_factor(narration_seconds: float, n_scenes: int, cfg) -> float | None:
+    """Return the duration factor needed to fit the squeezed timeline into max_seconds, or None
+    when the narration already fits. Raises PipelineError when the required speed-up is too big."""
+    v = cfg.video
+    overhead = float(v.lead_in_seconds) + 0.15 * max(n_scenes - 1, 0) + 0.5   # squeezed gaps + tail
+    allowed = float(v.max_seconds) - overhead
+    if narration_seconds <= allowed:
+        return None
+    factor = allowed / narration_seconds * 0.98
+    if factor < MIN_SPEEDUP_FACTOR:
+        raise PipelineError(f"narration {narration_seconds:.1f}s is far too long for a {v.max_seconds}s Short")
+    return factor
+
+
+def _with_length_scale(cfg, length_scale: float):
+    import copy
+    from .config import Cfg
+    new = Cfg(copy.deepcopy(dict(cfg)))
+    new["tts"]["piper_length_scale"] = round(length_scale, 3)
+    return new
+
+
 def produce_video(topic: Topic, index: int, date: str, cfg, logger, state: State, deadline: Deadline,
                   template_only: bool = False) -> tuple[dict, VideoScript]:
     themes = list(cfg.video.themes)
@@ -60,6 +85,17 @@ def produce_video(topic: Topic, index: int, date: str, cfg, logger, state: State
             deadline.check(stage)
         est = sum(a.duration for a in audio)
         logger.info("narration %.1fs via %s", est, audio[0].engine)
+        factor = tts_speedup_factor(est, len(audio), cfg)
+        if factor is not None:
+            # narration runs past the 59 s Shorts limit: speak a little faster instead of losing the topic
+            logger.info("narration too long for %ss, re-synthesizing at %.0f%% duration", cfg.video.max_seconds, factor * 100)
+            fast_cfg = _with_length_scale(cfg, float(cfg.tts.piper_length_scale) * factor)
+            audio = []
+            for i, scene in enumerate(script.scenes):
+                audio.append(synthesize(scene["narration"], vdir / "scenes" / f"{i + 1:02d}.wav", fast_cfg, logger))
+                deadline.check(stage)
+            est = sum(a.duration for a in audio)
+            logger.info("narration now %.1fs", est)
 
         stage = "render"
         seed = int(topic.id[:6], 16)
@@ -88,6 +124,16 @@ def produce_video(topic: Topic, index: int, date: str, cfg, logger, state: State
     except Exception as e:  # unexpected -> still recoverable for the run
         logger.debug(traceback.format_exc())
         raise PipelineError(f"{stage}: {type(e).__name__}: {e}") from e
+
+
+def upload_queue(state: State, produced: list[dict], demo: bool) -> list[dict]:
+    """Videos to upload now. A normal run uploads every pending non-demo video (including ones
+    rendered on earlier runs whose upload failed). `demo --upload` is a test and uploads only
+    the videos this run rendered, never older demos."""
+    if demo:
+        produced_ids = {r["id"] for r in produced}
+        return [v for v in state.pending_uploads(include_demo=True) if v["id"] in produced_ids]
+    return state.pending_uploads()
 
 
 def run_daily(cfg, logger, limit: int | None = None, no_upload: bool = False, demo: bool = False,
@@ -176,7 +222,7 @@ def run_daily(cfg, logger, limit: int | None = None, no_upload: bool = False, de
         else:
             publish_mode = yt.effective_publish_mode(cfg, logger)
             service = yt.build_service(creds)
-            for v in state.pending_uploads(include_demo=demo):
+            for v in upload_queue(state, produced, demo):
                 if deadline.remaining() < 60:
                     warnings.append("time budget reached before all uploads finished")
                     break
