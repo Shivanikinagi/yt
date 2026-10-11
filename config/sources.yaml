@@ -1,0 +1,59 @@
+# RSS/Atom feeds used for daily research. All are official or well-established feeds.
+# kind: news | research | concepts   weight: ranking multiplier
+feeds:
+  - name: "OpenAI News"
+    url: "https://openai.com/news/rss.xml"
+    kind: news
+    weight: 1.3
+  - name: "Google DeepMind Blog"
+    url: "https://deepmind.google/blog/rss.xml"
+    kind: news
+    weight: 1.3
+  - name: "Google Research Blog"
+    url: "https://research.google/blog/rss/"
+    kind: research
+    weight: 1.1
+  - name: "Hugging Face Blog"
+    url: "https://huggingface.co/blog/feed.xml"
+    kind: news
+    weight: 1.2
+  - name: "Microsoft Research Blog"
+    url: "https://www.microsoft.com/en-us/research/feed/"
+    kind: research
+    weight: 1.0
+  - name: "GitHub Blog - AI"
+    url: "https://github.blog/ai-and-ml/feed/"
+    kind: news
+    weight: 1.0
+  - name: "The Verge - AI"
+    url: "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml"
+    kind: news
+    weight: 1.0
+  - name: "Ars Technica - Technology Lab"
+    url: "https://feeds.arstechnica.com/arstechnica/technology-lab"
+    kind: news
+    weight: 1.0
+  - name: "MIT Technology Review"
+    url: "https://www.technologyreview.com/feed/"
+    kind: news
+    weight: 1.0
+  - name: "Quanta Magazine"
+    url: "https://api.quantamagazine.org/feed/"
+    kind: concepts
+    weight: 1.2
+  - name: "arXiv cs.AI"
+    url: "https://rss.arxiv.org/rss/cs.AI"
+    kind: research
+    weight: 0.9
+  - name: "arXiv cs.LG"
+    url: "https://rss.arxiv.org/rss/cs.LG"
+    kind: research
+    weight: 0.8
+  - name: "Hacker News front page (150+ points)"
+    url: "https://hnrss.org/frontpage?points=150"
+    kind: news
+    weight: 0.9
+  - name: "Simon Willison"
+    url: "https://simonwillison.net/atom/everything/"
+    kind: news
+    weight: 0.8

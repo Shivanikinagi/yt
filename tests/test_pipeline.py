@@ -1,0 +1,105 @@
+"""Fast unit tests (no network, no LLM, no YouTube). Run: .venv/Scripts/python -m pytest -q"""
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+from shorts_factory.align import chunk_words, proportional, to_srt  # noqa: E402
+from shorts_factory.config import load_settings  # noqa: E402
+from shorts_factory.research import Topic, evergreen_topics  # noqa: E402
+from shorts_factory.scripting import MAX_WORDS, MIN_WORDS, ScriptError, template_script, validate_and_normalize  # noqa: E402
+from shorts_factory.state import State  # noqa: E402
+from shorts_factory.utils import extract_json  # noqa: E402
+from shorts_factory.visuals import Renderer  # noqa: E402
+from shorts_factory.qc import check_script  # noqa: E402
+from shorts_factory.render import build_timeline  # noqa: E402
+from shorts_factory.runner import Deadline  # noqa: E402
+from shorts_factory.youtube import build_metadata, next_publish_slot  # noqa: E402
+
+cfg = load_settings()
+
+
+def _topic():
+    return evergreen_topics("test")[0]
+
+
+def test_template_script_is_valid_for_every_evergreen_topic():
+    for t in evergreen_topics("seed"):
+        s = template_script(t, "neon")
+        assert MIN_WORDS <= s.total_words() <= MAX_WORDS, (t.title, s.total_words())
+        assert s.scenes[0]["type"] == "title" and s.scenes[-1]["type"] == "payoff"
+
+
+def test_validate_rejects_short_scripts():
+    data = {"title": "A good title here", "scenes": [{"type": "title", "narration": "too short"}]}
+    try:
+        validate_and_normalize(data, _topic(), "test", "neon")
+        assert False, "should reject"
+    except ScriptError:
+        pass
+
+
+def test_extract_json_from_fenced_text():
+    assert extract_json('here ```json {"a": 1, "b": {"c": "}"}} ``` done') == {"a": 1, "b": {"c": "}"}}
+
+
+def test_captions_chunking_and_srt():
+    words = proportional("Hello world. This is a longer caption test sentence!".split(), 4.0)
+    chunks = chunk_words(words, 4, 24)
+    assert chunks and chunks[0]["start"] >= 0 and chunks[-1]["end"] <= 4.0
+    srt = to_srt(chunks)
+    assert "-->" in srt
+
+
+def test_timeline_and_squeeze():
+    tl = build_timeline([5.0, 6.0, 7.0], cfg)
+    assert tl[0]["audio_start"] == cfg.video.lead_in_seconds
+    assert tl[-1]["end"] > 18.0
+    tl2 = build_timeline([5.0, 6.0, 7.0], cfg, squeeze=True)
+    assert tl2[-1]["end"] < tl[-1]["end"]
+
+
+def test_renderer_frame_for_every_scene_type():
+    r = Renderer(cfg, "voxel", seed=3)
+    scenes = [
+        {"type": "title", "on_screen": "Why floating point lies to you"},
+        {"type": "explain", "on_screen": "The core idea", "bullets": ["Binary cannot store 0.1", "Errors add up"]},
+        {"type": "diagram", "on_screen": "Flow", "nodes": ["Input", "Model", "Output"]},
+        {"type": "compare", "on_screen": "Then vs now", "left_title": "RNN", "right_title": "Transformer",
+         "left": ["Sequential"], "right": ["Parallel"]},
+        {"type": "code", "on_screen": "Try it", "code": ["x = 0.1 + 0.2", "print(x)"]},
+        {"type": "fact", "on_screen": "0.30000000000000004"},
+        {"type": "payoff", "on_screen": "Now you know"},
+    ]
+    cap = {"words": [("Hello", 0.0, 0.5), ("world", 0.5, 1.0)], "start": 0.0, "end": 1.0}
+    for s in scenes:
+        img = r.frame(s, 1.2, 5.0, 3.0, 0.4, "Tech", cap)
+        assert img.size == (1080, 1920)
+
+
+def test_qc_flags_unsourced_numbers(tmp_path):
+    t = _topic()
+    s = template_script(t, "neon")
+    s.scenes[1]["narration"] += " It costs exactly 4,567 dollars and 98.6 percent agree."
+    st = State(tmp_path / "state.json")
+    res = check_script(s, t, st, cfg)
+    assert res["errors"], res
+
+
+def test_deadline():
+    d = Deadline(0.0001)
+    import time
+    time.sleep(0.02)
+    assert d.remaining() < 0
+
+
+def test_publish_slot_and_metadata(tmp_path):
+    st = State(tmp_path / "state.json")
+    slot = next_publish_slot(cfg, st)
+    assert slot.tzinfo is not None
+    s = template_script(_topic(), "neon")
+    body = build_metadata(s, cfg, "scheduled", slot)
+    assert body["status"]["privacyStatus"] == "private" and body["status"]["publishAt"].endswith("Z")
+    assert len(body["snippet"]["title"]) <= 100
+    body2 = build_metadata(s, cfg, "private", None)
+    assert "publishAt" not in body2["status"]

@@ -1,0 +1,193 @@
+{
+  "version": 1,
+  "topics": {
+    "8c3b302e704e63b0df86642633f74738c22b91d6": {
+      "title": "The Download: AI’s refusal problem and weight-loss drug side effects",
+      "url": "https://www.technologyreview.com/2026/10/09/1146250/the-download-ai-refusal-problem-weight-loss-drug-side-effects/",
+      "used_on": "2026-10-11"
+    }
+  },
+  "videos": [
+    {
+      "id": "2026-10-11-01-7212f2e4",
+      "date": "2026-10-11",
+      "title": "How GPS satellites must correct for Einstein's relativity",
+      "topic_id": "7212f2e485cf6984638266e753fba2b1acfa7251",
+      "topic_title": "How GPS satellites must correct for Einstein's relativity",
+      "source": "Evergreen library",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Error_analysis_for_the_Global_Positioning_System"
+      ],
+      "theme": "neon",
+      "provider": "template",
+      "tts_engine": "piper",
+      "duration": 48.77,
+      "path": "C:\\Users\\ShivaniKinagi\\OneDrive - Trinamix Systems Pvt Ltd\\Desktop\\project\\voice-app\\trial\\output\\2026-10-11\\01-how-gps-satellites-must-correct-for-einstein-s-r\\video.mp4",
+      "srt": "C:\\Users\\ShivaniKinagi\\OneDrive - Trinamix Systems Pvt Ltd\\Desktop\\project\\voice-app\\trial\\output\\2026-10-11\\01-how-gps-satellites-must-correct-for-einstein-s-r\\captions.srt",
+      "captions": 39,
+      "caption_method": "whisper",
+      "status": "rendered",
+      "qc_warnings": [
+        "2 scenes contain 12+ word spans copied from the source"
+      ],
+      "created": "2026-10-11T11:41:27",
+      "render_seconds": 147,
+      "demo": true
+    },
+    {
+      "id": "2026-10-11-02-d09c87ea",
+      "date": "2026-10-11",
+      "title": "Why no program can predict if another program will ever stop",
+      "topic_id": "d09c87ea160471f56d846441449944f04e97fed5",
+      "topic_title": "The halting problem: a question no program can answer",
+      "source": "Evergreen library",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Halting_problem"
+      ],
+      "theme": "voxel",
+      "provider": "groq",
+      "tts_engine": "piper",
+      "duration": 43.92,
+      "path": "C:\\Users\\ShivaniKinagi\\OneDrive - Trinamix Systems Pvt Ltd\\Desktop\\project\\voice-app\\trial\\output\\2026-10-11\\02-the-halting-problem-a-question-no-program-can-an\\video.mp4",
+      "srt": "C:\\Users\\ShivaniKinagi\\OneDrive - Trinamix Systems Pvt Ltd\\Desktop\\project\\voice-app\\trial\\output\\2026-10-11\\02-the-halting-problem-a-question-no-program-can-an\\captions.srt",
+      "captions": 34,
+      "caption_method": "whisper",
+      "status": "rendered",
+      "qc_warnings": [],
+      "created": "2026-10-11T11:49:40",
+      "render_seconds": 102,
+      "demo": true
+    },
+    {
+      "id": "2026-10-11-03-fa40a6ba",
+      "date": "2026-10-11",
+      "title": "Why secure systems never store plain passwords",
+      "topic_id": "fa40a6ba8a3f541b776ecc6985105e9c7ab0b269",
+      "topic_title": "Why passwords are stored as salted hashes",
+      "source": "Evergreen library",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Salt_(cryptography)"
+      ],
+      "theme": "blueprint",
+      "provider": "groq",
+      "tts_engine": "piper",
+      "duration": 48.53,
+      "path": "C:\\Users\\ShivaniKinagi\\OneDrive - Trinamix Systems Pvt Ltd\\Desktop\\project\\voice-app\\trial\\output\\2026-10-11\\03-why-passwords-are-stored-as-salted-hashes\\video.mp4",
+      "srt": "C:\\Users\\ShivaniKinagi\\OneDrive - Trinamix Systems Pvt Ltd\\Desktop\\project\\voice-app\\trial\\output\\2026-10-11\\03-why-passwords-are-stored-as-salted-hashes\\captions.srt",
+      "captions": 37,
+      "caption_method": "whisper",
+      "status": "rendered",
+      "qc_warnings": [],
+      "created": "2026-10-11T11:53:36",
+      "render_seconds": 198,
+      "demo": true
+    },
+    {
+      "id": "2026-10-11-01-8c3b302e",
+      "date": "2026-10-11",
+      "title": "When AI Says No: The Hidden Risks Behind Refusals and Weight‑Loss Drugs",
+      "topic_id": "8c3b302e704e63b0df86642633f74738c22b91d6",
+      "topic_title": "The Download: AI’s refusal problem and weight-loss drug side effects",
+      "source": "MIT Technology Review",
+      "sources": [
+        "https://www.technologyreview.com/2026/10/09/1146250/the-download-ai-refusal-problem-weight-loss-drug-side-effects/"
+      ],
+      "theme": "neon",
+      "provider": "groq",
+      "tts_engine": "piper",
+      "duration": 48.82,
+      "path": "C:\\Users\\ShivaniKinagi\\OneDrive - Trinamix Systems Pvt Ltd\\Desktop\\project\\voice-app\\trial\\output\\2026-10-11\\01-the-download-ai-s-refusal-problem-and-weight-los\\video.mp4",
+      "srt": "C:\\Users\\ShivaniKinagi\\OneDrive - Trinamix Systems Pvt Ltd\\Desktop\\project\\voice-app\\trial\\output\\2026-10-11\\01-the-download-ai-s-refusal-problem-and-weight-los\\captions.srt",
+      "captions": 38,
+      "caption_method": "whisper",
+      "status": "held",
+      "qc_warnings": [],
+      "created": "2026-10-11T12:01:05",
+      "render_seconds": 163,
+      "hold_reason": "newsletter digest topic (mixed stories); set status back to \"rendered\" to upload"
+    }
+  ],
+  "runs": [
+    {
+      "date": "2026-10-11",
+      "started": "2026-10-11T11:37:31+05:30",
+      "finished": "2026-10-11T11:41:27+05:30",
+      "elapsed_minutes": 3.9283232399999783,
+      "budget_minutes": 115.0,
+      "produced": 1,
+      "target": 1,
+      "uploaded": 0,
+      "publish_mode": "skipped (--no-upload)",
+      "providers": [
+        "template"
+      ],
+      "tts_engines": [
+        "piper"
+      ],
+      "quota_used": 0,
+      "failures": 1,
+      "demo": true
+    },
+    {
+      "date": "2026-10-11",
+      "started": "2026-10-11T11:47:12+05:30",
+      "finished": "2026-10-11T11:53:36+05:30",
+      "elapsed_minutes": 6.39827654666733,
+      "budget_minutes": 115.0,
+      "produced": 2,
+      "target": 2,
+      "uploaded": 0,
+      "publish_mode": "skipped (--no-upload)",
+      "providers": [
+        "groq"
+      ],
+      "tts_engines": [
+        "piper"
+      ],
+      "quota_used": 0,
+      "failures": 0,
+      "demo": true
+    },
+    {
+      "date": "2026-10-11",
+      "started": "2026-10-11T11:55:19+05:30",
+      "finished": "2026-10-11T11:55:19+05:30",
+      "elapsed_minutes": 3.606166768198212e-05,
+      "budget_minutes": 115.0,
+      "produced": 0,
+      "target": 1,
+      "uploaded": 0,
+      "publish_mode": "skipped (--no-upload)",
+      "providers": [],
+      "tts_engines": [],
+      "quota_used": 0,
+      "failures": 0,
+      "demo": false
+    },
+    {
+      "date": "2026-10-11",
+      "started": "2026-10-11T11:55:51+05:30",
+      "finished": "2026-10-11T12:01:05+05:30",
+      "elapsed_minutes": 5.2289053716658,
+      "budget_minutes": 115.0,
+      "produced": 1,
+      "target": 1,
+      "uploaded": 0,
+      "publish_mode": "skipped (--no-upload)",
+      "providers": [
+        "groq"
+      ],
+      "tts_engines": [
+        "piper"
+      ],
+      "quota_used": 0,
+      "failures": 0,
+      "demo": false
+    }
+  ],
+  "quota": {},
+  "schedule": [],
+  "failed_topics": {
+    "d09c87ea160471f56d846441449944f04e97fed5": 1
+  }
+}

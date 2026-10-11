@@ -1,0 +1,124 @@
+# Tech Shorts Factory - main settings
+# Environment variables override a few of these (see .env.example and shorts_factory/config.py).
+
+project_name: "Tech Shorts Factory"
+timezone: "Asia/Kolkata"
+daily_target: 5
+# Hard stop for a daily run. The GitHub workflow uses 125 min so the report still gets written.
+max_runtime_minutes: 115
+# Do not start producing another video when less than this remains.
+per_video_reserve_minutes: 7
+# Keep this much time for uploads + report at the end of the run.
+upload_reserve_minutes: 8
+
+video:
+  width: 1080
+  height: 1920
+  fps: 30
+  min_seconds: 25
+  max_seconds: 59
+  crf: 21
+  preset: veryfast
+  lead_in_seconds: 0.5       # silence before the first narration
+  scene_gap_seconds: 0.35    # pause between scenes
+  tail_seconds: 1.0          # hold after the last narration
+  transition_seconds: 0.4
+  # Visual themes rotate per video. Options: neon, blueprint, voxel, sunset, terminal
+  themes: [neon, voxel, blueprint, sunset, terminal]
+
+brand:
+  channel_name: "Tech Shorts"      # <- change to your channel name
+  handle: "@yourhandle"            # <- change to your handle
+  cta: "Follow for a new tech short every day"
+  font_candidates_bold:
+    - assets/fonts/Bold.ttf
+    - C:/Windows/Fonts/segoeuib.ttf
+    - C:/Windows/Fonts/arialbd.ttf
+    - /usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf
+    - /usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf
+  font_candidates_regular:
+    - assets/fonts/Regular.ttf
+    - C:/Windows/Fonts/segoeui.ttf
+    - C:/Windows/Fonts/arial.ttf
+    - /usr/share/fonts/truetype/dejavu/DejaVuSans.ttf
+    - /usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf
+  font_candidates_mono:
+    - assets/fonts/Mono.ttf
+    - C:/Windows/Fonts/consola.ttf
+    - C:/Windows/Fonts/cour.ttf
+    - /usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf
+    - /usr/share/fonts/truetype/liberation/LiberationMono-Regular.ttf
+
+llm:
+  # Tried in order; "template" is the always-available deterministic writer.
+  providers: [groq, ollama, github_models, gemini, openrouter, template]
+  groq_model: "openai/gpt-oss-120b"
+  groq_fallback_model: "openai/gpt-oss-20b"
+  ollama_model: "llama3.1:8b"
+  github_model: "openai/gpt-4o-mini"
+  gemini_model: "gemini-2.0-flash"
+  openrouter_model: "meta-llama/llama-3.3-70b-instruct:free"
+  timeout_seconds: 90
+  max_attempts_per_topic: 2
+  max_output_tokens: 3500
+  temperature: 0.8
+
+tts:
+  # Tried in order. piper = offline open source (default). groq = Orpheus via Groq (needs terms
+  # acceptance in the Groq console). edge = Microsoft Edge read-aloud (unofficial endpoint, opt-in).
+  # sapi = Windows built-in voices (Windows only, last resort).
+  engines: [piper, groq, sapi, edge]
+  piper_voice: "en_US-lessac-medium"
+  piper_length_scale: 0.95           # <1 = faster speech
+  groq_tts_model: "canopylabs/orpheus-v1-english"
+  groq_tts_voice: "troy"
+  edge_voice: "en-US-ChristopherNeural"
+  sample_rate: 48000
+  words_per_minute_estimate: 165
+
+captions:
+  # Word timestamps from Groq Whisper when available, otherwise proportional timing.
+  use_whisper_alignment: true
+  whisper_model: "whisper-large-v3-turbo"
+  max_words_per_chunk: 4
+  max_chars_per_chunk: 24
+
+research:
+  news_max_age_days: 7
+  candidates: 14
+  min_summary_chars: 140
+  dedupe_days: 120
+  title_similarity_threshold: 0.78
+  max_per_source: 2
+  verify_urls: true
+  enrich_articles: true          # fetch the article page for a text excerpt when the feed summary is thin
+  request_timeout_seconds: 15
+
+qc:
+  strict_numbers: true
+  max_unverified_numbers: 1
+  min_file_size_kb: 300
+  min_rms_dbfs: -35
+
+music:
+  enabled: true
+  gain_db: -24
+
+youtube:
+  enabled: true
+  # private  -> uploads stay private (test mode, default)
+  # unlisted -> uploads are unlisted
+  # scheduled-> private now, auto-published at the next slot (requires ALLOW_PUBLIC_SCHEDULING=true)
+  publish_mode: private
+  category_id: "28"              # Science & Technology
+  default_language: "en"
+  schedule_slots_local: ["09:00", "12:00", "15:00", "18:00", "21:00"]
+  schedule_min_lead_minutes: 60
+  daily_quota_budget: 9000       # YouTube Data API default quota is 10000 units/day
+  upload_cost_units: 1600
+  upload_captions: false         # +400 units per video; off to keep 5 uploads within quota
+  made_for_kids: false
+  declare_synthetic_media: true
+  description_footer: |
+    This Short was produced by an automated pipeline: AI-written script, synthetic (text-to-speech)
+    narration and generated motion graphics. Sources are listed above.

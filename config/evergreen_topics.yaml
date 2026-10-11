@@ -1,0 +1,219 @@
+# Evergreen topics used when the day's news does not yield enough strong, verified candidates.
+# Each entry has a canonical source URL and a factual summary the script writer must stay within.
+topics:
+  - title: "Why transformers replaced recurrent networks"
+    category: "AI concepts"
+    url: "https://arxiv.org/abs/1706.03762"
+    summary: >
+      The 2017 paper "Attention Is All You Need" introduced the Transformer, a neural network that
+      processes every token in a sequence in parallel using self-attention instead of reading
+      tokens one by one like recurrent networks. Parallelism made training on GPUs far faster, and
+      attention lets every word look at every other word directly, so long-range relationships are
+      easier to learn. Nearly all modern large language models are Transformer variants.
+  - title: "Moore's law: the prediction that shaped 60 years of chips"
+    category: "Computer science"
+    url: "https://en.wikipedia.org/wiki/Moore%27s_law"
+    summary: >
+      In 1965 Gordon Moore observed that the number of transistors on an integrated circuit was
+      doubling roughly every year, later revised to about every two years. The trend held for
+      decades and drove exponential gains in computing. Transistor features are now measured in
+      nanometers, and continued progress relies on 3D stacking, chiplets and new materials as
+      shrinking alone gets harder and more expensive.
+  - title: "How public-key cryptography lets strangers share secrets"
+    category: "Computer science"
+    url: "https://en.wikipedia.org/wiki/Public-key_cryptography"
+    summary: >
+      Public-key cryptography uses a pair of mathematically linked keys. Anyone can encrypt a
+      message with your public key, but only your private key can decrypt it. Introduced publicly
+      by Diffie and Hellman in 1976 and made practical by RSA in 1977, it underpins HTTPS, secure
+      messaging and digital signatures, letting two parties who have never met communicate
+      securely over an open network.
+  - title: "The halting problem: a question no program can answer"
+    category: "Computer science"
+    url: "https://en.wikipedia.org/wiki/Halting_problem"
+    summary: >
+      In 1936 Alan Turing proved that no general algorithm can decide, for every possible program
+      and input, whether that program eventually stops or runs forever. The proof works by
+      contradiction: if such a decider existed, you could build a program that halts exactly when
+      the decider says it does not. The result sets a hard limit on what computers can ever
+      compute, no matter how fast they become.
+  - title: "What a token actually is in a large language model"
+    category: "AI concepts"
+    url: "https://platform.openai.com/tokenizer"
+    summary: >
+      Language models do not read letters or whole words. Text is split into tokens, which are
+      common chunks of characters learned from data; a token is often a word piece, and roughly
+      four characters of English text on average. The model predicts the next token, one at a
+      time. Tokenization explains why models struggle with counting letters, why unusual words
+      cost more and why context windows are measured in tokens rather than words.
+  - title: "Why floating point says 0.1 + 0.2 is not 0.3"
+    category: "Programming"
+    url: "https://en.wikipedia.org/wiki/IEEE_754"
+    summary: >
+      Most programming languages store decimals as IEEE 754 binary floating point. Many simple
+      decimal fractions such as 0.1 cannot be represented exactly in binary, just as one third
+      cannot be written exactly in decimal. The tiny rounding errors add up, so 0.1 + 0.2 produces
+      0.30000000000000004 in languages like JavaScript and Python. Financial software avoids this
+      by using integers of the smallest unit or decimal types.
+  - title: "The birthday paradox behind hash collisions"
+    category: "Computer science"
+    url: "https://en.wikipedia.org/wiki/Birthday_problem"
+    summary: >
+      In a room of just 23 people there is about a 50 percent chance two share a birthday, far
+      lower than most people guess. The same math governs hash functions: collisions become
+      likely after roughly the square root of the number of possible outputs. That is why a
+      128-bit hash offers only about 64 bits of collision resistance, and why secure systems use
+      256-bit hashes like SHA-256.
+  - title: "How GPS satellites must correct for Einstein's relativity"
+    category: "Technology facts"
+    url: "https://en.wikipedia.org/wiki/Error_analysis_for_the_Global_Positioning_System"
+    summary: >
+      GPS receivers compute position by timing signals from satellites. The satellite clocks run
+      faster than clocks on Earth because of weaker gravity (general relativity) and slower because
+      of their orbital speed (special relativity). The net effect is about 38 microseconds per
+      day. Without correcting for it, position errors would grow by roughly 10 kilometers per day,
+      so the system is deliberately tuned to compensate.
+  - title: "Why neural networks need non-linear activation functions"
+    category: "AI concepts"
+    url: "https://en.wikipedia.org/wiki/Activation_function"
+    summary: >
+      Stacking linear layers without an activation function collapses into a single linear
+      transformation, no matter how many layers you add. Non-linear functions such as ReLU,
+      sigmoid or GELU between layers let a network bend and fold its input space, which is what
+      allows deep networks to approximate complex functions. ReLU, which simply zeroes negative
+      values, became popular because it is cheap and avoids vanishing gradients.
+  - title: "The Y2K bug and why two digits nearly broke the world"
+    category: "Technology facts"
+    url: "https://en.wikipedia.org/wiki/Year_2000_problem"
+    summary: >
+      To save scarce memory, early software stored years as two digits, so 1999 was "99". When
+      the year 2000 arrived, such systems could interpret "00" as 1900, breaking date math in
+      banking, utilities and scheduling. Governments and companies spent an estimated several
+      hundred billion dollars worldwide fixing code in the late 1990s, and the rollover passed
+      with only scattered failures.
+  - title: "How Git stores your history as a graph of hashes"
+    category: "Programming"
+    url: "https://git-scm.com/book/en/v2/Git-Internals-Git-Objects"
+    summary: >
+      Git is a content-addressed store. Every file, directory tree and commit is saved as an object
+      named by the SHA-1 hash of its contents. A commit points to a tree and to its parent
+      commits, forming a directed acyclic graph. Because names are hashes, identical content is
+      stored once and any corruption or tampering changes the hash, which is why Git history is
+      hard to alter silently.
+  - title: "What a context window really limits"
+    category: "AI concepts"
+    url: "https://en.wikipedia.org/wiki/Large_language_model"
+    summary: >
+      A language model's context window is the maximum number of tokens it can attend to at once,
+      covering both the prompt and the generated reply. Anything outside the window is invisible to
+      the model. Self-attention cost grows with the square of the sequence length, which is why
+      long windows are expensive and why techniques like retrieval, summarization and sparse
+      attention are used to work around the limit.
+  - title: "The first computer bug was a real moth"
+    category: "Technology facts"
+    url: "https://en.wikipedia.org/wiki/Software_bug#History"
+    summary: >
+      In 1947 operators of the Harvard Mark II electromechanical computer found a moth trapped in
+      a relay and taped it into the logbook with the note "first actual case of bug being found".
+      The term bug for an engineering fault predates computers, with Thomas Edison using it in the
+      1870s, but the moth story popularized it in computing. The logbook page is preserved at the
+      Smithsonian.
+  - title: "Why quicksort is fast even though it can be slow"
+    category: "Computer science"
+    url: "https://en.wikipedia.org/wiki/Quicksort"
+    summary: >
+      Quicksort picks a pivot, partitions the array into elements smaller and larger than the
+      pivot, and recurses. On average it runs in n log n time with excellent cache behaviour, which
+      is why it dominates in practice. Its worst case is quadratic when pivots are consistently
+      poor, such as already-sorted input with a naive pivot choice, so real implementations pick
+      random or median-of-three pivots and switch to other algorithms for small partitions.
+  - title: "How diffusion models paint images out of noise"
+    category: "AI concepts"
+    url: "https://arxiv.org/abs/2006.11239"
+    summary: >
+      Diffusion models are trained by gradually adding random noise to images and teaching a
+      neural network to predict and remove that noise. At generation time the process runs in
+      reverse: start from pure noise and denoise step by step, guided by a text prompt, until an
+      image emerges. The 2020 paper on denoising diffusion probabilistic models made the approach
+      practical and it now powers most image generators.
+  - title: "Why the internet still runs on a protocol from 1981"
+    category: "Technology facts"
+    url: "https://en.wikipedia.org/wiki/IPv4_address_exhaustion"
+    summary: >
+      IPv4, standardized in 1981, uses 32-bit addresses, allowing about 4.3 billion unique
+      addresses. That seemed enormous, but the top-level pool ran out in 2011. The successor IPv6
+      uses 128-bit addresses, enough for roughly 340 undecillion devices, yet adoption has been
+      gradual, so the internet relies heavily on address sharing techniques like NAT to keep IPv4
+      working.
+  - title: "What CAPTCHAs quietly taught machines"
+    category: "Technology facts"
+    url: "https://en.wikipedia.org/wiki/ReCAPTCHA"
+    summary: >
+      reCAPTCHA, launched in 2007 and acquired by Google in 2009, showed users distorted words that
+      optical character recognition had failed to read. Humans solving them helped digitize books
+      and old newspaper archives. Later versions asked users to identify street signs and objects
+      in photos, producing labelled data useful for computer vision, while modern versions mostly
+      judge behaviour in the background.
+  - title: "Why your program is slow: the cost of a cache miss"
+    category: "Programming"
+    url: "https://en.wikipedia.org/wiki/CPU_cache"
+    summary: >
+      A modern CPU can execute instructions in well under a nanosecond, but fetching data from main
+      memory can take around 100 nanoseconds. Small, fast caches sit between the processor and
+      memory to hide that gap. Code that walks memory sequentially, like an array, stays in cache
+      and runs fast; code that jumps around, like a linked list, keeps missing the cache and can be
+      many times slower even with the same number of operations.
+  - title: "How one bit flip from space can crash a computer"
+    category: "Technology facts"
+    url: "https://en.wikipedia.org/wiki/Soft_error"
+    summary: >
+      Cosmic rays and radioactive impurities in chip packaging occasionally flip a single bit in
+      memory, called a soft error. Most consumer machines have no protection, so a flip can corrupt
+      data or crash a program. Servers and spacecraft use error-correcting code memory that detects
+      and fixes single-bit errors, and critical systems may run redundant hardware that votes on
+      results.
+  - title: "Reinforcement learning from human feedback, explained"
+    category: "AI concepts"
+    url: "https://arxiv.org/abs/2203.02155"
+    summary: >
+      Raw language models predict text; they are not trained to be helpful. In reinforcement
+      learning from human feedback, humans compare pairs of model answers, a reward model learns
+      to predict those preferences, and the language model is then optimized to score well on the
+      reward model. The 2022 InstructGPT paper showed this made models follow instructions far
+      better than much larger base models.
+  - title: "Why UTF-8 won the encoding wars"
+    category: "Programming"
+    url: "https://en.wikipedia.org/wiki/UTF-8"
+    summary: >
+      UTF-8, designed by Ken Thompson and Rob Pike in 1992, encodes every Unicode character using
+      one to four bytes. It is backwards compatible with ASCII, so old English text is already
+      valid UTF-8, and it is self-synchronizing, meaning a decoder can find character boundaries
+      anywhere in a stream. These properties made it the dominant encoding of the web, used by
+      the vast majority of websites.
+  - title: "The Turing test and what it was really about"
+    category: "AI concepts"
+    url: "https://en.wikipedia.org/wiki/Turing_test"
+    summary: >
+      In his 1950 paper "Computing Machinery and Intelligence", Alan Turing proposed an imitation
+      game: a judge converses by text with a human and a machine and tries to tell which is
+      which. Turing used it to sidestep the vague question "can machines think?" Modern chatbots
+      can fool judges in short conversations, which has led researchers to argue the test measures
+      human gullibility as much as machine intelligence.
+  - title: "How error-correcting codes let CDs survive scratches"
+    category: "Computer science"
+    url: "https://en.wikipedia.org/wiki/Reed%E2%80%93Solomon_error_correction"
+    summary: >
+      Reed-Solomon codes, invented in 1960, add redundant symbols to data so that a decoder can
+      reconstruct the original even when many symbols are destroyed. Compact discs interleave
+      Reed-Solomon coded data so a scratch that wipes out a contiguous stretch of the disc only
+      removes small pieces of many blocks, each of which can be repaired. The same family of codes
+      protects QR codes, DVDs and deep-space transmissions.
+  - title: "Why passwords are stored as salted hashes"
+    category: "Computer science"
+    url: "https://en.wikipedia.org/wiki/Salt_(cryptography)"
+    summary: >
+      Well-built systems never store passwords. They store the output of a slow one-way hash
+      function applied to the password plus a random salt unique to each user. The salt means two
+      users with the same password get different hashes and attackers cannot use precomputed
+      tables. Deliberately slow algorithms such as bcrypt, scrypt and Argon2 make guessing
+      billions of passwords per second impractical even after a database leak.

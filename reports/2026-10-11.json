@@ -1,0 +1,135 @@
+{
+  "run": {
+    "date": "2026-10-11",
+    "started": "2026-10-11T11:55:51+05:30",
+    "finished": "2026-10-11T12:01:05+05:30",
+    "elapsed_minutes": 5.2289053716658,
+    "budget_minutes": 115.0,
+    "produced": 1,
+    "target": 1,
+    "uploaded": 0,
+    "publish_mode": "skipped (--no-upload)",
+    "providers": [
+      "groq"
+    ],
+    "tts_engines": [
+      "piper"
+    ],
+    "quota_used": 0,
+    "failures": 0,
+    "demo": false
+  },
+  "videos": [
+    {
+      "id": "2026-10-11-01-8c3b302e",
+      "date": "2026-10-11",
+      "title": "When AI Says No: The Hidden Risks Behind Refusals and Weight‑Loss Drugs",
+      "topic_id": "8c3b302e704e63b0df86642633f74738c22b91d6",
+      "topic_title": "The Download: AI’s refusal problem and weight-loss drug side effects",
+      "source": "MIT Technology Review",
+      "sources": [
+        "https://www.technologyreview.com/2026/10/09/1146250/the-download-ai-refusal-problem-weight-loss-drug-side-effects/"
+      ],
+      "theme": "neon",
+      "provider": "groq",
+      "tts_engine": "piper",
+      "duration": 48.82,
+      "path": "C:\\Users\\ShivaniKinagi\\OneDrive - Trinamix Systems Pvt Ltd\\Desktop\\project\\voice-app\\trial\\output\\2026-10-11\\01-the-download-ai-s-refusal-problem-and-weight-los\\video.mp4",
+      "srt": "C:\\Users\\ShivaniKinagi\\OneDrive - Trinamix Systems Pvt Ltd\\Desktop\\project\\voice-app\\trial\\output\\2026-10-11\\01-the-download-ai-s-refusal-problem-and-weight-los\\captions.srt",
+      "captions": 38,
+      "caption_method": "whisper",
+      "status": "rendered",
+      "qc_warnings": [],
+      "created": "2026-10-11T12:01:05",
+      "render_seconds": 163
+    }
+  ],
+  "failures": [],
+  "candidates": [
+    {
+      "title": "The Download: AI’s refusal problem and weight-loss drug side effects",
+      "source": "MIT Technology Review",
+      "kind": "news",
+      "url": "https://www.technologyreview.com/2026/10/09/1146250/the-download-ai-refusal-problem-weight-loss-drug-side-effects/"
+    },
+    {
+      "title": "We’re putting too much faith in AI’s ability to say no",
+      "source": "MIT Technology Review",
+      "kind": "news",
+      "url": "https://www.technologyreview.com/2026/10/09/1145728/we-are-putting-too-much-faith-in-ai-to-say-no/"
+    },
+    {
+      "title": "Dwarf Fortress uses version control now",
+      "source": "Simon Willison",
+      "kind": "news",
+      "url": "https://simonwillison.net/2026/Oct/11/dwarf-fortress/"
+    },
+    {
+      "title": "Satya Nadella says we should assume all AI models are ‘compromised’",
+      "source": "The Verge - AI",
+      "kind": "news",
+      "url": "https://www.theverge.com/ai-artificial-intelligence/1009337/satya-nadella-says-we-should-assume-all-ai-models-are-compromised"
+    },
+    {
+      "title": "A new feature for my blog, built using my voice",
+      "source": "Simon Willison",
+      "kind": "news",
+      "url": "https://simonwillison.net/2026/Oct/9/built-using-my-voice/"
+    },
+    {
+      "title": "Anthropic is cutting off its internal evaluations from the internet",
+      "source": "The Verge - AI",
+      "kind": "news",
+      "url": "https://www.theverge.com/ai-artificial-intelligence/1009286/anthropic-is-cutting-off-its-internal-evaluations-from-the-internet"
+    },
+    {
+      "title": "Secret protection must scale with software",
+      "source": "GitHub Blog - AI",
+      "kind": "news",
+      "url": "https://github.blog/ai-and-ml/github-copilot/secret-protection-must-scale-with-software/"
+    },
+    {
+      "title": "How Does Life Unfold? A Landscape Metaphor Comes Into Its Own.",
+      "source": "Quanta Magazine",
+      "kind": "concepts",
+      "url": "https://www.quantamagazine.org/how-does-life-unfold-a-landscape-metaphor-comes-into-its-own-20261009/"
+    },
+    {
+      "title": "Agent Lightning v1.0: A 3,500-Line Lightweight Agentic RL Framework for Training Agents with Real Harnesses",
+      "source": "Microsoft Research Blog",
+      "kind": "research",
+      "url": "https://www.microsoft.com/en-us/research/blog/agent-lightning-v1-0-a-3500-line-lightweight-agentic-rl-framework-for-training-agents-with-real-harnesses/"
+    },
+    {
+      "title": "Sophos cuts threat investigation time by 96% with OpenAI Daybreak",
+      "source": "OpenAI News",
+      "kind": "news",
+      "url": "https://openai.com/index/sophos"
+    },
+    {
+      "title": "What AI gets wrong and what failure teaches us",
+      "source": "Microsoft Research Blog",
+      "kind": "research",
+      "url": "https://www.microsoft.com/en-us/research/podcast/what-ai-gets-wrong-and-what-failure-teaches-us/"
+    },
+    {
+      "title": "Asana cuts model costs 76x in browser tests with GPT-6.1 Sol",
+      "source": "OpenAI News",
+      "kind": "news",
+      "url": "https://openai.com/index/asana-browser-agent"
+    },
+    {
+      "title": "As AI Closed In on ‘Unique Games’ Proof, Researchers Raced to Beat the Machines",
+      "source": "Quanta Magazine",
+      "kind": "concepts",
+      "url": "https://www.quantamagazine.org/as-ai-closed-in-on-unique-games-proof-researchers-raced-to-beat-the-machines-20261007/"
+    },
+    {
+      "title": "Impactful scheduling for GPU clusters",
+      "source": "Hugging Face Blog",
+      "kind": "news",
+      "url": "https://huggingface.co/blog/allenai/impactful-scheduling"
+    }
+  ],
+  "warnings": []
+}

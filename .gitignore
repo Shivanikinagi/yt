@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+secrets/
+!secrets/README.md
+output/
+models/
+*.log
+.pytest_cache/
+# state and reports ARE committed so the cloud runner has persistent memory
+!state/
+!reports/
