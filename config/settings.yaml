@@ -27,8 +27,8 @@ video:
   themes: [neon, voxel, blueprint, sunset, terminal]
 
 brand:
-  channel_name: "Tech Shorts"      # <- change to your channel name
-  handle: "@yourhandle"            # <- change to your handle
+  channel_name: "TechDecoded"      # <- change to your channel name
+  handle: "@TechDecoded60-y6b"            # <- change to your handle
   cta: "Follow for a new tech short every day"
   font_candidates_bold:
     - assets/fonts/Bold.ttf
