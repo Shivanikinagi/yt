@@ -1,49 +1,51 @@
-# Demo run 2026-10-12
+# Daily run 2026-10-12
 
-- Started: 2026-10-12T10:34:52+05:30  
-- Finished: 2026-10-12T10:38:50+05:30  
-- Elapsed: 4.0 min (budget 115 min)  
-- Produced: 1 / target 1  
-- Uploaded: 0  
-- Publish mode: skipped (--no-upload)  
+- Started: 2026-10-12T11:35:06+05:30  
+- Finished: 2026-10-12T11:40:10+05:30  
+- Elapsed: 5.1 min (budget 115 min)  
+- Produced: 5 / target 5  
+- Uploaded: 5  
+- Publish mode: private  
 - LLM providers used: groq  
 - TTS engines used: piper  
-- YouTube quota units used today: 0  
+- YouTube quota units used today: 8000  
 - Recurring cost of this run: ₹0 (free tiers / local compute only)
 
 ## Videos
 
 | # | Title | Duration | Theme | Status | YouTube | Publish at | QC warnings |
 |---|---|---|---|---|---|---|---|
-| 1 | How UTF-8 Became the Web’s Default Encoding | 50s | neon | rendered | - | - | - |
+| 1 | Can Faster AI Decisions Actually Slow Down Your Agent? | 49s | neon | uploaded | [oybHTlmXp_A](https://youtube.com/shorts/oybHTlmXp_A) | - | - |
+| 2 | Why XAI explanations often mislead you more than they help | 56s | voxel | uploaded | [LvnMumuqCiQ](https://youtube.com/shorts/LvnMumuqCiQ) | - | - |
+| 3 | Why Algebraic Integer Quantization could reshape AI hardware | 54s | blueprint | uploaded | [zgofNVH-y1k](https://youtube.com/shorts/zgofNVH-y1k) | - | - |
+| 4 | Trying Local AI on My Mac: Exciting, Overwhelming, Frustrating | 48s | sunset | uploaded | [LFZFaOroh_A](https://youtube.com/shorts/LFZFaOroh_A) | - | - |
+| 5 | Silicon Valley Backs Trump's Push to Call AI 'Super Intelligence' | 43s | terminal | uploaded | [d5vqE2seYrs](https://youtube.com/shorts/d5vqE2seYrs) | - | - |
+
+## Failures
+
+- **Towards Easier-to-Tune Training Algorithms: New Results from AlgoPerf** — render: render: video too long: 60.4s > 59s
 
 ## Topics considered
 
-- Why UTF-8 won the encoding wars (Evergreen library, evergreen)
-- Why floating point says 0.1 + 0.2 is not 0.3 (Evergreen library, evergreen)
-- How diffusion models paint images out of noise (Evergreen library, evergreen)
-- Why your program is slow: the cost of a cache miss (Evergreen library, evergreen)
-- How error-correcting codes let CDs survive scratches (Evergreen library, evergreen)
-- How public-key cryptography lets strangers share secrets (Evergreen library, evergreen)
-- The halting problem: a question no program can answer (Evergreen library, evergreen)
-- How GPS satellites must correct for Einstein's relativity (Evergreen library, evergreen)
-- Why quicksort is fast even though it can be slow (Evergreen library, evergreen)
-- How Git stores your history as a graph of hashes (Evergreen library, evergreen)
-- The first computer bug was a real moth (Evergreen library, evergreen)
-- Reinforcement learning from human feedback, explained (Evergreen library, evergreen)
-- The birthday paradox behind hash collisions (Evergreen library, evergreen)
-- Why transformers replaced recurrent networks (Evergreen library, evergreen)
-- What CAPTCHAs quietly taught machines (Evergreen library, evergreen)
-- Why neural networks need non-linear activation functions (Evergreen library, evergreen)
-- The Turing test and what it was really about (Evergreen library, evergreen)
-- What a token actually is in a large language model (Evergreen library, evergreen)
-- Why the internet still runs on a protocol from 1981 (Evergreen library, evergreen)
-- Why passwords are stored as salted hashes (Evergreen library, evergreen)
-- Moore's law: the prediction that shaped 60 years of chips (Evergreen library, evergreen)
-- The Y2K bug and why two digits nearly broke the world (Evergreen library, evergreen)
-- How one bit flip from space can crash a computer (Evergreen library, evergreen)
-- What a context window really limits (Evergreen library, evergreen)
+- When Faster Decisions Do Not Make Better Agents: An Empirical Study of Jev in Agent Workflows (arXiv cs.AI, research)
+- Faithfulness Without Anchors: A Position Paper on the Structural Misalignments of Explainable AI Faithfulness Metrics for Feature Importance (arXiv cs.AI, research)
+- Towards Easier-to-Tune Training Algorithms: New Results from AlgoPerf (arXiv cs.LG, research)
+- Algebraic Integer Quantization for Machine Learning Applications (arXiv cs.LG, research)
+- Learning to use local AI is exciting, overwhelming, and frustrating (The Verge - AI, news)
+- Silicon Valley is falling in line with Trump’s attempt to rename AI (The Verge - AI, news)
+- Dwarf Fortress uses version control now (Simon Willison, news)
+- We’re putting too much faith in AI’s ability to say no (MIT Technology Review, news)
+- Job titles of the future: Delivery drone air traffic controller (MIT Technology Review, news)
+- A new feature for my blog, built using my voice (Simon Willison, news)
+- How Does Life Unfold? A Landscape Metaphor Comes Into Its Own. (Quanta Magazine, concepts)
+- Secret protection must scale with software (GitHub Blog - AI, news)
+- Agent Lightning v1.0: A 3,500-Line Lightweight Agentic RL Framework for Training Agents with Real Harnesses (Microsoft Research Blog, research)
+- PC shipments fall 20.1 percent in “sharpest decline” since Q1 2023 (Ars Technica - Technology Lab, news)
 
 ## Sources used
 
-- How UTF-8 Became the Web’s Default Encoding: https://en.wikipedia.org/wiki/UTF-8
+- Can Faster AI Decisions Actually Slow Down Your Agent?: https://arxiv.org/abs/2610.13092
+- Why XAI explanations often mislead you more than they help: https://arxiv.org/abs/2610.12493
+- Why Algebraic Integer Quantization could reshape AI hardware: https://arxiv.org/abs/2610.12494
+- Trying Local AI on My Mac: Exciting, Overwhelming, Frustrating: https://www.theverge.com/ai-artificial-intelligence/1008484/learning-local-ai-hermes-qwen-model-mac-studio-testing-diary-progress
+- Silicon Valley Backs Trump's Push to Call AI 'Super Intelligence': https://www.theverge.com/ai-artificial-intelligence/1009406/silicon-valley-is-falling-in-line-with-trumps-attempt-to-rename-ai
