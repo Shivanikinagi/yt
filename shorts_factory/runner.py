@@ -13,7 +13,8 @@ from .research import Topic, evergreen_topics, select_candidates
 from .scripting import VideoScript, template_script, write_script
 from .state import State
 from .tts import synthesize, tempo_adjust
-from .utils import OUTPUT_DIR, PipelineError, TimeBudgetExceeded, now_local, slugify, today_str, write_json
+from .utils import (OUTPUT_DIR, PipelineError, TimeBudgetExceeded, abs_path, now_local, rel_path, slugify,
+                    today_str, write_json)
 
 
 class Deadline:
@@ -121,7 +122,7 @@ def produce_video(topic: Topic, index: int, date: str, cfg, logger, state: State
             "id": f"{date}-{index + 1:02d}-{topic.id[:8]}", "date": date, "title": script.title,
             "topic_id": topic.id, "topic_title": topic.title, "source": topic.source, "sources": script.sources,
             "theme": theme, "provider": script.provider, "tts_engine": audio[0].engine,
-            "duration": round(result["duration"], 2), "path": result["path"], "srt": result["srt"],
+            "duration": round(result["duration"], 2), "path": rel_path(result["path"]), "srt": rel_path(result["srt"]),
             "captions": result["captions"], "caption_method": result["caption_method"],
             "status": "rendered", "qc_warnings": qc_s["warnings"] + qc_v["warnings"],
             "created": datetime.now().isoformat(timespec="seconds"), "render_seconds": round(result["render_seconds"]),
@@ -266,7 +267,7 @@ def run_daily(cfg, logger, limit: int | None = None, no_upload: bool = False, de
                     break
                 script = scripts.get(v["id"])
                 if script is None:
-                    sp = Path(v["path"]).parent / "script.json"
+                    sp = abs_path(v["path"]).parent / "script.json"
                     if not sp.exists():
                         continue
                     from .utils import read_json
@@ -299,7 +300,7 @@ def run_daily(cfg, logger, limit: int | None = None, no_upload: bool = False, de
     state.add_run(run)
     state.save()
     path = write_report(run, todays if not demo else produced, failures, cand_dicts, warnings)
-    logger.info("report: %s", path)
+    logger.info("report: %s", rel_path(path))
     logger.info("=== done: produced %d, uploaded %d, failures %d, %.1f min ===", len(produced), uploaded,
                 len(failures), deadline.elapsed() / 60)
     return 0 if (produced or (existing and not demo)) else 2

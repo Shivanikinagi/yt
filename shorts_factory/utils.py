@@ -57,6 +57,35 @@ def setup_logging(name: str = "run", level: int = logging.INFO) -> logging.Logge
     return logger
 
 
+# ----------------------------------------------------------------------------- project-relative paths
+def rel_path(path) -> str:
+    """Store paths relative to the project root (forward slashes), so state and reports never
+    contain machine-specific folders such as the user's home or OneDrive directory."""
+    for candidate in (Path(path), abs_path(str(path))):
+        try:
+            return candidate.resolve().relative_to(ROOT.resolve()).as_posix()
+        except ValueError:
+            continue
+    return Path(path).as_posix()
+
+
+def abs_path(stored: str) -> Path:
+    """Resolve a stored path. Accepts project-relative paths and legacy absolute ones; a legacy
+    absolute path from another machine is re-rooted at its `output/` segment."""
+    s = str(stored)
+    # absolute in either OS style (a Linux CI path must be recognised on Windows and vice versa)
+    is_abs = s.startswith(("/", "\\")) or re.match(r"^[A-Za-z]:[\\/]", s) is not None
+    if not is_abs:
+        return ROOT / s
+    p = Path(s)
+    if p.exists():
+        return p
+    parts = re.split(r"[\\/]+", s)
+    if "output" in parts:
+        return ROOT.joinpath(*parts[parts.index("output"):])
+    return p
+
+
 # ----------------------------------------------------------------------------- text
 def slugify(text: str, maxlen: int = 48) -> str:
     text = re.sub(r"[^a-zA-Z0-9]+", "-", text).strip("-").lower()

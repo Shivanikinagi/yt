@@ -129,6 +129,15 @@ def test_tts_speedup_factor():
         pass
 
 
+def test_paths_are_stored_relative_and_legacy_paths_resolve():
+    from shorts_factory.utils import ROOT, abs_path, rel_path
+    p = ROOT / "output" / "2026-10-12" / "01-x" / "video.mp4"
+    assert rel_path(p) == "output/2026-10-12/01-x/video.mp4"
+    assert abs_path("output/2026-10-12/01-x/video.mp4") == p
+    legacy_ci = "/home/runner/work/yt/yt/output/2026-10-12/01-x/video.mp4"
+    assert abs_path(legacy_ci) == p
+
+
 def test_tempo_adjust_shortens_audio(tmp_path):
     import numpy as np
     from shorts_factory.tts import TTSResult, tempo_adjust

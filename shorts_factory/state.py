@@ -9,7 +9,7 @@ import difflib
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-from .utils import STATE_DIR, read_json, write_json
+from .utils import STATE_DIR, abs_path, read_json, write_json
 
 STATE_FILE = STATE_DIR / "state.json"
 
@@ -64,7 +64,8 @@ class State:
 
     def pending_uploads(self, include_demo: bool = False) -> list[dict]:
         return [v for v in self.data["videos"]
-                if v.get("status") == "rendered" and not v.get("youtube_id") and Path(v.get("path", "")).exists()
+                if v.get("status") == "rendered" and not v.get("youtube_id") and v.get("path")
+                and abs_path(v["path"]).exists()
                 and (include_demo or not v.get("demo"))]
 
     # --------------------------------------------------------------- quota
