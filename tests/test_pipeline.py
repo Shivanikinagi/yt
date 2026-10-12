@@ -129,6 +129,18 @@ def test_tts_speedup_factor():
         pass
 
 
+def test_tempo_adjust_shortens_audio(tmp_path):
+    import numpy as np
+    from shorts_factory.tts import TTSResult, tempo_adjust
+    from shorts_factory.utils import wav_duration, write_wav
+    sr = 48000
+    t = np.arange(int(sr * 4.0)) / sr
+    wav = tmp_path / "s.wav"
+    write_wav(wav, 0.3 * np.sin(2 * np.pi * 220 * t), sr)
+    res = tempo_adjust(TTSResult(wav, wav_duration(wav), "test"), 1.08, sr)
+    assert abs(res.duration - 4.0 / 1.08) < 0.1, res.duration
+
+
 def test_upload_queue_scopes_demo_uploads_to_this_run(tmp_path):
     st = State(tmp_path / "state.json")
     mp4 = tmp_path / "v.mp4"

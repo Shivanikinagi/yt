@@ -112,6 +112,17 @@ def _sapi(text: str, out: Path, cfg, logger) -> None:
 ENGINES = {"piper": _piper, "groq": _groq, "edge": _edge, "sapi": _sapi}
 
 
+def tempo_adjust(result: TTSResult, tempo: float, sr: int) -> TTSResult:
+    """Speed a narration WAV up by `tempo` (e.g. 1.05 = 5 % faster) without changing pitch.
+    Works for every engine, unlike Piper's length_scale which shortens pauses less than speech."""
+    src = Path(result.path)
+    tmp = src.with_name(src.stem + "_tempo.wav")
+    run([ffmpeg_exe(), "-y", "-hide_banner", "-loglevel", "error", "-i", str(src),
+         "-af", f"atempo={tempo:.4f}", "-ac", "1", "-ar", str(sr), "-c:a", "pcm_s16le", str(tmp)], timeout=120)
+    os.replace(tmp, src)
+    return TTSResult(src, wav_duration(src), result.engine)
+
+
 def synthesize(text: str, out_wav: Path, cfg, logger) -> TTSResult:
     out_wav = Path(out_wav)
     out_wav.parent.mkdir(parents=True, exist_ok=True)

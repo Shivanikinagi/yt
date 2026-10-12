@@ -12,7 +12,7 @@ from .report import write_report
 from .research import Topic, evergreen_topics, select_candidates
 from .scripting import VideoScript, template_script, write_script
 from .state import State
-from .tts import synthesize
+from .tts import synthesize, tempo_adjust
 from .utils import OUTPUT_DIR, PipelineError, TimeBudgetExceeded, now_local, slugify, today_str, write_json
 
 
@@ -96,6 +96,16 @@ def produce_video(topic: Topic, index: int, date: str, cfg, logger, state: State
                 deadline.check(stage)
             est = sum(a.duration for a in audio)
             logger.info("narration now %.1fs", est)
+            # Piper shortens speech more than pauses, so the first pass can still be a little long.
+            # Close the remaining gap with a pitch-preserving tempo change on the finished audio.
+            factor2 = tts_speedup_factor(est, len(audio), cfg)
+            if factor2 is not None:
+                if factor * factor2 < MIN_SPEEDUP_FACTOR:
+                    raise PipelineError(f"narration {est:.1f}s still too long after speeding up")
+                tempo = 1.0 / factor2
+                audio = [tempo_adjust(a, tempo, int(cfg.tts.sample_rate)) for a in audio]
+                est = sum(a.duration for a in audio)
+                logger.info("narration tempo x%.3f -> %.1fs", tempo, est)
 
         stage = "render"
         seed = int(topic.id[:6], 16)
