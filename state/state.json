@@ -158,6 +158,30 @@
       "privacy": "private",
       "publish_at": null,
       "mode": "private"
+    },
+    {
+      "id": "2026-10-12-01-f96a3fa2",
+      "date": "2026-10-12",
+      "title": "How UTF-8 Became the Web’s Default Encoding",
+      "topic_id": "f96a3fa2f81fb6468cfb622e75de2c29be725608",
+      "topic_title": "Why UTF-8 won the encoding wars",
+      "source": "Evergreen library",
+      "sources": [
+        "https://en.wikipedia.org/wiki/UTF-8"
+      ],
+      "theme": "neon",
+      "provider": "groq",
+      "tts_engine": "piper",
+      "duration": 49.55,
+      "path": "C:\\Users\\ShivaniKinagi\\OneDrive - Trinamix Systems Pvt Ltd\\Desktop\\project\\trial\\output\\2026-10-12\\01-why-utf-8-won-the-encoding-wars\\video.mp4",
+      "srt": "C:\\Users\\ShivaniKinagi\\OneDrive - Trinamix Systems Pvt Ltd\\Desktop\\project\\trial\\output\\2026-10-12\\01-why-utf-8-won-the-encoding-wars\\captions.srt",
+      "captions": 37,
+      "caption_method": "whisper",
+      "status": "rendered",
+      "qc_warnings": [],
+      "created": "2026-10-12T10:38:50",
+      "render_seconds": 124,
+      "demo": true
     }
   ],
   "runs": [
@@ -292,6 +316,26 @@
       "quota_used": 1600,
       "failures": 14,
       "demo": false
+    },
+    {
+      "date": "2026-10-12",
+      "started": "2026-10-12T10:34:52+05:30",
+      "finished": "2026-10-12T10:38:50+05:30",
+      "elapsed_minutes": 3.9617848250006014,
+      "budget_minutes": 115.0,
+      "produced": 1,
+      "target": 1,
+      "uploaded": 0,
+      "publish_mode": "skipped (--no-upload)",
+      "providers": [
+        "groq"
+      ],
+      "tts_engines": [
+        "piper"
+      ],
+      "quota_used": 0,
+      "failures": 0,
+      "demo": true
     }
   ],
   "quota": {
@@ -300,20 +344,6 @@
   "schedule": [],
   "failed_topics": {
     "d09c87ea160471f56d846441449944f04e97fed5": 1,
-    "f96a3fa2f81fb6468cfb622e75de2c29be725608": 1,
-    "ea95eacbd85b4f832328956f6de32a573596d995": 1,
-    "7771bfdab5372356a10959aefb0d981017b2ac39": 1,
-    "d81b2786174d57318c693c7522457a6e8c037611": 1,
-    "a6096b68ac7882f7c3b8720a70353b36b5595efe": 1,
-    "35dc91695d5dee44c75cb34865ccb277a31d276d": 1,
-    "95aa84e502289945039d1019f66669d724d0cb62": 1,
-    "b96448f5a5529676ae0ecc167e74c935a985b82a": 1,
-    "bd11689da23ff506f851e873088c089e6439a65b": 1,
-    "c7de22c7db255c599990e44f6b90d91a46504196": 1,
-    "d88308f9717685b76840cb9a4e026e14d9a642d3": 1,
-    "21ab3d58f3ee6e747fbd0d7f5627e27367677261": 1,
-    "edd58468d564448f5fe7e63ada47c987b79bf809": 1,
-    "90995f7dbc9c26746d9c1348259bf95f75d89e72": 1,
-    "c2e7917438d64d4a3a7d6f83b0f494dde4a558d0": 1
+    "f96a3fa2f81fb6468cfb622e75de2c29be725608": 1
   }
 }

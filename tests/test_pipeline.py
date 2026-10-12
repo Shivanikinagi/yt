@@ -13,7 +13,7 @@ from shorts_factory.utils import extract_json  # noqa: E402
 from shorts_factory.visuals import Renderer  # noqa: E402
 from shorts_factory.qc import check_script  # noqa: E402
 from shorts_factory.render import build_timeline  # noqa: E402
-from shorts_factory.runner import Deadline, tts_speedup_factor, upload_queue  # noqa: E402
+from shorts_factory.runner import Deadline, is_systemic_failure, tts_speedup_factor, upload_queue  # noqa: E402
 from shorts_factory.utils import PipelineError  # noqa: E402
 from shorts_factory.youtube import build_metadata, next_publish_slot  # noqa: E402
 
@@ -92,6 +92,29 @@ def test_deadline():
     import time
     time.sleep(0.02)
     assert d.remaining() < 0
+
+
+def test_finish_ffmpeg_after_stdin_closed():
+    """Regression: the cloud run failed every render with 'flush of closed file'."""
+    import subprocess
+    from shorts_factory.render import finish_ffmpeg
+    child = "import sys; sys.stdin.buffer.read(); sys.stderr.write('done'); sys.exit(3)"
+    proc = subprocess.Popen([sys.executable, "-c", child], stdin=subprocess.PIPE, stderr=subprocess.PIPE)
+    proc.stdin.write(b"x" * 1000)
+    proc.stdin.close()                      # the renderer closes stdin before finishing
+    err = finish_ffmpeg(proc, timeout=30)
+    assert proc.returncode == 3 and b"done" in err
+
+
+def test_systemic_failure_detection():
+    same = [{"topic": f"t{i}", "error": "render: ValueError: flush of closed file"} for i in range(3)]
+    assert is_systemic_failure(same)
+    assert not is_systemic_failure(same[:2])
+    mixed = same[:2] + [{"topic": "t9", "error": "script QC failed: numbers not found in source: ['42']"}]
+    assert not is_systemic_failure(mixed)
+    # durations differ between topics but it is the same failure
+    too_long = [{"topic": f"t{i}", "error": f"render: video too long: {60 + i}.5s > 59s"} for i in range(3)]
+    assert is_systemic_failure(too_long)
 
 
 def test_tts_speedup_factor():

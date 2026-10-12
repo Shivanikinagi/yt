@@ -29,6 +29,33 @@ def build_timeline(durations: list[float], cfg, squeeze: bool = False) -> list[d
     return out
 
 
+def finish_ffmpeg(proc: subprocess.Popen, timeout: float = 600) -> bytes:
+    """Close ffmpeg's stdin, wait for it to exit and return its stderr.
+
+    Popen.communicate() must not be called after stdin was closed by hand: on Linux with
+    Python <= 3.12 it flushes the closed pipe and raises "ValueError: flush of closed file"
+    (Windows and Python 3.13 tolerate it, so this only failed on the GitHub runner).
+    ffmpeg runs with -loglevel error, so stderr is tiny and reading it after exit cannot deadlock."""
+    try:
+        if proc.stdin and not proc.stdin.closed:
+            proc.stdin.close()
+    except (BrokenPipeError, OSError, ValueError):
+        pass
+    proc.stdin = None
+    err = b""
+    try:
+        if proc.stderr is not None:
+            err = proc.stderr.read() or b""
+    except (OSError, ValueError):
+        pass
+    try:
+        proc.wait(timeout=timeout)
+    except subprocess.TimeoutExpired:
+        proc.kill()
+        proc.wait()
+    return err
+
+
 def render_video(script: VideoScript, audio: list[TTSResult], out_dir: Path, cfg, logger,
                  deadline=None, seed: int = 0) -> dict:
     out_dir = Path(out_dir)
@@ -85,6 +112,7 @@ def render_video(script: VideoScript, audio: list[TTSResult], out_dir: Path, cfg
     chunk_idx = 0
     prev_last_frame = None
     scene_idx = 0
+    pipe_broken = False
     try:
         for i in range(n_frames):
             t = i / fps
@@ -103,20 +131,23 @@ def render_video(script: VideoScript, audio: list[TTSResult], out_dir: Path, cfg
             if prev_last_frame is not None and t_local < trans and scene_idx > 0:
                 from PIL import Image
                 img = Image.blend(prev_last_frame, img, t_local / trans)
-            proc.stdin.write(img.tobytes())
+            try:
+                proc.stdin.write(img.tobytes())
+            except (BrokenPipeError, OSError):
+                pipe_broken = True   # ffmpeg exited early; its stderr below says why
+                break
             if i % 90 == 0:
                 if deadline is not None:
                     deadline.check("rendering")
                 if i and i % 450 == 0:
                     logger.info("  frames %d/%d (%.1f fps)", i, n_frames, i / max(time.time() - t0, 1e-3))
+    except BaseException:
+        proc.kill()
+        raise
     finally:
-        try:
-            proc.stdin.close()
-        except Exception:
-            pass
-    _, err = proc.communicate(timeout=600)
-    if proc.returncode != 0:
-        raise PipelineError(f"ffmpeg encode failed: {err.decode('utf-8', 'replace')[-800:]}")
+        err = finish_ffmpeg(proc)
+    if proc.returncode != 0 or pipe_broken:
+        raise PipelineError(f"ffmpeg encode failed (exit {proc.returncode}): {err.decode('utf-8', 'replace')[-800:]}")
     mix_path.unlink(missing_ok=True)
     elapsed = time.time() - t0
     logger.info("rendered %s (%.1fs video in %.0fs, captions=%s)", out_mp4.name, total, elapsed, "+".join(sorted(methods)))

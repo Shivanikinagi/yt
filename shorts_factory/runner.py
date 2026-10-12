@@ -126,6 +126,22 @@ def produce_video(topic: Topic, index: int, date: str, cfg, logger, state: State
         raise PipelineError(f"{stage}: {type(e).__name__}: {e}") from e
 
 
+SYSTEMIC_FAILURE_RUN = 3
+
+
+def _error_signature(err: str) -> str:
+    import re
+    return re.sub(r"\d+(\.\d+)?", "#", err)[:120]
+
+
+def is_systemic_failure(failures: list[dict]) -> bool:
+    """True when the last few failures (for different topics) share the same error."""
+    last = failures[-SYSTEMIC_FAILURE_RUN:]
+    if len(last) < SYSTEMIC_FAILURE_RUN:
+        return False
+    return len({_error_signature(f["error"]) for f in last}) == 1 and len({f["topic"] for f in last}) == len(last)
+
+
 def upload_queue(state: State, produced: list[dict], demo: bool) -> list[dict]:
     """Videos to upload now. A normal run uploads every pending non-demo video (including ones
     rendered on earlier runs whose upload failed). `demo --upload` is a test and uploads only
@@ -201,9 +217,21 @@ def run_daily(cfg, logger, limit: int | None = None, no_upload: bool = False, de
             logger.error(str(e))
             break
         except PipelineError as e:
-            fails[topic.id] = fails.get(topic.id, 0) + 1
             failures.append({"topic": topic.title, "stage": str(e).split(":")[0], "error": str(e)[:300]})
             logger.error("[fail] %s -> %s", topic.title, str(e)[:300])
+            if is_systemic_failure(failures):
+                # the same error for several different topics is a bug or outage, not a bad topic:
+                # stop instead of burning every candidate, and do not mark these topics as failed
+                for f in failures[-SYSTEMIC_FAILURE_RUN:]:
+                    tid = next((c.id for c in candidates if c.title == f["topic"]), None)
+                    if tid and fails.get(tid):
+                        fails[tid] -= 1
+                warnings.append(f"stopped: the same error hit {SYSTEMIC_FAILURE_RUN} topics in a row "
+                                f"({str(e)[:160]}). This is a pipeline problem, not a topic problem.")
+                logger.error(warnings[-1])
+                state.save()
+                break
+            fails[topic.id] = fails.get(topic.id, 0) + 1
             state.save()
 
     # ------------------------------------------------------------------ upload

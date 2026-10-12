@@ -1,0 +1,196 @@
+{
+  "run": {
+    "date": "2026-10-12",
+    "started": "2026-10-12T10:34:52+05:30",
+    "finished": "2026-10-12T10:38:50+05:30",
+    "elapsed_minutes": 3.9617848250006014,
+    "budget_minutes": 115.0,
+    "produced": 1,
+    "target": 1,
+    "uploaded": 0,
+    "publish_mode": "skipped (--no-upload)",
+    "providers": [
+      "groq"
+    ],
+    "tts_engines": [
+      "piper"
+    ],
+    "quota_used": 0,
+    "failures": 0,
+    "demo": true
+  },
+  "videos": [
+    {
+      "id": "2026-10-12-01-f96a3fa2",
+      "date": "2026-10-12",
+      "title": "How UTF-8 Became the Web’s Default Encoding",
+      "topic_id": "f96a3fa2f81fb6468cfb622e75de2c29be725608",
+      "topic_title": "Why UTF-8 won the encoding wars",
+      "source": "Evergreen library",
+      "sources": [
+        "https://en.wikipedia.org/wiki/UTF-8"
+      ],
+      "theme": "neon",
+      "provider": "groq",
+      "tts_engine": "piper",
+      "duration": 49.55,
+      "path": "C:\\Users\\ShivaniKinagi\\OneDrive - Trinamix Systems Pvt Ltd\\Desktop\\project\\trial\\output\\2026-10-12\\01-why-utf-8-won-the-encoding-wars\\video.mp4",
+      "srt": "C:\\Users\\ShivaniKinagi\\OneDrive - Trinamix Systems Pvt Ltd\\Desktop\\project\\trial\\output\\2026-10-12\\01-why-utf-8-won-the-encoding-wars\\captions.srt",
+      "captions": 37,
+      "caption_method": "whisper",
+      "status": "rendered",
+      "qc_warnings": [],
+      "created": "2026-10-12T10:38:50",
+      "render_seconds": 124,
+      "demo": true
+    }
+  ],
+  "failures": [],
+  "candidates": [
+    {
+      "title": "Why UTF-8 won the encoding wars",
+      "source": "Evergreen library",
+      "kind": "evergreen",
+      "url": "https://en.wikipedia.org/wiki/UTF-8"
+    },
+    {
+      "title": "Why floating point says 0.1 + 0.2 is not 0.3",
+      "source": "Evergreen library",
+      "kind": "evergreen",
+      "url": "https://en.wikipedia.org/wiki/IEEE_754"
+    },
+    {
+      "title": "How diffusion models paint images out of noise",
+      "source": "Evergreen library",
+      "kind": "evergreen",
+      "url": "https://arxiv.org/abs/2006.11239"
+    },
+    {
+      "title": "Why your program is slow: the cost of a cache miss",
+      "source": "Evergreen library",
+      "kind": "evergreen",
+      "url": "https://en.wikipedia.org/wiki/CPU_cache"
+    },
+    {
+      "title": "How error-correcting codes let CDs survive scratches",
+      "source": "Evergreen library",
+      "kind": "evergreen",
+      "url": "https://en.wikipedia.org/wiki/Reed%E2%80%93Solomon_error_correction"
+    },
+    {
+      "title": "How public-key cryptography lets strangers share secrets",
+      "source": "Evergreen library",
+      "kind": "evergreen",
+      "url": "https://en.wikipedia.org/wiki/Public-key_cryptography"
+    },
+    {
+      "title": "The halting problem: a question no program can answer",
+      "source": "Evergreen library",
+      "kind": "evergreen",
+      "url": "https://en.wikipedia.org/wiki/Halting_problem"
+    },
+    {
+      "title": "How GPS satellites must correct for Einstein's relativity",
+      "source": "Evergreen library",
+      "kind": "evergreen",
+      "url": "https://en.wikipedia.org/wiki/Error_analysis_for_the_Global_Positioning_System"
+    },
+    {
+      "title": "Why quicksort is fast even though it can be slow",
+      "source": "Evergreen library",
+      "kind": "evergreen",
+      "url": "https://en.wikipedia.org/wiki/Quicksort"
+    },
+    {
+      "title": "How Git stores your history as a graph of hashes",
+      "source": "Evergreen library",
+      "kind": "evergreen",
+      "url": "https://git-scm.com/book/en/v2/Git-Internals-Git-Objects"
+    },
+    {
+      "title": "The first computer bug was a real moth",
+      "source": "Evergreen library",
+      "kind": "evergreen",
+      "url": "https://en.wikipedia.org/wiki/Software_bug#History"
+    },
+    {
+      "title": "Reinforcement learning from human feedback, explained",
+      "source": "Evergreen library",
+      "kind": "evergreen",
+      "url": "https://arxiv.org/abs/2203.02155"
+    },
+    {
+      "title": "The birthday paradox behind hash collisions",
+      "source": "Evergreen library",
+      "kind": "evergreen",
+      "url": "https://en.wikipedia.org/wiki/Birthday_problem"
+    },
+    {
+      "title": "Why transformers replaced recurrent networks",
+      "source": "Evergreen library",
+      "kind": "evergreen",
+      "url": "https://arxiv.org/abs/1706.03762"
+    },
+    {
+      "title": "What CAPTCHAs quietly taught machines",
+      "source": "Evergreen library",
+      "kind": "evergreen",
+      "url": "https://en.wikipedia.org/wiki/ReCAPTCHA"
+    },
+    {
+      "title": "Why neural networks need non-linear activation functions",
+      "source": "Evergreen library",
+      "kind": "evergreen",
+      "url": "https://en.wikipedia.org/wiki/Activation_function"
+    },
+    {
+      "title": "The Turing test and what it was really about",
+      "source": "Evergreen library",
+      "kind": "evergreen",
+      "url": "https://en.wikipedia.org/wiki/Turing_test"
+    },
+    {
+      "title": "What a token actually is in a large language model",
+      "source": "Evergreen library",
+      "kind": "evergreen",
+      "url": "https://platform.openai.com/tokenizer"
+    },
+    {
+      "title": "Why the internet still runs on a protocol from 1981",
+      "source": "Evergreen library",
+      "kind": "evergreen",
+      "url": "https://en.wikipedia.org/wiki/IPv4_address_exhaustion"
+    },
+    {
+      "title": "Why passwords are stored as salted hashes",
+      "source": "Evergreen library",
+      "kind": "evergreen",
+      "url": "https://en.wikipedia.org/wiki/Salt_(cryptography)"
+    },
+    {
+      "title": "Moore's law: the prediction that shaped 60 years of chips",
+      "source": "Evergreen library",
+      "kind": "evergreen",
+      "url": "https://en.wikipedia.org/wiki/Moore%27s_law"
+    },
+    {
+      "title": "The Y2K bug and why two digits nearly broke the world",
+      "source": "Evergreen library",
+      "kind": "evergreen",
+      "url": "https://en.wikipedia.org/wiki/Year_2000_problem"
+    },
+    {
+      "title": "How one bit flip from space can crash a computer",
+      "source": "Evergreen library",
+      "kind": "evergreen",
+      "url": "https://en.wikipedia.org/wiki/Soft_error"
+    },
+    {
+      "title": "What a context window really limits",
+      "source": "Evergreen library",
+      "kind": "evergreen",
+      "url": "https://en.wikipedia.org/wiki/Large_language_model"
+    }
+  ],
+  "warnings": []
+}
