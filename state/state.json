@@ -521,6 +521,22 @@
       "quota_used": 8000,
       "failures": 1,
       "demo": false
+    },
+    {
+      "date": "2026-10-12",
+      "started": "2026-10-12T13:11:25+05:30",
+      "finished": "2026-10-12T13:11:25+05:30",
+      "elapsed_minutes": 0.006061221000000216,
+      "budget_minutes": 115.0,
+      "produced": 0,
+      "target": 5,
+      "uploaded": 0,
+      "publish_mode": "private",
+      "providers": [],
+      "tts_engines": [],
+      "quota_used": 8000,
+      "failures": 0,
+      "demo": false
     }
   ],
   "quota": {

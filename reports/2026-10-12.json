@@ -1,22 +1,18 @@
 {
   "run": {
     "date": "2026-10-12",
-    "started": "2026-10-12T11:35:06+05:30",
-    "finished": "2026-10-12T11:40:10+05:30",
-    "elapsed_minutes": 5.070951669933334,
+    "started": "2026-10-12T13:11:25+05:30",
+    "finished": "2026-10-12T13:11:25+05:30",
+    "elapsed_minutes": 0.006061221000000216,
     "budget_minutes": 115.0,
-    "produced": 5,
+    "produced": 0,
     "target": 5,
-    "uploaded": 5,
+    "uploaded": 0,
     "publish_mode": "private",
-    "providers": [
-      "groq"
-    ],
-    "tts_engines": [
-      "piper"
-    ],
+    "providers": [],
+    "tts_engines": [],
     "quota_used": 8000,
-    "failures": 1,
+    "failures": 0,
     "demo": false
   },
   "videos": [
@@ -161,98 +157,7 @@
       "mode": "private"
     }
   ],
-  "failures": [
-    {
-      "topic": "Towards Easier-to-Tune Training Algorithms: New Results from AlgoPerf",
-      "stage": "render",
-      "error": "render: video too long: 60.4s > 59s"
-    }
-  ],
-  "candidates": [
-    {
-      "title": "When Faster Decisions Do Not Make Better Agents: An Empirical Study of Jev in Agent Workflows",
-      "source": "arXiv cs.AI",
-      "kind": "research",
-      "url": "https://arxiv.org/abs/2610.13092"
-    },
-    {
-      "title": "Faithfulness Without Anchors: A Position Paper on the Structural Misalignments of Explainable AI Faithfulness Metrics for Feature Importance",
-      "source": "arXiv cs.AI",
-      "kind": "research",
-      "url": "https://arxiv.org/abs/2610.12493"
-    },
-    {
-      "title": "Towards Easier-to-Tune Training Algorithms: New Results from AlgoPerf",
-      "source": "arXiv cs.LG",
-      "kind": "research",
-      "url": "https://arxiv.org/abs/2610.13036"
-    },
-    {
-      "title": "Algebraic Integer Quantization for Machine Learning Applications",
-      "source": "arXiv cs.LG",
-      "kind": "research",
-      "url": "https://arxiv.org/abs/2610.12494"
-    },
-    {
-      "title": "Learning to use local AI is exciting, overwhelming, and frustrating",
-      "source": "The Verge - AI",
-      "kind": "news",
-      "url": "https://www.theverge.com/ai-artificial-intelligence/1008484/learning-local-ai-hermes-qwen-model-mac-studio-testing-diary-progress"
-    },
-    {
-      "title": "Silicon Valley is falling in line with Trump’s attempt to rename AI",
-      "source": "The Verge - AI",
-      "kind": "news",
-      "url": "https://www.theverge.com/ai-artificial-intelligence/1009406/silicon-valley-is-falling-in-line-with-trumps-attempt-to-rename-ai"
-    },
-    {
-      "title": "Dwarf Fortress uses version control now",
-      "source": "Simon Willison",
-      "kind": "news",
-      "url": "https://simonwillison.net/2026/Oct/11/dwarf-fortress/"
-    },
-    {
-      "title": "We’re putting too much faith in AI’s ability to say no",
-      "source": "MIT Technology Review",
-      "kind": "news",
-      "url": "https://www.technologyreview.com/2026/10/09/1145728/we-are-putting-too-much-faith-in-ai-to-say-no/"
-    },
-    {
-      "title": "Job titles of the future: Delivery drone air traffic controller",
-      "source": "MIT Technology Review",
-      "kind": "news",
-      "url": "https://www.technologyreview.com/2026/10/09/1145737/job-titles-delivery-drone-air-traffic-controller-trevor-wischnewsky/"
-    },
-    {
-      "title": "A new feature for my blog, built using my voice",
-      "source": "Simon Willison",
-      "kind": "news",
-      "url": "https://simonwillison.net/2026/Oct/9/built-using-my-voice/"
-    },
-    {
-      "title": "How Does Life Unfold? A Landscape Metaphor Comes Into Its Own.",
-      "source": "Quanta Magazine",
-      "kind": "concepts",
-      "url": "https://www.quantamagazine.org/how-does-life-unfold-a-landscape-metaphor-comes-into-its-own-20261009/"
-    },
-    {
-      "title": "Secret protection must scale with software",
-      "source": "GitHub Blog - AI",
-      "kind": "news",
-      "url": "https://github.blog/ai-and-ml/github-copilot/secret-protection-must-scale-with-software/"
-    },
-    {
-      "title": "Agent Lightning v1.0: A 3,500-Line Lightweight Agentic RL Framework for Training Agents with Real Harnesses",
-      "source": "Microsoft Research Blog",
-      "kind": "research",
-      "url": "https://www.microsoft.com/en-us/research/blog/agent-lightning-v1-0-a-3500-line-lightweight-agentic-rl-framework-for-training-agents-with-real-harnesses/"
-    },
-    {
-      "title": "PC shipments fall 20.1 percent in “sharpest decline” since Q1 2023",
-      "source": "Ars Technica - Technology Lab",
-      "kind": "news",
-      "url": "https://arstechnica.com/information-technology/2026/10/pc-shipments-fall-20-1-percent-in-sharpest-decline-since-q1-2023/"
-    }
-  ],
+  "failures": [],
+  "candidates": [],
   "warnings": []
 }
