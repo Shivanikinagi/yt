@@ -1,21 +1,16 @@
 {
   "run": {
     "date": "2026-10-13",
-    "started": "2026-10-13T07:53:45+05:30",
-    "finished": "2026-10-13T08:01:57+05:30",
-    "elapsed_minutes": 8.195517072083332,
+    "started": "2026-10-13T13:31:47+05:30",
+    "finished": "2026-10-13T13:31:48+05:30",
+    "elapsed_minutes": 0.005450013183333388,
     "budget_minutes": 115.0,
-    "produced": 5,
+    "produced": 0,
     "target": 5,
-    "uploaded": 5,
+    "uploaded": 0,
     "publish_mode": "scheduled",
-    "providers": [
-      "groq",
-      "template"
-    ],
-    "tts_engines": [
-      "piper"
-    ],
+    "providers": [],
+    "tts_engines": [],
     "quota_used": 8000,
     "failures": 0,
     "demo": false
@@ -165,91 +160,6 @@
     }
   ],
   "failures": [],
-  "candidates": [
-    {
-      "title": "GitHub Copilot app for Beginners: How to teach Copilot about your codebase",
-      "source": "GitHub Blog - AI",
-      "kind": "news",
-      "url": "https://github.blog/ai-and-ml/github-copilot/github-copilot-app-for-beginners-how-to-teach-copilot-about-your-codebase/"
-    },
-    {
-      "title": "Simulating student learning for better AI tutoring",
-      "source": "Microsoft Research Blog",
-      "kind": "research",
-      "url": "https://www.microsoft.com/en-us/research/blog/simulating-student-learning-for-better-ai-tutoring/"
-    },
-    {
-      "title": "Mars may be a hellhole, but the moon is not far behind",
-      "source": "MIT Technology Review",
-      "kind": "news",
-      "url": "https://www.technologyreview.com/2026/10/12/1145760/imagining-building-cities-on-the-moon/"
-    },
-    {
-      "title": "The ecologist revealing the invisible networks that revive rainforests",
-      "source": "MIT Technology Review",
-      "kind": "news",
-      "url": "https://www.technologyreview.com/2026/10/12/1145745/daisy-dent-ecologist-revealing-invisible-networks-revive-rainforests/"
-    },
-    {
-      "title": "EliteTable: Self-Improving Program Search for Executable Control Policies",
-      "source": "arXiv cs.AI",
-      "kind": "research",
-      "url": "https://arxiv.org/abs/2610.12536"
-    },
-    {
-      "title": "Equal-Budget Monte Carlo Tree Search versus Randomized-Restart List Scheduling for DAG Workflows: A Controlled Equal-Budget Computational Study",
-      "source": "arXiv cs.AI",
-      "kind": "research",
-      "url": "https://arxiv.org/abs/2610.12542"
-    },
-    {
-      "title": "Microsoft’s new AI chip makes it less reliant on Nvidia’s GPUs",
-      "source": "The Verge - AI",
-      "kind": "news",
-      "url": "https://www.theverge.com/news/1009465/microsoft-maia-300-chip-improvements-rollout"
-    },
-    {
-      "title": "Meta has some Wonder Full new AI models",
-      "source": "The Verge - AI",
-      "kind": "news",
-      "url": "https://www.theverge.com/ai-artificial-intelligence/1009479/meta-muse-wonder-full-ai-model"
-    },
-    {
-      "title": "Hello Python 3.15, goodbye 3.10, and now I can use 3.11",
-      "source": "Simon Willison",
-      "kind": "news",
-      "url": "https://simonwillison.net/2026/Oct/12/python-3-15/"
-    },
-    {
-      "title": "Towards Easier-to-Tune Training Algorithms: New Results from AlgoPerf",
-      "source": "arXiv cs.LG",
-      "kind": "research",
-      "url": "https://arxiv.org/abs/2610.13036"
-    },
-    {
-      "title": "Kairos: Toward a Byte-Level Foundation Model for Every Modality",
-      "source": "arXiv cs.LG",
-      "kind": "research",
-      "url": "https://arxiv.org/abs/2610.12495"
-    },
-    {
-      "title": "Is ‘Attention’ the Essence of Intelligence?",
-      "source": "Quanta Magazine",
-      "kind": "concepts",
-      "url": "https://www.quantamagazine.org/is-attention-the-essence-of-intelligence-20261012/"
-    },
-    {
-      "title": "Dwarf Fortress uses version control now",
-      "source": "Simon Willison",
-      "kind": "news",
-      "url": "https://simonwillison.net/2026/Oct/11/dwarf-fortress/"
-    },
-    {
-      "title": "Hackers activate automatic defrosting in supermarket fridges across Europe",
-      "source": "Hacker News front page (150+ points)",
-      "kind": "news",
-      "url": "https://www.tomshardware.com/tech-industry/cyber-security/unprecedented-cyberattack-cripples-supermarket-fridges-across-europe-as-hackers-activate-automatic-defrosting-delivery-and-store-prices-also-impacted-by-incident"
-    }
-  ],
+  "candidates": [],
   "warnings": []
 }
