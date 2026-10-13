@@ -30,6 +30,31 @@
       "title": "Silicon Valley is falling in line with Trump’s attempt to rename AI",
       "url": "https://www.theverge.com/ai-artificial-intelligence/1009406/silicon-valley-is-falling-in-line-with-trumps-attempt-to-rename-ai",
       "used_on": "2026-10-12"
+    },
+    "acb868617334bc3b8e58223cae4f7b3b71e8f869": {
+      "title": "GitHub Copilot app for Beginners: How to teach Copilot about your codebase",
+      "url": "https://github.blog/ai-and-ml/github-copilot/github-copilot-app-for-beginners-how-to-teach-copilot-about-your-codebase/",
+      "used_on": "2026-10-13"
+    },
+    "181049058bc1c54f752223f1e274bdf4bfcacef4": {
+      "title": "Simulating student learning for better AI tutoring",
+      "url": "https://www.microsoft.com/en-us/research/blog/simulating-student-learning-for-better-ai-tutoring/",
+      "used_on": "2026-10-13"
+    },
+    "4d7ed514b522938d9d1a3759a872b5e98d999f55": {
+      "title": "Mars may be a hellhole, but the moon is not far behind",
+      "url": "https://www.technologyreview.com/2026/10/12/1145760/imagining-building-cities-on-the-moon/",
+      "used_on": "2026-10-13"
+    },
+    "dd30167d2eeee6170084a32c99de3e898122a933": {
+      "title": "The ecologist revealing the invisible networks that revive rainforests",
+      "url": "https://www.technologyreview.com/2026/10/12/1145745/daisy-dent-ecologist-revealing-invisible-networks-revive-rainforests/",
+      "used_on": "2026-10-13"
+    },
+    "6cf0ccffbf38bf7cdbb267820ca58c4848c92e19": {
+      "title": "EliteTable: Self-Improving Program Search for Executable Control Policies",
+      "url": "https://arxiv.org/abs/2610.12536",
+      "used_on": "2026-10-13"
     }
   },
   "videos": [
@@ -347,6 +372,148 @@
       "privacy": "private",
       "publish_at": null,
       "mode": "private"
+    },
+    {
+      "id": "2026-10-13-01-acb86861",
+      "date": "2026-10-13",
+      "title": "Teaching GitHub Copilot Your Codebase Rules",
+      "topic_id": "acb868617334bc3b8e58223cae4f7b3b71e8f869",
+      "topic_title": "GitHub Copilot app for Beginners: How to teach Copilot about your codebase",
+      "source": "GitHub Blog - AI",
+      "sources": [
+        "https://github.blog/ai-and-ml/github-copilot/github-copilot-app-for-beginners-how-to-teach-copilot-about-your-codebase/"
+      ],
+      "theme": "neon",
+      "provider": "groq",
+      "tts_engine": "piper",
+      "duration": 57.03,
+      "path": "output/2026-10-13/01-github-copilot-app-for-beginners-how-to-teach-co/video.mp4",
+      "srt": "output/2026-10-13/01-github-copilot-app-for-beginners-how-to-teach-co/captions.srt",
+      "captions": 46,
+      "caption_method": "whisper",
+      "status": "uploaded",
+      "qc_warnings": [],
+      "created": "2026-10-13T02:25:30",
+      "render_seconds": 71,
+      "youtube_id": "mImuLwnYGYY",
+      "url": "https://youtube.com/shorts/mImuLwnYGYY",
+      "privacy": "private",
+      "publish_at": "2026-10-13T06:30:00Z",
+      "mode": "scheduled"
+    },
+    {
+      "id": "2026-10-13-02-18104905",
+      "date": "2026-10-13",
+      "title": "Simulating student learning for better AI tutoring",
+      "topic_id": "181049058bc1c54f752223f1e274bdf4bfcacef4",
+      "topic_title": "Simulating student learning for better AI tutoring",
+      "source": "Microsoft Research Blog",
+      "sources": [
+        "https://www.microsoft.com/en-us/research/blog/simulating-student-learning-for-better-ai-tutoring/"
+      ],
+      "theme": "voxel",
+      "provider": "template",
+      "tts_engine": "piper",
+      "duration": 54.42,
+      "path": "output/2026-10-13/02-simulating-student-learning-for-better-ai-tutori/video.mp4",
+      "srt": "output/2026-10-13/02-simulating-student-learning-for-better-ai-tutori/captions.srt",
+      "captions": 45,
+      "caption_method": "whisper",
+      "status": "uploaded",
+      "qc_warnings": [
+        "3 scenes contain 12+ word spans copied from the source"
+      ],
+      "created": "2026-10-13T02:26:59",
+      "render_seconds": 67,
+      "youtube_id": "uWF_hRUB0JQ",
+      "url": "https://youtube.com/shorts/uWF_hRUB0JQ",
+      "privacy": "private",
+      "publish_at": "2026-10-13T09:30:00Z",
+      "mode": "scheduled"
+    },
+    {
+      "id": "2026-10-13-03-4d7ed514",
+      "date": "2026-10-13",
+      "title": "Why the Moon is the Next Battleground for Space Nations",
+      "topic_id": "4d7ed514b522938d9d1a3759a872b5e98d999f55",
+      "topic_title": "Mars may be a hellhole, but the moon is not far behind",
+      "source": "MIT Technology Review",
+      "sources": [
+        "https://www.technologyreview.com/2026/10/12/1145760/imagining-building-cities-on-the-moon/"
+      ],
+      "theme": "blueprint",
+      "provider": "groq",
+      "tts_engine": "piper",
+      "duration": 57.88,
+      "path": "output/2026-10-13/03-mars-may-be-a-hellhole-but-the-moon-is-not-far-b/video.mp4",
+      "srt": "output/2026-10-13/03-mars-may-be-a-hellhole-but-the-moon-is-not-far-b/captions.srt",
+      "captions": 46,
+      "caption_method": "whisper",
+      "status": "uploaded",
+      "qc_warnings": [],
+      "created": "2026-10-13T02:28:37",
+      "render_seconds": 72,
+      "youtube_id": "q2YmwsXThUY",
+      "url": "https://youtube.com/shorts/q2YmwsXThUY",
+      "privacy": "private",
+      "publish_at": "2026-10-13T12:30:00Z",
+      "mode": "scheduled"
+    },
+    {
+      "id": "2026-10-13-04-dd30167d",
+      "date": "2026-10-13",
+      "title": "How Animals Rebuild Rainforests Faster Than Plantations",
+      "topic_id": "dd30167d2eeee6170084a32c99de3e898122a933",
+      "topic_title": "The ecologist revealing the invisible networks that revive rainforests",
+      "source": "MIT Technology Review",
+      "sources": [
+        "https://www.technologyreview.com/2026/10/12/1145745/daisy-dent-ecologist-revealing-invisible-networks-revive-rainforests/"
+      ],
+      "theme": "sunset",
+      "provider": "groq",
+      "tts_engine": "piper",
+      "duration": 55.97,
+      "path": "output/2026-10-13/04-the-ecologist-revealing-the-invisible-networks-t/video.mp4",
+      "srt": "output/2026-10-13/04-the-ecologist-revealing-the-invisible-networks-t/captions.srt",
+      "captions": 45,
+      "caption_method": "whisper",
+      "status": "uploaded",
+      "qc_warnings": [],
+      "created": "2026-10-13T02:30:08",
+      "render_seconds": 68,
+      "youtube_id": "B7Cs2RJwL40",
+      "url": "https://youtube.com/shorts/B7Cs2RJwL40",
+      "privacy": "private",
+      "publish_at": "2026-10-13T15:30:00Z",
+      "mode": "scheduled"
+    },
+    {
+      "id": "2026-10-13-05-6cf0ccff",
+      "date": "2026-10-13",
+      "title": "EliteTable: AI That Rewrites Its Own Game Strategies",
+      "topic_id": "6cf0ccffbf38bf7cdbb267820ca58c4848c92e19",
+      "topic_title": "EliteTable: Self-Improving Program Search for Executable Control Policies",
+      "source": "arXiv cs.AI",
+      "sources": [
+        "https://arxiv.org/abs/2610.12536"
+      ],
+      "theme": "terminal",
+      "provider": "groq",
+      "tts_engine": "piper",
+      "duration": 57.94,
+      "path": "output/2026-10-13/05-elitetable-self-improving-program-search-for-exe/video.mp4",
+      "srt": "output/2026-10-13/05-elitetable-self-improving-program-search-for-exe/captions.srt",
+      "captions": 46,
+      "caption_method": "whisper",
+      "status": "uploaded",
+      "qc_warnings": [],
+      "created": "2026-10-13T02:31:47",
+      "render_seconds": 73,
+      "youtube_id": "OnbYiiA6Q3Q",
+      "url": "https://youtube.com/shorts/OnbYiiA6Q3Q",
+      "privacy": "private",
+      "publish_at": "2026-10-14T03:30:00Z",
+      "mode": "scheduled"
     }
   ],
   "runs": [
@@ -537,11 +704,33 @@
       "quota_used": 8000,
       "failures": 0,
       "demo": false
+    },
+    {
+      "date": "2026-10-13",
+      "started": "2026-10-13T07:53:45+05:30",
+      "finished": "2026-10-13T08:01:57+05:30",
+      "elapsed_minutes": 8.195517072083332,
+      "budget_minutes": 115.0,
+      "produced": 5,
+      "target": 5,
+      "uploaded": 5,
+      "publish_mode": "scheduled",
+      "providers": [
+        "groq",
+        "template"
+      ],
+      "tts_engines": [
+        "piper"
+      ],
+      "quota_used": 8000,
+      "failures": 0,
+      "demo": false
     }
   ],
   "quota": {
     "2026-10-11": 1600,
-    "2026-10-12": 8000
+    "2026-10-12": 8000,
+    "2026-10-13": 8000
   },
   "schedule": [],
   "failed_topics": {
