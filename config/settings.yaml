@@ -22,32 +22,41 @@ video:
   lead_in_seconds: 0.5       # silence before the first narration
   scene_gap_seconds: 0.35    # pause between scenes
   tail_seconds: 1.0          # hold after the last narration
-  transition_seconds: 0.4
-  # Visual themes rotate per video. Options: neon, blueprint, voxel, sunset, terminal
+  transition_seconds: 0.4    # how long a new scene takes to settle into the frame
+  # One shared layout; the theme only rotates the accent colours. Options: neon, blueprint, voxel, sunset, terminal
   themes: [neon, voxel, blueprint, sunset, terminal]
+  # Each video is a conversation: [host who explains, guest who asks]. Pairs rotate per video.
+  # Anime style: yuki, sora, hana, ren. Cartoon: nova, kai, bit (robot), mochi (cat).
+  # One name per pair = a single talking host; [] = plain narrator with no characters.
+  cast_pairs: [[yuki, sora], [hana, ren], [nova, kai], [bit, mochi], [ren, hana]]
+  # Film the conversation: close-ups/wide shots for the chat, cut to the info panel for the facts.
+  cinematic: true
 
 brand:
   channel_name: "TechDecoded"      # <- change to your channel name
   handle: "@TechDecoded60-y6b"            # <- change to your handle
   cta: "Follow for a new tech short every day"
-  font_candidates_bold:
-    - assets/fonts/Bold.ttf
-    - C:/Windows/Fonts/segoeuib.ttf
-    - C:/Windows/Fonts/arialbd.ttf
+  # Bundled OFL fonts (assets/fonts) so the GitHub runner renders the same as your PC.
+  font_candidates_headline:
+    - assets/fonts/ArchivoBlack-Regular.ttf
+    - C:/Windows/Fonts/ariblk.ttf
     - /usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf
-    - /usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf
+  font_candidates_bold:
+    - assets/fonts/IBMPlexSans-SemiBold.ttf
+    - C:/Windows/Fonts/segoeuib.ttf
+    - /usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf
   font_candidates_regular:
-    - assets/fonts/Regular.ttf
+    - assets/fonts/IBMPlexSans-Regular.ttf
     - C:/Windows/Fonts/segoeui.ttf
-    - C:/Windows/Fonts/arial.ttf
     - /usr/share/fonts/truetype/dejavu/DejaVuSans.ttf
-    - /usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf
   font_candidates_mono:
-    - assets/fonts/Mono.ttf
+    - assets/fonts/IBMPlexMono-Medium.ttf
     - C:/Windows/Fonts/consola.ttf
-    - C:/Windows/Fonts/cour.ttf
     - /usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf
-    - /usr/share/fonts/truetype/liberation/LiberationMono-Regular.ttf
+  font_candidates_mono_bold:
+    - assets/fonts/IBMPlexMono-Bold.ttf
+    - C:/Windows/Fonts/consolab.ttf
+    - /usr/share/fonts/truetype/dejavu/DejaVuSansMono-Bold.ttf
 
 llm:
   # Tried in order; "template" is the always-available deterministic writer.

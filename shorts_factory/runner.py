@@ -12,7 +12,8 @@ from .report import write_report
 from .research import Topic, evergreen_topics, select_candidates
 from .scripting import VideoScript, template_script, write_script
 from .state import State
-from .tts import synthesize, tempo_adjust
+from .characters import pick_cast, voice_for
+from .tts import speak_scene, tempo_adjust
 from .utils import (OUTPUT_DIR, PipelineError, TimeBudgetExceeded, abs_path, now_local, rel_path, slugify,
                     today_str, write_json)
 
@@ -67,7 +68,11 @@ def produce_video(topic: Topic, index: int, date: str, cfg, logger, state: State
     stage = "script"
     try:
         logger.info("[%d] topic: %s  (%s)", index + 1, topic.title, topic.source)
-        script = template_script(topic, theme) if template_only else write_script(topic, theme, cfg, logger)
+        cast = pick_cast(cfg, index)
+        script = (template_script(topic, theme, cast) if template_only
+                  else write_script(topic, theme, cfg, logger, cast=cast))
+        cast = script.extra.get("cast") or []
+        voices = {role: voice_for(key) for role, key in zip(("host", "guest"), cast)} or None
         write_json(vdir / "script.json", script.to_dict())
         write_json(vdir / "topic.json", topic.to_dict())
         deadline.check(stage)
@@ -82,7 +87,7 @@ def produce_video(topic: Topic, index: int, date: str, cfg, logger, state: State
         stage = "tts"
         audio = []
         for i, scene in enumerate(script.scenes):
-            audio.append(synthesize(scene["narration"], vdir / "scenes" / f"{i + 1:02d}.wav", cfg, logger))
+            audio.append(speak_scene(scene, vdir / "scenes" / f"{i + 1:02d}.wav", cfg, logger, voices))
             deadline.check(stage)
         est = sum(a.duration for a in audio)
         logger.info("narration %.1fs via %s", est, audio[0].engine)
@@ -93,7 +98,7 @@ def produce_video(topic: Topic, index: int, date: str, cfg, logger, state: State
             fast_cfg = _with_length_scale(cfg, float(cfg.tts.piper_length_scale) * factor)
             audio = []
             for i, scene in enumerate(script.scenes):
-                audio.append(synthesize(scene["narration"], vdir / "scenes" / f"{i + 1:02d}.wav", fast_cfg, logger))
+                audio.append(speak_scene(scene, vdir / "scenes" / f"{i + 1:02d}.wav", fast_cfg, logger, voices))
                 deadline.check(stage)
             est = sum(a.duration for a in audio)
             logger.info("narration now %.1fs", est)

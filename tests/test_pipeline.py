@@ -175,3 +175,33 @@ def test_publish_slot_and_metadata(tmp_path):
     assert len(body["snippet"]["title"]) <= 100
     body2 = build_metadata(s, cfg, "private", None)
     assert "publishAt" not in body2["status"]
+
+
+def test_cue_times_follow_narration():
+    from shorts_factory.render import cue_times
+    timed = [("Its", 0.0, 0.2), ("variable", 0.2, 0.6), ("length", 0.6, 0.9), ("saves", 0.9, 1.2),
+             ("space", 1.2, 1.5), ("and", 1.5, 1.6), ("ASCII", 1.6, 2.0), ("stays", 2.0, 2.3)]
+    assert cue_times(["Variable-length encoding", "ASCII compatible"], timed, 0.5) == [0.7, 2.1]
+    assert cue_times(["Something unrelated"], timed, 0.0) is None
+
+
+def test_dialogue_speaker_turns_and_lines():
+    from shorts_factory.scripting import _lines
+    from shorts_factory.visuals import speaker_at
+    turns = [("guest", 0.5, 1.5), ("host", 1.72, 4.0)]
+    assert speaker_at(turns, 0.0) == "guest"
+    assert speaker_at(turns, 1.55) == "guest"      # the pause belongs to whoever just spoke
+    assert speaker_at(turns, 2.0) == "host"
+    assert speaker_at(turns, 9.0) == "host"
+    assert speaker_at(None, 1.0) is None
+    lines = _lines([{"who": "Sora", "text": "Wait,  really?"}, {"who": "host", "text": "Yes."}, {"text": ""}],
+                   ["yuki", "sora"])
+    assert lines == [{"who": "guest", "text": "Wait, really?"}, {"who": "host", "text": "Yes."}]
+
+
+def test_cast_pairs_rotate_and_characters_render():
+    from shorts_factory.characters import CAST, Host, pick_cast
+    assert pick_cast(cfg, 0) != pick_cast(cfg, 1)
+    for key in CAST:
+        img = Host(key, (56, 189, 248), scale=1.12).sprite(0.3, "point", 2)
+        assert img.mode == "RGBA" and img.getbbox() is not None
