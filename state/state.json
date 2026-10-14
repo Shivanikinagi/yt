@@ -55,6 +55,31 @@
       "title": "EliteTable: Self-Improving Program Search for Executable Control Policies",
       "url": "https://arxiv.org/abs/2610.12536",
       "used_on": "2026-10-13"
+    },
+    "9cfce5cf4579b2e0152b85dea2878d321654b16f": {
+      "title": "How Should a Camera-First AI Agent Work?",
+      "url": "https://arxiv.org/abs/2610.14772",
+      "used_on": "2026-10-14"
+    },
+    "49fe8a3fc3d9ad0e3c275bfb0982bc738e2ec59f": {
+      "title": "GitHub’s model for secret detection: Finding more secrets with less noise",
+      "url": "https://github.blog/ai-and-ml/githubs-model-for-secret-detection-finding-more-secrets-with-less-noise/",
+      "used_on": "2026-10-14"
+    },
+    "a16d50c7df94b811aa7e2995c05a3f2dc93a1b93": {
+      "title": "Artificiality's First Exam: An LLM-Referenced C-test for Supraintelligence",
+      "url": "https://arxiv.org/abs/2610.14005",
+      "used_on": "2026-10-14"
+    },
+    "c48f77cfce80ca67880c4d83f19ddbd38babd241": {
+      "title": "Open models have real benefits. Do they outweigh the risks?",
+      "url": "https://www.technologyreview.com/2026/10/13/1146366/open-models-have-real-benefits-do-they-outweigh-the-risks/",
+      "used_on": "2026-10-14"
+    },
+    "6b99b16975206067eee89bcfaa05bc2fa0d94f46": {
+      "title": "AI labs are buying data from dead startups to train their models",
+      "url": "https://www.technologyreview.com/2026/10/13/1145755/ai-labs-buying-data-from-dead-startups-to-train-models/",
+      "used_on": "2026-10-14"
     }
   },
   "videos": [
@@ -514,6 +539,146 @@
       "privacy": "private",
       "publish_at": "2026-10-14T03:30:00Z",
       "mode": "scheduled"
+    },
+    {
+      "id": "2026-10-14-01-9cfce5cf",
+      "date": "2026-10-14",
+      "title": "Why Camera-First AI Needs Two Deadlines to Catch Fleeting Vision",
+      "topic_id": "9cfce5cf4579b2e0152b85dea2878d321654b16f",
+      "topic_title": "How Should a Camera-First AI Agent Work?",
+      "source": "arXiv cs.AI",
+      "sources": [
+        "https://arxiv.org/abs/2610.14772"
+      ],
+      "theme": "neon",
+      "provider": "groq",
+      "tts_engine": "piper",
+      "duration": 50.38,
+      "path": "output/2026-10-14/01-how-should-a-camera-first-ai-agent-work/video.mp4",
+      "srt": "output/2026-10-14/01-how-should-a-camera-first-ai-agent-work/captions.srt",
+      "captions": 42,
+      "caption_method": "whisper",
+      "status": "uploaded",
+      "qc_warnings": [],
+      "created": "2026-10-14T06:28:41",
+      "render_seconds": 75,
+      "youtube_id": "MfpKQjvGXq8",
+      "url": "https://youtube.com/shorts/MfpKQjvGXq8",
+      "privacy": "private",
+      "publish_at": "2026-10-14T09:30:00Z",
+      "mode": "scheduled"
+    },
+    {
+      "id": "2026-10-14-02-49fe8a3f",
+      "date": "2026-10-14",
+      "title": "GitHub’s Secret Scanner: More Detection, Less Noise",
+      "topic_id": "49fe8a3fc3d9ad0e3c275bfb0982bc738e2ec59f",
+      "topic_title": "GitHub’s model for secret detection: Finding more secrets with less noise",
+      "source": "GitHub Blog - AI",
+      "sources": [
+        "https://github.blog/ai-and-ml/githubs-model-for-secret-detection-finding-more-secrets-with-less-noise/"
+      ],
+      "theme": "voxel",
+      "provider": "groq",
+      "tts_engine": "piper",
+      "duration": 57.89,
+      "path": "output/2026-10-14/02-github-s-model-for-secret-detection-finding-more/video.mp4",
+      "srt": "output/2026-10-14/02-github-s-model-for-secret-detection-finding-more/captions.srt",
+      "captions": 43,
+      "caption_method": "whisper",
+      "status": "uploaded",
+      "qc_warnings": [],
+      "created": "2026-10-14T06:30:29",
+      "render_seconds": 87,
+      "youtube_id": "Jjl28_RFGLo",
+      "url": "https://youtube.com/shorts/Jjl28_RFGLo",
+      "privacy": "private",
+      "publish_at": "2026-10-14T12:30:00Z",
+      "mode": "scheduled"
+    },
+    {
+      "id": "2026-10-14-03-a16d50c7",
+      "date": "2026-10-14",
+      "title": "Can AI Tests Outpace Human Benchmarks? The New LLM‑C Test Explained",
+      "topic_id": "a16d50c7df94b811aa7e2995c05a3f2dc93a1b93",
+      "topic_title": "Artificiality's First Exam: An LLM-Referenced C-test for Supraintelligence",
+      "source": "arXiv cs.AI",
+      "sources": [
+        "https://arxiv.org/abs/2610.14005"
+      ],
+      "theme": "blueprint",
+      "provider": "groq",
+      "tts_engine": "piper",
+      "duration": 52.51,
+      "path": "output/2026-10-14/03-artificiality-s-first-exam-an-llm-referenced-c-t/video.mp4",
+      "srt": "output/2026-10-14/03-artificiality-s-first-exam-an-llm-referenced-c-t/captions.srt",
+      "captions": 41,
+      "caption_method": "whisper",
+      "status": "uploaded",
+      "qc_warnings": [],
+      "created": "2026-10-14T06:32:03",
+      "render_seconds": 79,
+      "youtube_id": "XYU4qDa9nCU",
+      "url": "https://youtube.com/shorts/XYU4qDa9nCU",
+      "privacy": "private",
+      "publish_at": "2026-10-14T15:30:00Z",
+      "mode": "scheduled"
+    },
+    {
+      "id": "2026-10-14-04-c48f77cf",
+      "date": "2026-10-14",
+      "title": "Open AI Models: Freedom or Danger?",
+      "topic_id": "c48f77cfce80ca67880c4d83f19ddbd38babd241",
+      "topic_title": "Open models have real benefits. Do they outweigh the risks?",
+      "source": "MIT Technology Review",
+      "sources": [
+        "https://www.technologyreview.com/2026/10/13/1146366/open-models-have-real-benefits-do-they-outweigh-the-risks/"
+      ],
+      "theme": "sunset",
+      "provider": "groq",
+      "tts_engine": "piper",
+      "duration": 50.04,
+      "path": "output/2026-10-14/04-open-models-have-real-benefits-do-they-outweigh/video.mp4",
+      "srt": "output/2026-10-14/04-open-models-have-real-benefits-do-they-outweigh/captions.srt",
+      "captions": 45,
+      "caption_method": "whisper",
+      "status": "uploaded",
+      "qc_warnings": [],
+      "created": "2026-10-14T06:33:31",
+      "render_seconds": 73,
+      "youtube_id": "9c2KPz60XVA",
+      "url": "https://youtube.com/shorts/9c2KPz60XVA",
+      "privacy": "private",
+      "publish_at": "2026-10-15T03:30:00Z",
+      "mode": "scheduled"
+    },
+    {
+      "id": "2026-10-14-05-6b99b169",
+      "date": "2026-10-14",
+      "title": "How dead startups are funding AI labs with their data",
+      "topic_id": "6b99b16975206067eee89bcfaa05bc2fa0d94f46",
+      "topic_title": "AI labs are buying data from dead startups to train their models",
+      "source": "MIT Technology Review",
+      "sources": [
+        "https://www.technologyreview.com/2026/10/13/1145755/ai-labs-buying-data-from-dead-startups-to-train-models/"
+      ],
+      "theme": "terminal",
+      "provider": "groq",
+      "tts_engine": "piper",
+      "duration": 57.91,
+      "path": "output/2026-10-14/05-ai-labs-are-buying-data-from-dead-startups-to-tr/video.mp4",
+      "srt": "output/2026-10-14/05-ai-labs-are-buying-data-from-dead-startups-to-tr/captions.srt",
+      "captions": 44,
+      "caption_method": "whisper",
+      "status": "uploaded",
+      "qc_warnings": [],
+      "created": "2026-10-14T06:35:16",
+      "render_seconds": 84,
+      "youtube_id": "iXFWEXq34v0",
+      "url": "https://youtube.com/shorts/iXFWEXq34v0",
+      "privacy": "private",
+      "publish_at": "2026-10-15T06:30:00Z",
+      "mode": "scheduled"
     }
   ],
   "runs": [
@@ -741,12 +906,33 @@
       "quota_used": 8000,
       "failures": 0,
       "demo": false
+    },
+    {
+      "date": "2026-10-14",
+      "started": "2026-10-14T11:56:54+05:30",
+      "finished": "2026-10-14T12:05:31+05:30",
+      "elapsed_minutes": 8.622832396216667,
+      "budget_minutes": 115.0,
+      "produced": 5,
+      "target": 5,
+      "uploaded": 5,
+      "publish_mode": "scheduled",
+      "providers": [
+        "groq"
+      ],
+      "tts_engines": [
+        "piper"
+      ],
+      "quota_used": 8000,
+      "failures": 0,
+      "demo": false
     }
   ],
   "quota": {
     "2026-10-11": 1600,
     "2026-10-12": 8000,
-    "2026-10-13": 8000
+    "2026-10-13": 8000,
+    "2026-10-14": 8000
   },
   "schedule": [],
   "failed_topics": {
