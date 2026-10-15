@@ -1,8 +1,8 @@
-# Daily run 2026-10-14
+# Daily run 2026-10-15
 
-- Started: 2026-10-14T11:56:54+05:30  
-- Finished: 2026-10-14T12:05:31+05:30  
-- Elapsed: 8.6 min (budget 115 min)  
+- Started: 2026-10-15T11:39:00+05:30  
+- Finished: 2026-10-15T11:47:53+05:30  
+- Elapsed: 8.9 min (budget 115 min)  
 - Produced: 5 / target 5  
 - Uploaded: 5  
 - Publish mode: scheduled  
@@ -15,33 +15,33 @@
 
 | # | Title | Duration | Theme | Status | YouTube | Publish at | QC warnings |
 |---|---|---|---|---|---|---|---|
-| 1 | Why Camera-First AI Needs Two Deadlines to Catch Fleeting Vision | 50s | neon | uploaded | [MfpKQjvGXq8](https://youtube.com/shorts/MfpKQjvGXq8) | 2026-10-14T09:30:00Z | - |
-| 2 | GitHub’s Secret Scanner: More Detection, Less Noise | 58s | voxel | uploaded | [Jjl28_RFGLo](https://youtube.com/shorts/Jjl28_RFGLo) | 2026-10-14T12:30:00Z | - |
-| 3 | Can AI Tests Outpace Human Benchmarks? The New LLM‑C Test Explained | 53s | blueprint | uploaded | [XYU4qDa9nCU](https://youtube.com/shorts/XYU4qDa9nCU) | 2026-10-14T15:30:00Z | - |
-| 4 | Open AI Models: Freedom or Danger? | 50s | sunset | uploaded | [9c2KPz60XVA](https://youtube.com/shorts/9c2KPz60XVA) | 2026-10-15T03:30:00Z | - |
-| 5 | How dead startups are funding AI labs with their data | 58s | terminal | uploaded | [iXFWEXq34v0](https://youtube.com/shorts/iXFWEXq34v0) | 2026-10-15T06:30:00Z | - |
+| 1 | Petal: Free Open-Source Pair Programming Tool Revives Screen Sharing | 53s | neon | uploaded | [5iqJgG_4rKI](https://youtube.com/shorts/5iqJgG_4rKI) | 2026-10-15T09:30:00Z | - |
+| 2 | Can AI Really Design Its Own Experiments? | 57s | voxel | uploaded | [7_--mADrv4Y](https://youtube.com/shorts/7_--mADrv4Y) | 2026-10-15T12:30:00Z | - |
+| 3 | How AI Can Teach Itself to Get Smarter – Inside Recursive Self‑Improvement | 54s | blueprint | uploaded | [-NxCZJMUeqw](https://youtube.com/shorts/-NxCZJMUeqw) | 2026-10-15T15:30:00Z | - |
+| 4 | French supermarkets' fridges turned into fire pits – a simple security flaw | 52s | sunset | uploaded | [NAZiAFuiASA](https://youtube.com/shorts/NAZiAFuiASA) | 2026-10-16T03:30:00Z | - |
+| 5 | Will Tiny AI Worms Turn Your Smart Fridge Into a Virus Host? | 58s | terminal | uploaded | [YSatA5bhhpE](https://youtube.com/shorts/YSatA5bhhpE) | 2026-10-16T06:30:00Z | - |
 
 ## Topics considered
 
-- How Should a Camera-First AI Agent Work? (arXiv cs.AI, research)
-- GitHub’s model for secret detection: Finding more secrets with less noise (GitHub Blog - AI, news)
-- Artificiality's First Exam: An LLM-Referenced C-test for Supraintelligence (arXiv cs.AI, research)
-- Open models have real benefits. Do they outweigh the risks? (MIT Technology Review, news)
-- AI labs are buying data from dead startups to train their models (MIT Technology Review, news)
-- Perfect Reconstruction Cannot Show Whether Two Codebooks on a VAE's Latent Space Agree (arXiv cs.LG, research)
-- Learning Non-Gaussian SEMs with Conditional Risk, and Why the Direction of Recursion Matters (arXiv cs.LG, research)
-- Topgolf saved over $11.3 million after leaving VMware (Ars Technica - Technology Lab, news)
-- Shopify opens its catalog up to more AI agents (The Verge - AI, news)
+- Show HN: Petal, open-source CoScreen/ScreenHero finally free (Hacker News front page (150+ points), news)
+- ACED-Bench: Evaluating How LLM Agents Acquire and Act on Causal Evidence (arXiv cs.AI, research)
+- From Existing Methods to New Research Ideas: Two Perspectives on Recursive Self-Improvement (arXiv cs.AI, research)
+- Fridge hack costing millions and sparking fires stemmed from poor security (Ars Technica - Technology Lab, news)
+- Anthropic warns small AI models could self-replicate through IoT devices (Ars Technica - Technology Lab, news)
+- The US military’s race to make fake blood (MIT Technology Review, news)
+- How Many Ranks Does a Token Need? A Noise-Floor Squelch for Rank-One LoRA Experts (arXiv cs.LG, research)
+- How Inner Optimizers Shape Replica Scaling (arXiv cs.LG, research)
+- YouTube sticks new labels on AI-generated songs (The Verge - AI, news)
+- The AI race is back on (The Verge - AI, news)
+- AI is mass decompiling games. That's both awesome and scary. (Simon Willison, news)
 - Redesigning source control at Anthropic (Simon Willison, news)
-- llm-gemini 0.35 (Simon Willison, news)
-- Google makes it easier to launch your vibe-coded apps (The Verge - AI, news)
-- Google DeepMind and Singapore Government collaborate to build fine-tuned AI model for scam detection (Google DeepMind Blog, news)
-- Show HN: Guitoro, a virtual guitar you strum with your keyboard (Hacker News front page (150+ points), news)
+- Triplet of ‘Ghostly’ Galaxies Hints at What Dark Matter Is — and Isn’t (Quanta Magazine, concepts)
+- How Third Moment Research runs 10,000 agents for 36+ hours (OpenAI News, news)
 
 ## Sources used
 
-- Why Camera-First AI Needs Two Deadlines to Catch Fleeting Vision: https://arxiv.org/abs/2610.14772
-- GitHub’s Secret Scanner: More Detection, Less Noise: https://github.blog/ai-and-ml/githubs-model-for-secret-detection-finding-more-secrets-with-less-noise/
-- Can AI Tests Outpace Human Benchmarks? The New LLM‑C Test Explained: https://arxiv.org/abs/2610.14005
-- Open AI Models: Freedom or Danger?: https://www.technologyreview.com/2026/10/13/1146366/open-models-have-real-benefits-do-they-outweigh-the-risks/
-- How dead startups are funding AI labs with their data: https://www.technologyreview.com/2026/10/13/1145755/ai-labs-buying-data-from-dead-startups-to-train-models/
+- Petal: Free Open-Source Pair Programming Tool Revives Screen Sharing: https://petal.live/
+- Can AI Really Design Its Own Experiments?: https://arxiv.org/abs/2610.14381
+- How AI Can Teach Itself to Get Smarter – Inside Recursive Self‑Improvement: https://arxiv.org/abs/2610.14625
+- French supermarkets' fridges turned into fire pits – a simple security flaw: https://arstechnica.com/security/2026/10/fridge-hack-costing-millions-and-sparking-fires-stemmed-from-poor-security/
+- Will Tiny AI Worms Turn Your Smart Fridge Into a Virus Host?: https://arstechnica.com/security/2026/10/anthropic-warns-small-ai-models-could-self-replicate-through-iot-devices/
