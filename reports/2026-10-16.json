@@ -1,0 +1,258 @@
+{
+  "run": {
+    "date": "2026-10-16",
+    "started": "2026-10-16T11:35:43+05:30",
+    "finished": "2026-10-16T11:44:33+05:30",
+    "elapsed_minutes": 8.83402359,
+    "budget_minutes": 115.0,
+    "produced": 5,
+    "target": 5,
+    "uploaded": 5,
+    "publish_mode": "scheduled",
+    "providers": [
+      "groq"
+    ],
+    "tts_engines": [
+      "piper"
+    ],
+    "quota_used": 8000,
+    "failures": 1,
+    "demo": false
+  },
+  "videos": [
+    {
+      "id": "2026-10-16-01-e86ff66c",
+      "date": "2026-10-16",
+      "title": "Why Flock's Surveillance Fallout Is Just the Tip of the Iceberg",
+      "topic_id": "e86ff66c491075b88153f61cb8da6fd416398f5e",
+      "topic_title": "Benn Jordan on Flock, privacy, and the new surveillance backlash",
+      "source": "The Verge - AI",
+      "sources": [
+        "https://www.theverge.com/podcast/1011170/benn-jordan-flock-cameras-alpr-ai-surveillance-privacy"
+      ],
+      "theme": "neon",
+      "provider": "groq",
+      "tts_engine": "piper",
+      "duration": 51.2,
+      "path": "output/2026-10-16/01-benn-jordan-on-flock-privacy-and-the-new-surveil/video.mp4",
+      "srt": "output/2026-10-16/01-benn-jordan-on-flock-privacy-and-the-new-surveil/captions.srt",
+      "captions": 45,
+      "caption_method": "whisper",
+      "status": "uploaded",
+      "qc_warnings": [],
+      "created": "2026-10-16T06:07:29",
+      "render_seconds": 74,
+      "youtube_id": "xcRlNDQW5tY",
+      "url": "https://youtube.com/shorts/xcRlNDQW5tY",
+      "privacy": "private",
+      "publish_at": "2026-10-16T09:30:00Z",
+      "mode": "scheduled"
+    },
+    {
+      "id": "2026-10-16-02-831e945b",
+      "date": "2026-10-16",
+      "title": "How a Gigawatt Hides Inside Old Nuclear Reactors",
+      "topic_id": "831e945b10fddc197d19383b01728d416a7823a2",
+      "topic_title": "How much more can nuclear power plants give?",
+      "source": "MIT Technology Review",
+      "sources": [
+        "https://www.technologyreview.com/2026/10/15/1146577/nuclear-power-upgrade/"
+      ],
+      "theme": "voxel",
+      "provider": "groq",
+      "tts_engine": "piper",
+      "duration": 57.82,
+      "path": "output/2026-10-16/02-how-much-more-can-nuclear-power-plants-give/video.mp4",
+      "srt": "output/2026-10-16/02-how-much-more-can-nuclear-power-plants-give/captions.srt",
+      "captions": 43,
+      "caption_method": "whisper",
+      "status": "uploaded",
+      "qc_warnings": [],
+      "created": "2026-10-16T06:09:12",
+      "render_seconds": 85,
+      "youtube_id": "uFQYOiTcK1w",
+      "url": "https://youtube.com/shorts/uFQYOiTcK1w",
+      "privacy": "private",
+      "publish_at": "2026-10-16T12:30:00Z",
+      "mode": "scheduled"
+    },
+    {
+      "id": "2026-10-16-03-d579c9bd",
+      "date": "2026-10-16",
+      "title": "When AI Keeps Old Thoughts, Does Fresh Evidence Lose?",
+      "topic_id": "d579c9bda0501fa4fe9b7a3db5135108a15cbe70",
+      "topic_title": "When Reasoning Traces Conflict with Evidence: How Answer Configuration Shapes Evidence Following",
+      "source": "arXiv cs.AI",
+      "sources": [
+        "https://arxiv.org/abs/2610.20805"
+      ],
+      "theme": "blueprint",
+      "provider": "groq",
+      "tts_engine": "piper",
+      "duration": 51.12,
+      "path": "output/2026-10-16/03-when-reasoning-traces-conflict-with-evidence-how/video.mp4",
+      "srt": "output/2026-10-16/03-when-reasoning-traces-conflict-with-evidence-how/captions.srt",
+      "captions": 43,
+      "caption_method": "whisper",
+      "status": "uploaded",
+      "qc_warnings": [],
+      "created": "2026-10-16T06:11:08",
+      "render_seconds": 74,
+      "youtube_id": "cYaahln-v5o",
+      "url": "https://youtube.com/shorts/cYaahln-v5o",
+      "privacy": "private",
+      "publish_at": "2026-10-16T15:30:00Z",
+      "mode": "scheduled"
+    },
+    {
+      "id": "2026-10-16-04-801ba3cd",
+      "date": "2026-10-16",
+      "title": "Zero‑click ads turned into silent spyware – the Al Jazeera hack explained",
+      "topic_id": "801ba3cd95f8203214fc4f1349421c89d388bf54",
+      "topic_title": "Targeted ads delivered 0-click exploits to install mercenary malware",
+      "source": "Ars Technica - Technology Lab",
+      "sources": [
+        "https://arstechnica.com/security/2026/10/targeted-ads-delivered-0-click-exploits-to-install-mercenary-malware/"
+      ],
+      "theme": "sunset",
+      "provider": "groq",
+      "tts_engine": "piper",
+      "duration": 49.83,
+      "path": "output/2026-10-16/04-targeted-ads-delivered-0-click-exploits-to-insta/video.mp4",
+      "srt": "output/2026-10-16/04-targeted-ads-delivered-0-click-exploits-to-insta/captions.srt",
+      "captions": 41,
+      "caption_method": "whisper",
+      "status": "uploaded",
+      "qc_warnings": [],
+      "created": "2026-10-16T06:12:38",
+      "render_seconds": 77,
+      "youtube_id": "MLqMdBYffjg",
+      "url": "https://youtube.com/shorts/MLqMdBYffjg",
+      "privacy": "private",
+      "publish_at": "2026-10-17T03:30:00Z",
+      "mode": "scheduled"
+    },
+    {
+      "id": "2026-10-16-05-f1d2b002",
+      "date": "2026-10-16",
+      "title": "How Magnetar lets programs prove they ran correctly in milliseconds",
+      "topic_id": "f1d2b0021bdbe009de6d2056f8ab68956f161aeb",
+      "topic_title": "Proof-based general-purpose computing with Magnetar",
+      "source": "Microsoft Research Blog",
+      "sources": [
+        "https://www.microsoft.com/en-us/research/blog/proof-based-general-purpose-computing-with-magnetar/"
+      ],
+      "theme": "terminal",
+      "provider": "groq",
+      "tts_engine": "piper",
+      "duration": 57.93,
+      "path": "output/2026-10-16/05-proof-based-general-purpose-computing-with-magne/video.mp4",
+      "srt": "output/2026-10-16/05-proof-based-general-purpose-computing-with-magne/captions.srt",
+      "captions": 47,
+      "caption_method": "whisper",
+      "status": "uploaded",
+      "qc_warnings": [],
+      "created": "2026-10-16T06:14:21",
+      "render_seconds": 84,
+      "youtube_id": "cL2ze-Sin4Y",
+      "url": "https://youtube.com/shorts/cL2ze-Sin4Y",
+      "privacy": "private",
+      "publish_at": "2026-10-17T06:30:00Z",
+      "mode": "scheduled"
+    }
+  ],
+  "failures": [
+    {
+      "topic": "When Reality Outpaces Cognition: A New Scaling Principle for Reliable Intelligence",
+      "stage": "script",
+      "error": "script: ScriptError: total narration 171 words not in 95-165"
+    }
+  ],
+  "candidates": [
+    {
+      "title": "Benn Jordan on Flock, privacy, and the new surveillance backlash",
+      "source": "The Verge - AI",
+      "kind": "news",
+      "url": "https://www.theverge.com/podcast/1011170/benn-jordan-flock-cameras-alpr-ai-surveillance-privacy"
+    },
+    {
+      "title": "How much more can nuclear power plants give?",
+      "source": "MIT Technology Review",
+      "kind": "news",
+      "url": "https://www.technologyreview.com/2026/10/15/1146577/nuclear-power-upgrade/"
+    },
+    {
+      "title": "When Reality Outpaces Cognition: A New Scaling Principle for Reliable Intelligence",
+      "source": "arXiv cs.AI",
+      "kind": "research",
+      "url": "https://arxiv.org/abs/2610.20764"
+    },
+    {
+      "title": "When Reasoning Traces Conflict with Evidence: How Answer Configuration Shapes Evidence Following",
+      "source": "arXiv cs.AI",
+      "kind": "research",
+      "url": "https://arxiv.org/abs/2610.20805"
+    },
+    {
+      "title": "Targeted ads delivered 0-click exploits to install mercenary malware",
+      "source": "Ars Technica - Technology Lab",
+      "kind": "news",
+      "url": "https://arstechnica.com/security/2026/10/targeted-ads-delivered-0-click-exploits-to-install-mercenary-malware/"
+    },
+    {
+      "title": "Proof-based general-purpose computing with Magnetar",
+      "source": "Microsoft Research Blog",
+      "kind": "research",
+      "url": "https://www.microsoft.com/en-us/research/blog/proof-based-general-purpose-computing-with-magnetar/"
+    },
+    {
+      "title": "Same Answer, New Box: How Much of RLVR's Out-of-Domain Gain Is Answer Format?",
+      "source": "arXiv cs.LG",
+      "kind": "research",
+      "url": "https://arxiv.org/abs/2610.20639"
+    },
+    {
+      "title": "Six wild ideas for perpetuating your mind",
+      "source": "MIT Technology Review",
+      "kind": "news",
+      "url": "https://www.technologyreview.com/2026/10/15/1145819/six-wild-ideas-perpetuating-your-mind-cognitive-immortality/"
+    },
+    {
+      "title": "TurboMamba: Faster Inference, Faster Training, and Better Prediction with Lexical Memory",
+      "source": "arXiv cs.LG",
+      "kind": "research",
+      "url": "https://arxiv.org/abs/2610.20682"
+    },
+    {
+      "title": "Sega pulls Total War: Shogun 2 remaster from sale following disastrous launch",
+      "source": "The Verge - AI",
+      "kind": "news",
+      "url": "https://www.theverge.com/games/1012512/sega-total-war-shogun-2-remaster-pulled"
+    },
+    {
+      "title": "How Do Fungi Keep the Planet Healthy?",
+      "source": "Quanta Magazine",
+      "kind": "concepts",
+      "url": "https://www.quantamagazine.org/how-do-fungi-keep-the-planet-healthy-20261015/"
+    },
+    {
+      "title": "Anthropic tells investors quarterly revenue up nearly 50% to $16.8bn ahead of IPO",
+      "source": "Simon Willison",
+      "kind": "news",
+      "url": "https://simonwillison.net/2026/Oct/15/anthropic-tells-investors/"
+    },
+    {
+      "title": "AI is mass decompiling games. That's both awesome and scary.",
+      "source": "Simon Willison",
+      "kind": "news",
+      "url": "https://simonwillison.net/2026/Oct/14/ai-is-mass-decompiling-games/"
+    },
+    {
+      "title": "Topgolf saved over $11.3 million after leaving VMware",
+      "source": "Ars Technica - Technology Lab",
+      "kind": "news",
+      "url": "https://arstechnica.com/information-technology/2026/10/topgolf-saved-over-11-3-million-after-leaving-vmware/"
+    }
+  ],
+  "warnings": []
+}

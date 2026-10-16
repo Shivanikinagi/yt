@@ -1,8 +1,8 @@
-# Daily run 2026-10-15
+# Daily run 2026-10-16
 
-- Started: 2026-10-15T11:39:00+05:30  
-- Finished: 2026-10-15T11:47:53+05:30  
-- Elapsed: 8.9 min (budget 115 min)  
+- Started: 2026-10-16T11:35:43+05:30  
+- Finished: 2026-10-16T11:44:33+05:30  
+- Elapsed: 8.8 min (budget 115 min)  
 - Produced: 5 / target 5  
 - Uploaded: 5  
 - Publish mode: scheduled  
@@ -15,33 +15,37 @@
 
 | # | Title | Duration | Theme | Status | YouTube | Publish at | QC warnings |
 |---|---|---|---|---|---|---|---|
-| 1 | Petal: Free Open-Source Pair Programming Tool Revives Screen Sharing | 53s | neon | uploaded | [5iqJgG_4rKI](https://youtube.com/shorts/5iqJgG_4rKI) | 2026-10-15T09:30:00Z | - |
-| 2 | Can AI Really Design Its Own Experiments? | 57s | voxel | uploaded | [7_--mADrv4Y](https://youtube.com/shorts/7_--mADrv4Y) | 2026-10-15T12:30:00Z | - |
-| 3 | How AI Can Teach Itself to Get Smarter – Inside Recursive Self‑Improvement | 54s | blueprint | uploaded | [-NxCZJMUeqw](https://youtube.com/shorts/-NxCZJMUeqw) | 2026-10-15T15:30:00Z | - |
-| 4 | French supermarkets' fridges turned into fire pits – a simple security flaw | 52s | sunset | uploaded | [NAZiAFuiASA](https://youtube.com/shorts/NAZiAFuiASA) | 2026-10-16T03:30:00Z | - |
-| 5 | Will Tiny AI Worms Turn Your Smart Fridge Into a Virus Host? | 58s | terminal | uploaded | [YSatA5bhhpE](https://youtube.com/shorts/YSatA5bhhpE) | 2026-10-16T06:30:00Z | - |
+| 1 | Why Flock's Surveillance Fallout Is Just the Tip of the Iceberg | 51s | neon | uploaded | [xcRlNDQW5tY](https://youtube.com/shorts/xcRlNDQW5tY) | 2026-10-16T09:30:00Z | - |
+| 2 | How a Gigawatt Hides Inside Old Nuclear Reactors | 58s | voxel | uploaded | [uFQYOiTcK1w](https://youtube.com/shorts/uFQYOiTcK1w) | 2026-10-16T12:30:00Z | - |
+| 3 | When AI Keeps Old Thoughts, Does Fresh Evidence Lose? | 51s | blueprint | uploaded | [cYaahln-v5o](https://youtube.com/shorts/cYaahln-v5o) | 2026-10-16T15:30:00Z | - |
+| 4 | Zero‑click ads turned into silent spyware – the Al Jazeera hack explained | 50s | sunset | uploaded | [MLqMdBYffjg](https://youtube.com/shorts/MLqMdBYffjg) | 2026-10-17T03:30:00Z | - |
+| 5 | How Magnetar lets programs prove they ran correctly in milliseconds | 58s | terminal | uploaded | [cL2ze-Sin4Y](https://youtube.com/shorts/cL2ze-Sin4Y) | 2026-10-17T06:30:00Z | - |
+
+## Failures
+
+- **When Reality Outpaces Cognition: A New Scaling Principle for Reliable Intelligence** — script: script: ScriptError: total narration 171 words not in 95-165
 
 ## Topics considered
 
-- Show HN: Petal, open-source CoScreen/ScreenHero finally free (Hacker News front page (150+ points), news)
-- ACED-Bench: Evaluating How LLM Agents Acquire and Act on Causal Evidence (arXiv cs.AI, research)
-- From Existing Methods to New Research Ideas: Two Perspectives on Recursive Self-Improvement (arXiv cs.AI, research)
-- Fridge hack costing millions and sparking fires stemmed from poor security (Ars Technica - Technology Lab, news)
-- Anthropic warns small AI models could self-replicate through IoT devices (Ars Technica - Technology Lab, news)
-- The US military’s race to make fake blood (MIT Technology Review, news)
-- How Many Ranks Does a Token Need? A Noise-Floor Squelch for Rank-One LoRA Experts (arXiv cs.LG, research)
-- How Inner Optimizers Shape Replica Scaling (arXiv cs.LG, research)
-- YouTube sticks new labels on AI-generated songs (The Verge - AI, news)
-- The AI race is back on (The Verge - AI, news)
+- Benn Jordan on Flock, privacy, and the new surveillance backlash (The Verge - AI, news)
+- How much more can nuclear power plants give? (MIT Technology Review, news)
+- When Reality Outpaces Cognition: A New Scaling Principle for Reliable Intelligence (arXiv cs.AI, research)
+- When Reasoning Traces Conflict with Evidence: How Answer Configuration Shapes Evidence Following (arXiv cs.AI, research)
+- Targeted ads delivered 0-click exploits to install mercenary malware (Ars Technica - Technology Lab, news)
+- Proof-based general-purpose computing with Magnetar (Microsoft Research Blog, research)
+- Same Answer, New Box: How Much of RLVR's Out-of-Domain Gain Is Answer Format? (arXiv cs.LG, research)
+- Six wild ideas for perpetuating your mind (MIT Technology Review, news)
+- TurboMamba: Faster Inference, Faster Training, and Better Prediction with Lexical Memory (arXiv cs.LG, research)
+- Sega pulls Total War: Shogun 2 remaster from sale following disastrous launch (The Verge - AI, news)
+- How Do Fungi Keep the Planet Healthy? (Quanta Magazine, concepts)
+- Anthropic tells investors quarterly revenue up nearly 50% to $16.8bn ahead of IPO (Simon Willison, news)
 - AI is mass decompiling games. That's both awesome and scary. (Simon Willison, news)
-- Redesigning source control at Anthropic (Simon Willison, news)
-- Triplet of ‘Ghostly’ Galaxies Hints at What Dark Matter Is — and Isn’t (Quanta Magazine, concepts)
-- How Third Moment Research runs 10,000 agents for 36+ hours (OpenAI News, news)
+- Topgolf saved over $11.3 million after leaving VMware (Ars Technica - Technology Lab, news)
 
 ## Sources used
 
-- Petal: Free Open-Source Pair Programming Tool Revives Screen Sharing: https://petal.live/
-- Can AI Really Design Its Own Experiments?: https://arxiv.org/abs/2610.14381
-- How AI Can Teach Itself to Get Smarter – Inside Recursive Self‑Improvement: https://arxiv.org/abs/2610.14625
-- French supermarkets' fridges turned into fire pits – a simple security flaw: https://arstechnica.com/security/2026/10/fridge-hack-costing-millions-and-sparking-fires-stemmed-from-poor-security/
-- Will Tiny AI Worms Turn Your Smart Fridge Into a Virus Host?: https://arstechnica.com/security/2026/10/anthropic-warns-small-ai-models-could-self-replicate-through-iot-devices/
+- Why Flock's Surveillance Fallout Is Just the Tip of the Iceberg: https://www.theverge.com/podcast/1011170/benn-jordan-flock-cameras-alpr-ai-surveillance-privacy
+- How a Gigawatt Hides Inside Old Nuclear Reactors: https://www.technologyreview.com/2026/10/15/1146577/nuclear-power-upgrade/
+- When AI Keeps Old Thoughts, Does Fresh Evidence Lose?: https://arxiv.org/abs/2610.20805
+- Zero‑click ads turned into silent spyware – the Al Jazeera hack explained: https://arstechnica.com/security/2026/10/targeted-ads-delivered-0-click-exploits-to-install-mercenary-malware/
+- How Magnetar lets programs prove they ran correctly in milliseconds: https://www.microsoft.com/en-us/research/blog/proof-based-general-purpose-computing-with-magnetar/
