@@ -137,7 +137,17 @@ def build_metadata(script: VideoScript, cfg, mode: str, publish_at: datetime | N
     parts.append(f"New tech explained every day. Subscribe: {channel_url(cfg)}?sub_confirmation=1")
     parts += [f"Sources:\n{sources}", cfg.youtube.description_footer.strip(), " ".join(script.hashtags)]
     desc = "\n\n".join(p for p in parts if p)
-    tags = [h.lstrip("#") for h in script.hashtags] + (["technology", "explained", "deep dive"] if long_form
+    credit_lines = extra.get("credits") or []
+    if credit_lines:                           # photo/footage credits, as many as fit (each is also shown on screen)
+        room, kept = 4850 - len(desc) - 30, []
+        for line in credit_lines:
+            if room - len(line) - 1 < 0:
+                break
+            kept.append(line)
+            room -= len(line) + 1
+        if kept:
+            desc += "\n\nImages and footage:\n" + "\n".join(kept)
+    tags =[h.lstrip("#") for h in script.hashtags] + (["technology", "explained", "deep dive"] if long_form
                                                          else ["shorts", "technology", "explained"])
     body = {
         "snippet": {"title": title[:100], "description": desc[:4900], "tags": tags[:30],

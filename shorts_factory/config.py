@@ -70,7 +70,7 @@ def load_longform() -> list[dict]:
 
 # `video` keys that a format section may override
 _FORMAT_VIDEO_KEYS = ("width", "height", "fps", "min_seconds", "max_seconds", "crf", "preset", "lead_in_seconds",
-                      "scene_gap_seconds", "tail_seconds", "transition_seconds", "cast_pairs", "cinematic", "themes")
+                      "scene_gap_seconds", "tail_seconds", "transition_seconds", "cast_pairs", "cinematic", "themes", "style")
 
 
 def cfg_for_format(cfg: Cfg, fmt: str) -> Cfg:

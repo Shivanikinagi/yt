@@ -50,11 +50,13 @@ jobs:
       - name: Unit tests (Linux catches platform-specific bugs before a 2-hour run)
         run: pip install -q pytest && python -m pytest -q tests
 
-      - name: Cache Piper voice
+      - name: Cache voice models
         uses: actions/cache@v4
         with:
-          path: models/piper
-          key: piper-${{ hashFiles('config/settings.yaml') }}
+          path: |
+            models/piper
+            models/kokoro
+          key: voices-${{ hashFiles('config/settings.yaml') }}
 
       - name: Environment check
         env:
@@ -81,6 +83,7 @@ jobs:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           YOUTUBE_TOKEN_JSON: ${{ secrets.YOUTUBE_TOKEN_JSON }}
           YOUTUBE_CLIENT_SECRET_JSON: ${{ secrets.YOUTUBE_CLIENT_SECRET_JSON }}

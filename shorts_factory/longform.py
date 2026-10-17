@@ -70,10 +70,17 @@ Cover these points: {points}
 The video is a conversation between {host} (the host: explains and carries the facts) and {guest} (the guest:
 asks short questions, reacts, sums up in their own words, sometimes pushes back).
 Write {smin} to {smax} scenes with {wmin}-{wmax} spoken words in total for this chapter.
-Scene types: {types}"explain" (headline + 2-4 short bullets), "diagram" (3-5 node labels showing a flow),
-"compare" (left vs right, 2-3 items each), "code" (3-6 short lines, only if natural), "fact" (one striking
-phrase; a number from the source goes in on_screen as digits, it is animated as a counter).
-Mix the types; at most 2 "compare" scenes per chapter. Every scene must fill the fields of its type.
+This is a documentary: the viewer sees real photos and footage, so every scene needs "search": a 2-5 word
+query for real photos or video of something concrete and visible (objects, places, machines, named people
+or companies), e.g. "nuclear centrifuge hall", "server room cables", "Garry Kasparov". Never abstract ideas.
+Scene types: {types}"photo" (real footage carries it; headline only), "explain" (headline + 2-4 short bullets),
+"quote" (one exact sentence copied word for word from the SOURCE MATERIAL, max 40 words, shown as a highlighted
+article clipping), "timeline" (2-5 dated events from the source), "chart" (2-5 numbers from the source to
+compare as bars), "fact" (one striking number from the source in on_screen as digits, animated as a counter),
+"diagram" (3-5 node labels showing a flow), "compare" (left vs right, 2-3 items each), "code" (3-6 short
+lines, only if natural).
+Mix the types: mostly "photo" and "explain", plus a "quote", "timeline", "chart" or "fact" whenever the
+source supports one; at most 1 "compare" and 1 "diagram" per chapter. Every scene must fill its fields.
 Each scene has "lines": 1-4 spoken lines in order, each {{"who": "host" or "guest", "text": "..."}}, 15-85 words
 per scene. The guest speaks in at least half of the scenes. Vary sentence length; it must sound like two
 people talking, not a lecture.
@@ -84,13 +91,16 @@ word the lines say, so they can appear as it is spoken. Optional per scene: "kic
 Do not greet the viewer, do not ask them to like, comment or subscribe (that is added separately), and do not
 mention chapter numbers.
 
-Return exactly this JSON shape (scene shapes by type; "lines" in every scene):
+Return exactly this JSON shape (scene shapes by type; "search" and "lines" in every scene):
 {{"scenes": [
-  {{"type": "explain", "on_screen": "...", "kicker": "...", "bullets": ["...", "..."], "lines": [{{"who": "guest", "text": "..."}}, {{"who": "host", "text": "..."}}]}},
-  {{"type": "diagram", "on_screen": "...", "nodes": ["...", "...", "..."], "lines": [...]}},
-  {{"type": "compare", "on_screen": "...", "left_title": "...", "right_title": "...", "left": ["...", "..."], "right": ["...", "..."], "lines": [...]}},
-  {{"type": "code", "on_screen": "...", "code": ["...", "..."], "lines": [...]}},
-  {{"type": "fact", "on_screen": "...", "highlight": "...", "lines": [...]}}
+  {{"type": "photo", "on_screen": "...", "kicker": "...", "search": "...", "lines": [{{"who": "guest", "text": "..."}}, {{"who": "host", "text": "..."}}]}},
+  {{"type": "explain", "on_screen": "...", "search": "...", "bullets": ["...", "..."], "lines": [...]}},
+  {{"type": "quote", "on_screen": "...", "search": "...", "quote": "exact sentence from the source", "lines": [...]}},
+  {{"type": "timeline", "on_screen": "...", "search": "...", "timeline": [{{"when": "2010", "label": "..."}}, {{"when": "2012", "label": "..."}}], "lines": [...]}},
+  {{"type": "chart", "on_screen": "...", "search": "...", "chart": {{"unit": "%", "bars": [{{"label": "...", "value": 42}}, {{"label": "...", "value": 17}}]}}, "lines": [...]}},
+  {{"type": "fact", "on_screen": "...", "search": "...", "highlight": "...", "lines": [...]}},
+  {{"type": "diagram", "on_screen": "...", "search": "...", "nodes": ["...", "...", "..."], "lines": [...]}},
+  {{"type": "compare", "on_screen": "...", "search": "...", "left_title": "...", "right_title": "...", "left": ["..."], "right": ["..."], "lines": [...]}}
 ]}}"""
 
 SCENE_MIN_WORDS, SCENE_MAX_WORDS = 8, 95
@@ -129,12 +139,57 @@ def _check_outline(data: dict, cmin: int, cmax: int) -> dict:
     return data
 
 
-def _check_chapter(data: dict, cast, k: int, n: int, smin: int, smax: int, wmin: int, wmax: int) -> list[dict]:
+def _norm_text(x: str) -> str:
+    x = str(x).translate(str.maketrans({"’": "'", "‘": "'", "“": '"', "”": '"', "‑": "-"}))
+    return re.sub(r"[^a-z0-9%$.,' -]", "", " ".join(x.lower().split()))
+
+
+def _number_in(value, source_norm: str) -> bool:
+    v = float(value)
+    forms = {f"{v:g}", f"{v:,.0f}" if v.is_integer() else f"{v:,}", str(int(v)) if v.is_integer() else f"{v}"}
+    return any(f.lower() in source_norm or f.replace(",", "") in source_norm.replace(",", "") for f in forms)
+
+
+def _documentary_fields(raw: dict, ns: dict, source_norm: str) -> None:
+    """Search query, quote, timeline and chart; anything not backed by the source becomes a photo scene."""
+    ns["search"] = _clip(raw.get("search") or ns.get("on_screen") or "", 60)
+    kind = ns["type"]
+    if kind == "quote":
+        q = " ".join(str(raw.get("quote") or "").split()).strip(' "')
+        if q and 6 <= len(q.split()) <= 45 and _norm_text(q) in source_norm:
+            ns["quote"] = q
+        else:
+            ns["type"] = "photo"
+    elif kind == "timeline":
+        ev = [{"when": _clip(e.get("when", ""), 14), "label": _clip(e.get("label", ""), 44)}
+              for e in raw.get("timeline") or [] if isinstance(e, dict) and str(e.get("when", "")).strip()]
+        if len(ev) >= 2 and all(_norm_text(e["when"]) in source_norm for e in ev):
+            ns["timeline"] = ev[:5]
+        else:
+            ns["type"] = "photo"
+    elif kind == "chart":
+        ch = raw.get("chart") if isinstance(raw.get("chart"), dict) else {}
+        bars = []
+        for b in ch.get("bars") or []:
+            try:
+                bars.append({"label": _clip(b.get("label", ""), 24), "value": float(str(b.get("value")).replace(",", ""))})
+            except (TypeError, ValueError, AttributeError):
+                continue
+        if len(bars) >= 2 and all(b["value"] > 0 and _number_in(b["value"], source_norm) for b in bars):
+            ns["chart"] = {"unit": _clip(ch.get("unit") or "", 12), "bars": bars[:5]}
+        else:
+            ns["type"] = "photo"
+
+
+def _check_chapter(data: dict, cast, k: int, n: int, smin: int, smax: int, wmin: int, wmax: int,
+                   source: str = "") -> list[dict]:
     scenes, problems = [], []
+    source_norm = _norm_text(source)
     for i, raw in enumerate(data.get("scenes") or []):
         if not isinstance(raw, dict):
             continue
         ns, errs = normalize_scene(raw, cast, SCENE_MIN_WORDS, SCENE_MAX_WORDS)
+        _documentary_fields(raw, ns, source_norm)
         kind = str(raw.get("type", "")).lower()
         need = {"explain": ("bullets",), "diagram": ("nodes",), "compare": ("left", "right"), "code": ("code",)}
         missing = [f for f in need.get(kind, ()) if not [x for x in raw.get(f) or [] if str(x).strip()]]
@@ -227,7 +282,7 @@ def write_long_script(topic: Topic, theme: str, cfg, logger, cast: list[str] | N
             title=topic.title, text=text[:5000], video_title=outline["title"], chapter_list=chapter_list, k=k, n=n,
             ctitle=ctitle, position=position, points=points, host=names[0], guest=names[1], smin=smin, smax=smax,
             wmin=wmin, wmax=wmax, ending=ending, types='"title" (only the first scene), ' if k == 1 else "")
-        body, prov = _llm_json(cfg, user, logger, lambda d: _check_chapter(d, cast, k, n, smin, smax, wmin, wmax))
+        body, prov = _llm_json(cfg, user, logger, lambda d: _check_chapter(d, cast, k, n, smin, smax, wmin, wmax, text))
         providers.add(prov)
         logger.info("  chapter %d/%d %r: %d scenes, %d words", k, n, ctitle, len(body),
                     sum(word_count(s["narration"]) for s in body))

@@ -357,3 +357,116 @@ def test_moving_average_matches_convolution():
     for w in (1, 2, 7, 64):
         ref = np.convolve(x, np.ones(w, np.float32) / w, mode="same")
         assert np.abs(ref - moving_average(x, w)).max() < 1e-5
+
+
+# ----------------------------------------------------------------------------- documentary long-form
+def _docu_fixture(tmp_path):
+    import numpy as np
+    from PIL import Image
+    assets = []
+    for i, kind in enumerate(("photo", "graphic", "photo")):
+        p = tmp_path / f"a{i}.jpg"
+        Image.fromarray(np.random.default_rng(i).integers(0, 255, (900, 1600, 3), dtype=np.uint8)).save(p)
+        assets.append({"path": str(p), "kind": kind, "credit": f"Author {i} / CC BY 4.0", "title": f"t{i}"})
+    turns = [("guest", 0.2, 2.0), ("host", 2.3, 11.0)]
+    views = [
+        {"type": "title", "on_screen": "The backdoor", "_turns": [("host", 0.2, 5.0), ("guest", 5.2, 7.0)], "chapter_index": 1},
+        {"type": "explain", "on_screen": "How it hid", "bullets": ["one", "two"], "_turns": turns, "chapter_index": 1},
+        {"type": "quote", "on_screen": "In their words", "quote": "A sentence from the source.", "_turns": turns, "chapter_index": 1},
+        {"type": "chapter", "on_screen": "Part two", "cta": "like", "cta_from": 0, "chapter_index": 2,
+         "_turns": [("host", 0.2, 3.0), ("guest", 3.2, 5.0)]},
+        {"type": "timeline", "on_screen": "Timeline", "timeline": [{"when": "2021", "label": "a"}, {"when": "2024", "label": "b"}],
+         "_turns": turns, "chapter_index": 2},
+        {"type": "chart", "on_screen": "Numbers", "chart": {"unit": "%", "bars": [{"label": "a", "value": 40}, {"label": "b", "value": 10}]},
+         "_turns": turns, "chapter_index": 2},
+        {"type": "fact", "on_screen": "8.5 million machines", "_turns": turns, "chapter_index": 2},
+        {"type": "diagram", "on_screen": "Flow", "nodes": ["a", "b", "c"], "_turns": turns, "chapter_index": 2},
+        {"type": "outro", "on_screen": "Bye", "cta": "end", "cta_from": 0, "_turns": [("host", 0.2, 4.0)], "chapter_index": 2},
+    ]
+    timeline = build_timeline([7.5 if v["type"] in ("title",) else 11.5 for v in views], cfg)
+    media = {"scenes": [[assets[i % 3]] for i in range(len(views))], "pool": assets}
+    return views, timeline, media
+
+
+def test_documentary_shot_plan_covers_the_video_with_small_character_role(tmp_path):
+    from shorts_factory.docu import plan_shots, sfx_events
+    views, timeline, media = _docu_fixture(tmp_path)
+    shots = plan_shots(views, timeline, media)
+    assert shots[0]["start"] == 0.0 and shots[-1]["end"] >= timeline[-1]["end"]
+    assert all(a["end"] == b["start"] for a, b in zip(shots, shots[1:]))
+    kinds = [s["kind"] for s in shots]
+    for k in ("broll", "quote", "timeline", "chart", "stat", "panel", "chapter", "wide", "close"):
+        assert k in kinds, k
+    char_time = sum(s["end"] - s["start"] for s in shots if s["kind"] in ("wide", "close"))
+    assert char_time < 0.35 * timeline[-1]["end"]                  # characters only in a small role
+    assert max(s["end"] - s["start"] for s in shots if s["kind"] == "broll") < 7
+    sfx = sfx_events(shots)
+    assert any(k == "riser" for _, k in sfx) and any(k == "impact" for _, k in sfx)
+
+
+def test_documentary_renderer_draws_every_shot_kind(tmp_path):
+    from shorts_factory.config import cfg_for_format
+    from shorts_factory.docu import DocuRenderer, plan_shots
+    lcfg = cfg_for_format(cfg, "long")
+    views, timeline, media = _docu_fixture(tmp_path)
+    shots = plan_shots(views, timeline, media)
+    s = template_script(_topic(), "neon", ["nova", "kai"])
+    s.extra["chapters"] = ["Intro", "Part two"]
+    r = DocuRenderer(lcfg, s, views, shots, seed=1)
+    cap = {"words": [("Hello", 0.0, 0.5), ("world", 0.5, 1.0)], "start": 0.0, "end": 1.0, "who": "guest"}
+    seen = set()
+    for sh in shots:
+        if sh["kind"] in seen:
+            continue
+        seen.add(sh["kind"])
+        i, t = sh["scene"], (sh["start"] + sh["end"]) / 2
+        img = r.frame(views[i], t - timeline[i]["start"], 11.5, t, 0.5, "x", cap, index=i)
+        assert img.size == (1920, 1080), sh["kind"]
+    r.close()
+
+
+def test_documentary_fields_must_come_from_the_source():
+    from shorts_factory.longform import _documentary_fields, _norm_text
+    src = _norm_text("In 2010 the worm hit 14 sites. It spread to 200,000 computers. Officials called it a wake-up call.")
+    ns = {"type": "quote", "on_screen": "x"}
+    _documentary_fields({"quote": "In 2010 the worm hit 14 sites.", "search": "centrifuge hall"}, ns, src)
+    assert ns["type"] == "quote" and ns["search"] == "centrifuge hall"
+    ns = {"type": "quote", "on_screen": "x"}
+    _documentary_fields({"quote": "It spread to millions of computers worldwide overnight."}, ns, src)
+    assert ns["type"] == "photo"                                   # not in the source -> plain b-roll
+    ns = {"type": "chart", "on_screen": "x"}
+    _documentary_fields({"chart": {"bars": [{"label": "sites", "value": 14}, {"label": "PCs", "value": "200,000"}]}}, ns, src)
+    assert ns["type"] == "chart" and ns["chart"]["bars"][1]["value"] == 200000
+    ns = {"type": "chart", "on_screen": "x"}
+    _documentary_fields({"chart": {"bars": [{"label": "a", "value": 14}, {"label": "b", "value": 99}]}}, ns, src)
+    assert ns["type"] == "photo"
+    ns = {"type": "timeline", "on_screen": "x"}
+    _documentary_fields({"timeline": [{"when": "2010", "label": "a"}, {"when": "2031", "label": "b"}]}, ns, src)
+    assert ns["type"] == "photo"
+
+
+def test_media_license_and_junk_filters():
+    from shorts_factory.media import _asset_from_imageinfo, _license_ok
+    assert _license_ok("CC BY-SA 4.0") and _license_ok("Public domain") and _license_ok("CC0")
+    assert not _license_ok("CC BY-NC 2.0") and not _license_ok("CC BY-ND 3.0") and not _license_ok("Fair use")
+    meta = lambda lic, nonfree="": {"LicenseShortName": {"value": lic}, "NonFree": {"value": nonfree},  # noqa: E731
+                                    "Artist": {"value": "<a>Jane</a>"}}
+    photo = {"mime": "image/jpeg", "width": 2000, "height": 1300, "thumburl": "u", "extmetadata": meta("CC BY 2.0")}
+    a = _asset_from_imageinfo("File:Natanz hall.jpg", photo, "commons")
+    assert a and a["kind"] == "photo" and a["credit"] == "Jane / CC BY 2.0"
+    assert _asset_from_imageinfo("File:Flag of Iran.svg", {**photo, "mime": "image/svg+xml"}, "w") is None
+    assert _asset_from_imageinfo("File:Poster.jpg", {**photo, "extmetadata": meta("CC BY 2.0", "true")}, "w") is None
+    assert _asset_from_imageinfo("File:Tiny.jpg", {**photo, "width": 400}, "w") is None
+
+
+def test_sound_effects_in_mix(tmp_path):
+    import numpy as np
+    from shorts_factory.audio import build_mix, synth_sfx
+    from shorts_factory.utils import write_wav
+    for k in ("whoosh", "impact", "riser", "swish"):
+        s = synth_sfx(k, 48000)
+        assert 0.3 * 48000 < len(s) < 1.5 * 48000 and np.abs(s).max() <= 1.0
+    w = tmp_path / "v.wav"
+    write_wav(w, np.full(48000, 0.1, np.float32), 48000)
+    mix, narration = build_mix([w], [0.5], 4.0, 48000, -24, False, 1, sfx=[(2.0, "impact")])
+    assert len(mix) == 4 * 48000 and np.abs(mix[2 * 48000:int(2.3 * 48000)]).max() > 0.02

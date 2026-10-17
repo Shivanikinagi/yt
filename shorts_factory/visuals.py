@@ -1083,7 +1083,8 @@ class Renderer:
         return 0
 
     def frame(self, scene: dict, t_local: float, scene_dur: float, t_global: float, progress: float,
-              label: str, caption: dict | None, index: int | None = None) -> Image.Image:
+              label: str, caption: dict | None, index: int | None = None, shot: str | None = None) -> Image.Image:
+        """`shot` forces "wide", "close" or "panel" (the documentary renderer decides when characters appear)."""
         if index is None:
             index = self._index_of(scene)
         turns = scene.get("_turns")
@@ -1092,7 +1093,7 @@ class Renderer:
         if caption and caption.get("who") and caption["who"] != who:
             caption = None                          # a chunk from the other speaker is ending
         grain = self.grain[int(t_global * self.fps) % len(self.grain)]
-        shot = self._shot(scene, t_local, who)
+        shot = shot if shot and self.cinematic else self._shot(scene, t_local, who)
         if shot != "panel":
             k = turn_at(turns, t_local)
             lines = scene.get("lines") or []

@@ -10,7 +10,8 @@ from .llm import LLMError, chat
 from .research import Topic
 from .utils import extract_json, word_count
 
-SCENE_TYPES = {"title", "explain", "diagram", "compare", "code", "fact", "payoff", "chapter", "outro"}
+SCENE_TYPES = {"title", "explain", "diagram", "compare", "code", "fact", "payoff", "chapter", "outro",
+               "photo", "quote", "timeline", "chart"}       # the last four: documentary long-form only
 MIN_SCENES, MAX_SCENES = 4, 8
 # Short and hook-first: most viewers decide in the first second, and a 30-40 s Short that is watched
 # to the end (or loops) beats a 55 s one abandoned halfway. Measured pace incl. pauses: ~2.6 words/s.

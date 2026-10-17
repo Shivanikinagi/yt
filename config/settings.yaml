@@ -51,6 +51,10 @@ long_video:
   schedule_slots_local: ["17:00"]
   captions_max_words: 5
   captions_max_chars: 30
+  # documentary = real photos (Wikipedia/Wikimedia Commons) and stock footage (Pexels, needs the free
+  # PEXELS_API_KEY) cut every few seconds, with the characters only in the intro, reactions and outro.
+  # Anything else = the Shorts look in 16:9.
+  style: documentary
 
 # Daily feedback loop: the channel's own view counts and YouTube's most-popular tech videos steer
 # topic ranking and the script prompts. Read-only calls, about 5 quota units a day.
@@ -101,11 +105,14 @@ llm:
   temperature: 0.8
 
 tts:
-  # Tried in order. piper = offline open source (default). groq = Orpheus via Groq (needs terms
+  # Tried in order. kokoro = offline open source, natural (default). piper = offline, more robotic
+  # (fallback). groq = Orpheus via Groq (needs terms
   # acceptance in the Groq console). edge = Microsoft Edge read-aloud (unofficial endpoint, opt-in).
   # sapi = Windows built-in voices (Windows only, last resort).
-  engines: [piper, groq, sapi, edge]
+  engines: [kokoro, piper, groq, sapi, edge]
   piper_voice: "en_US-lessac-medium"
+  kokoro_voice: "af_heart"           # characters have their own voices in characters.py
+  kokoro_speed: 1.0
   piper_length_scale: 0.95           # <1 = faster speech
   groq_tts_model: "canopylabs/orpheus-v1-english"
   groq_tts_voice: "troy"

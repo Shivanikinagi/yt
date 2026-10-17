@@ -63,7 +63,9 @@ def _with_length_scale(cfg, length_scale: float):
     import copy
     from .config import Cfg
     new = Cfg(copy.deepcopy(dict(cfg)))
+    old = float(cfg.tts.piper_length_scale) or 1.0
     new["tts"]["piper_length_scale"] = round(length_scale, 3)
+    new["tts"]["kokoro_speed"] = round(float(cfg.tts.get("kokoro_speed", 1.0)) * old / length_scale, 3)
     return new
 
 
@@ -132,8 +134,16 @@ def produce_video(topic: Topic, index: int, date: str, cfg, logger, state: State
                 est = sum(a.duration for a in audio)
                 logger.info("narration tempo x%.3f -> %.1fs", tempo, est)
 
+        media = None
+        if long_form and cfg.video.get("style") == "documentary":
+            stage = "media"                        # real photos and footage for the documentary cut
+            from .media import credits, gather
+            media = gather(script, topic, [a.duration for a in audio], vdir / "media", logger)
+            script.extra["credits"] = credits(media)
+            deadline.check(stage)
+
         stage = "render"
-        result = render_video(script, audio, vdir, cfg, logger, deadline=deadline, seed=seed)
+        result = render_video(script, audio, vdir, cfg, logger, deadline=deadline, seed=seed, media=media)
         deadline.check(stage)
         thumb = None
         if long_form:

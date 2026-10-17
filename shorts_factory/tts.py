@@ -117,7 +117,41 @@ def _sapi(text: str, out: Path, cfg, logger, voice: dict | None = None) -> None:
         raise PipelineError(f"sapi failed: {proc.stderr[-300:]}")
 
 
-ENGINES = {"piper": _piper, "groq": _groq, "edge": _edge, "sapi": _sapi}
+# ----------------------------------------------------------------------------- kokoro (offline, natural)
+# Kokoro-82M (Apache-2.0) sounds far more like a person than Piper and still runs on a CPU.
+KOKORO_URL = "https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/"
+KOKORO_FILES = ("kokoro-v1.0.int8.onnx", "voices-v1.0.bin")
+_KOKORO: dict = {}
+
+
+def ensure_kokoro(logger) -> tuple[Path, Path]:
+    d = MODELS_DIR / "kokoro"
+    paths = tuple(d / f for f in KOKORO_FILES)
+    for f, p in zip(KOKORO_FILES, paths):
+        if p.exists() and p.stat().st_size > 1_000_000:
+            continue
+        d.mkdir(parents=True, exist_ok=True)
+        logger.info("downloading kokoro %s ...", f)
+        tmp = p.with_suffix(p.suffix + ".part")
+        with requests.get(KOKORO_URL + f, stream=True, timeout=120) as r:
+            r.raise_for_status()
+            with open(tmp, "wb") as fh:
+                for chunk in r.iter_content(1 << 20):
+                    fh.write(chunk)
+        os.replace(tmp, p)
+    return paths  # type: ignore[return-value]
+
+
+def _kokoro(text: str, out: Path, cfg, logger, voice: dict | None = None) -> None:
+    from kokoro_onnx import Kokoro
+    if "model" not in _KOKORO:
+        _KOKORO["model"] = Kokoro(*(str(p) for p in ensure_kokoro(logger)))
+    name = (voice or {}).get("kokoro") or cfg.tts.get("kokoro_voice", "af_heart")
+    samples, sr = _KOKORO["model"].create(text, voice=name, speed=float(cfg.tts.get("kokoro_speed", 1.0)), lang="en-us")
+    write_wav(out, np.asarray(samples, np.float32), int(sr))
+
+
+ENGINES = {"piper": _piper, "kokoro": _kokoro, "groq": _groq, "edge": _edge, "sapi": _sapi}
 
 
 def tempo_adjust(result: TTSResult, tempo: float, sr: int) -> TTSResult:

@@ -44,7 +44,24 @@ viewer ("Can AI tests outpace human benchmarks?", 158 views) beat obscure paper 
 
 ## Long-form videos
 
-One a day, 16:9, the same two characters filmed as an 8-10 minute conversation with chapters.
+One a day, 16:9, 8-10 minutes, cut like a documentary (`long_video.style: documentary`): real
+photos and footage, a new shot every 4-6 seconds, with the two characters' voices carrying the
+conversation and the characters themselves only on screen for the intro, short reactions, the like
+ask and the outro.
+
+- **Real visuals**: each scene has a search query for something concrete and visible. Images come
+  from the Wikipedia articles the script is based on and from Wikimedia Commons, free licenses
+  only (non-free, NC and ND files are skipped). Stock video and photos come from Pexels when the
+  free `PEXELS_API_KEY` secret is set (pexels.com/api); real footage is the biggest single step
+  towards a filmed look. Every image credits its author and license on screen and in the description.
+- **Shot types**: slow zooms and pans over photos, stock clips, highlighted article clippings
+  (`quote`, the sentence must appear word for word in the source), animated timelines and bar
+  charts (every date and number must be in the source, or the scene falls back to a photo), big
+  number reveals, diagram cards, full-screen chapter cards with a flash cut.
+- **Sound**: whooshes into graphics, a riser and hit into each chapter, a highlighter swish on quotes.
+- **Voices** (all videos): Kokoro-82M, open source and offline, sounds much more like real people
+  than Piper. Each character has its own Kokoro voice in `characters.py`; Piper stays as the
+  fallback. The model (~120 MB) downloads once and is cached by the workflow.
 
 - **Topics**: the strongest news story with enough material for a deep dive (the full article
   text, 3,000+ characters), otherwise an evergreen deep dive from
@@ -54,9 +71,8 @@ One a day, 16:9, the same two characters filmed as an 8-10 minute conversation w
 - **Script**: an outline call (title, thumbnail text, 5-7 chapters), then one call per chapter.
   This keeps each request inside Groq's free per-minute limit, and a bad chapter is retried on its
   own. There is no template fallback: if a long video fails, the day simply has fewer.
-- **Video**: a cold-open hook, chapter cards with the guest's question, and cuts between close-ups
-  and the info panel. YouTube chapter timestamps go in the description, and a custom 1280x720
-  thumbnail is uploaded with it.
+- **Video**: a cold-open hook over real footage, chapter cards with the guest's question as
+  voice-over, YouTube chapter timestamps in the description, and a custom 1280x720 thumbnail.
 
 ## Calls to action
 

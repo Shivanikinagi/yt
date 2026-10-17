@@ -33,6 +33,10 @@ def _numbers(text: str) -> list[str]:
 def check_script(script: VideoScript, topic: Topic, state: State, cfg) -> dict:
     errors, warnings = [], []
     text = script.narration() + " " + " ".join(s.get("on_screen", "") for s in script.scenes)
+    for s in script.scenes:                    # documentary graphics show numbers too
+        text += " " + " ".join(f"{e.get('when', '')} {e.get('label', '')}" for e in s.get("timeline") or [])
+        text += " " + " ".join(f"{b.get('value', ''):g}" if isinstance(b.get("value"), (int, float)) else ""
+                               for b in (s.get("chart") or {}).get("bars") or [])
     source = re.sub(r",", "", topic.source_text())
     unverified = []
     for num in _numbers(text):

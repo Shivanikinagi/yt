@@ -70,8 +70,43 @@ def db_to_gain(db: float) -> float:
     return float(10 ** (db / 20))
 
 
+SFX_GAIN_DB = {"whoosh": -21.0, "impact": -17.0, "riser": -24.0, "swish": -27.0}
+
+
+def synth_sfx(kind: str, sr: int, seed: int = 0) -> np.ndarray:
+    """Transition sounds made from filtered noise and sines; original, no samples needed."""
+    rng = np.random.default_rng(seed)
+    if kind == "impact":
+        n = int(1.4 * sr)
+        t = np.arange(n) / sr
+        boom = np.sin(2 * np.pi * (52 * t - 6 * t * t)) * np.exp(-t * 3.2)
+        hit = moving_average(rng.standard_normal(n).astype(np.float32), 24) * 6 * np.exp(-t * 28)
+        out = boom + hit
+    elif kind == "riser":
+        n = int(1.3 * sr)
+        t = np.arange(n) / sr
+        noise = rng.standard_normal(n).astype(np.float32)
+        band = moving_average(noise, 6) - moving_average(noise, 40)
+        tone = np.sin(2 * np.pi * (180 * t + 260 * t * t)) * 0.25
+        out = (band * 1.6 + tone) * (t / t[-1]) ** 2.2
+    elif kind == "swish":
+        n = int(0.35 * sr)
+        t = np.arange(n) / sr
+        noise = rng.standard_normal(n).astype(np.float32)
+        out = (noise - moving_average(noise, 6)) * np.sin(np.pi * t / t[-1]) ** 2
+    else:                                                  # whoosh
+        n = int(0.75 * sr)
+        t = np.arange(n) / sr
+        noise = rng.standard_normal(n).astype(np.float32)
+        band = moving_average(noise, 5) - moving_average(noise, 70)
+        env = np.sin(np.pi * np.clip(t / t[-1], 0, 1)) ** 3
+        out = band * env * 2.0
+    peak = float(np.max(np.abs(out))) or 1.0
+    return (out / peak).astype(np.float32)
+
+
 def build_mix(scene_wavs: list, starts: list[float], total: float, sr: int, music_gain_db: float,
-              music_enabled: bool, seed: int) -> tuple[np.ndarray, np.ndarray]:
+              music_enabled: bool, seed: int, sfx: list[tuple[float, str]] | None = None) -> tuple[np.ndarray, np.ndarray]:
     """Place each narration clip at its start time; add ducked music. Returns (mix, narration_only)."""
     n = int(np.ceil(total * sr))
     narration = np.zeros(n, dtype=np.float32)
@@ -91,4 +126,13 @@ def build_mix(scene_wavs: list, starts: list[float], total: float, sr: int, musi
         if len(music) < n:
             music = np.pad(music, (0, n - len(music)))
         mix = mix + music[:n] * duck.astype(np.float32)
+    cache: dict[str, np.ndarray] = {}
+    for k, (at, kind) in enumerate(sfx or []):
+        if kind not in cache:
+            cache[kind] = synth_sfx(kind, sr, seed + k) * db_to_gain(SFX_GAIN_DB.get(kind, -22.0))
+        s = cache[kind]
+        i0 = int(max(at, 0) * sr)
+        i1 = min(i0 + len(s), n)
+        if i1 > i0:
+            mix[i0:i1] += s[: i1 - i0]
     return np.clip(mix, -1, 1).astype(np.float32), narration
