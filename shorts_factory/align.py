@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import os
 import re
+import time
 from pathlib import Path
 
 import requests
@@ -41,13 +42,22 @@ def whisper_words(wav_path: Path, cfg, logger) -> list[dict] | None:
     if not key or not cfg.captions.use_whisper_alignment:
         return None
     try:
-        with open(wav_path, "rb") as f:
-            r = requests.post("https://api.groq.com/openai/v1/audio/transcriptions",
-                              headers={"Authorization": f"Bearer {key}"},
-                              files={"file": (wav_path.name, f, "audio/wav")},
-                              data={"model": cfg.captions.whisper_model, "response_format": "verbose_json",
-                                    "timestamp_granularities[]": "word", "language": "en"},
-                              timeout=90)
+        for attempt in range(3):
+            with open(wav_path, "rb") as f:
+                r = requests.post("https://api.groq.com/openai/v1/audio/transcriptions",
+                                  headers={"Authorization": f"Bearer {key}"},
+                                  files={"file": (wav_path.name, f, "audio/wav")},
+                                  data={"model": cfg.captions.whisper_model, "response_format": "verbose_json",
+                                        "timestamp_granularities[]": "word", "language": "en"},
+                                  timeout=90)
+            if r.status_code != 429 or attempt == 2:
+                break
+            # free tier allows ~20 requests a minute; a long video has ~45 scenes, so wait it out
+            try:
+                wait = min(float(r.headers.get("retry-after") or 10), 30.0)
+            except ValueError:
+                wait = 10.0
+            time.sleep(wait)
         if r.status_code >= 400:
             logger.warning("whisper HTTP %s: %s", r.status_code, r.text[:160])
             return None

@@ -38,9 +38,11 @@ def check_script(script: VideoScript, topic: Topic, state: State, cfg) -> dict:
     for num in _numbers(text):
         if num not in source and num.rstrip("0").rstrip(".") not in source:
             unverified.append(num)
+    long_form = (script.extra or {}).get("format") == "long"
+    allowed = int(cfg.qc.max_unverified_numbers) + (2 if long_form else 0)    # a 10-minute script says more
     if unverified:
         msg = f"numbers not found in source: {sorted(set(unverified))}"
-        if cfg.qc.strict_numbers and len(set(unverified)) > int(cfg.qc.max_unverified_numbers):
+        if cfg.qc.strict_numbers and len(set(unverified)) > allowed:
             errors.append(msg)
         else:
             warnings.append(msg)
@@ -64,9 +66,10 @@ def check_script(script: VideoScript, topic: Topic, state: State, cfg) -> dict:
             if " ".join(words[i:i + 12]) in src_low:
                 copied += 1
                 break
-    if copied >= 2:
+    n = len(script.scenes)
+    if copied >= max(2, n // 10):
         warnings.append(f"{copied} scenes contain 12+ word spans copied from the source")
-    if copied >= 4:
+    if copied >= max(4, n // 6):
         errors.append("script copies the source text too closely")
     return {"errors": errors, "warnings": warnings}
 

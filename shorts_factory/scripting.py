@@ -10,10 +10,10 @@ from .llm import LLMError, chat
 from .research import Topic
 from .utils import extract_json, word_count
 
-SCENE_TYPES = {"title", "explain", "diagram", "compare", "code", "fact", "payoff"}
+SCENE_TYPES = {"title", "explain", "diagram", "compare", "code", "fact", "payoff", "chapter", "outro"}
 MIN_SCENES, MAX_SCENES = 5, 8
 MIN_WORDS, MAX_WORDS = 95, 165          # ~35-60 s at 165 wpm
-DIALOGUE_MIN_WORDS = 128                # LLM dialogues shorter than this come out under ~48 s
+DIALOGUE_MIN_WORDS = 112                # plus the ~15-word sign-off from add_short_cta: about 48 s
 BANNED = ("as an ai", "i cannot", "i can't", "as a language model", "as an ai language", "subscribe now", "smash that",
           "http://", "https://", "www.", "like and subscribe")
 
@@ -64,7 +64,7 @@ Output ONLY one JSON object, no markdown, no commentary."""
 USER_TEMPLATE = """SOURCE MATERIAL
 Title: {title}
 Source: {source} ({url})
-Text: {text}
+Text: {text}{insights}
 
 TASK
 Write a {style} YouTube Short (35-58 seconds, {min_w}-{max_w} narration words total).
@@ -98,8 +98,10 @@ Return exactly this JSON shape:
     {{"type": "payoff", "on_screen": "...", "narration": "..."}}
   ],
   "description": "2-3 sentence YouTube description in your own words",
-  "hashtags": ["#AI", "#Tech", "..."]
-}}"""
+  "hashtags": ["#AI", "#Tech", "..."],
+  "comment_prompt": "a short question viewers will want to answer in the comments, max 12 words"
+}}
+Do not ask viewers to like, follow or subscribe: a closing line is added after your script."""
 
 
 DIALOGUE_TEMPLATE = """
@@ -111,8 +113,8 @@ Replace "narration" in every scene with "lines": 1-3 spoken lines in order, each
 {{"who": "host" or "guest", "text": "..."}}. The host carries the facts. The guest speaks in at least
 3 scenes with short lines (3-14 words): a question, surprise, or a quick recap in their own words.
 They may use each other's names now and then. The scene and total word limits count all lines.
-Aim for 135-155 words in total: pauses between speakers make dialogue slower, and a Short under
-48 seconds feels thin.
+Aim for 120-138 words in total: pauses between speakers make dialogue slower, and a short sign-off
+is added after your last scene.
 Example scene: {{"type": "explain", "on_screen": "...", "bullets": ["..."], "lines": [
   {{"who": "guest", "text": "Wait, so how does it actually work?"}},
   {{"who": "host", "text": "..."}}]}}"""
@@ -124,11 +126,11 @@ def _names(cast: list[str] | None) -> tuple[str, str] | None:
     return CAST[cast[0]]["name"].title(), CAST[cast[1]]["name"].title()
 
 
-def build_prompt(topic: Topic, theme: str, cast: list[str] | None = None) -> tuple[str, str]:
+def build_prompt(topic: Topic, theme: str, cast: list[str] | None = None, insights: str = "") -> tuple[str, str]:
     text = topic.source_text()[:2600]
     user = USER_TEMPLATE.format(title=topic.title, source=topic.source, url=topic.url, text=text,
-                                style=STYLE,
-                                min_w=MIN_WORDS + 15, max_w=MAX_WORDS - 20)   # ~145 words ≈ 53 s of Piper speech
+                                style=STYLE, insights=insights,
+                                min_w=MIN_WORDS + 5, max_w=MAX_WORDS - 33)    # + sign-off ≈ 145 words ≈ 53 s
     names = _names(cast)
     if names:
         user += DIALOGUE_TEMPLATE.format(host=names[0], guest=names[1])
@@ -157,6 +159,49 @@ def _clip(s: str, n: int) -> str:
     return s if len(s) <= n else s[: n - 1].rstrip() + "…"
 
 
+def normalize_scene(s: dict, cast: list[str] | None, min_words: int = 6, max_words: int = 48) -> tuple[dict, list[str]]:
+    """Clean one scene from the model: known type, clipped texts, dialogue lines. Returns (scene, problems)."""
+    problems = []
+    st = str(s.get("type", "")).lower().strip()
+    if st not in SCENE_TYPES:
+        st = "explain"
+    lines = _lines(s.get("lines"), cast) if _names(cast) else []
+    narration = " ".join(x["text"] for x in lines) if lines else " ".join(str(s.get("narration", "")).split())
+    wc = word_count(narration)
+    if wc < min_words or wc > max_words:
+        problems.append(f"narration has {wc} words")
+    ns = {"type": st, "on_screen": _clip(s.get("on_screen", ""), 58), "narration": narration}
+    if lines:
+        ns["lines"] = lines
+    for key, limit in (("kicker", 28), ("highlight", 40)):
+        if str(s.get(key) or "").strip():
+            ns[key] = _clip(s[key], limit)
+    if st == "explain":
+        bullets = [_clip(b, 40) for b in (s.get("bullets") or []) if str(b).strip()][:4]
+        if not bullets:
+            bullets = [ns["on_screen"] or _clip(narration, 40)]
+        ns["bullets"] = bullets
+    elif st == "diagram":
+        nodes = [_clip(n, 30) for n in (s.get("nodes") or []) if str(n).strip()][:5]
+        if len(nodes) < 2:
+            st = ns["type"] = "explain"
+            ns["bullets"] = [ns["on_screen"] or _clip(narration, 40)]
+        else:
+            ns["nodes"] = nodes
+    elif st == "compare":
+        ns["left_title"] = _clip(s.get("left_title", "Before"), 20)
+        ns["right_title"] = _clip(s.get("right_title", "After"), 20)
+        ns["left"] = [_clip(x, 34) for x in (s.get("left") or [])][:3] or ["—"]
+        ns["right"] = [_clip(x, 34) for x in (s.get("right") or [])][:3] or ["—"]
+    elif st == "code":
+        code = [str(c).rstrip()[:40] for c in (s.get("code") or []) if str(c).strip()][:6]
+        if not code:
+            st = ns["type"] = "fact"
+        else:
+            ns["code"] = code
+    return ns, problems
+
+
 def validate_and_normalize(data: dict, topic: Topic, provider: str, theme: str,
                            cast: list[str] | None = None) -> VideoScript:
     problems = []
@@ -170,43 +215,8 @@ def validate_and_normalize(data: dict, topic: Topic, provider: str, theme: str,
         problems.append(f"scene count {len(scenes)} not in {MIN_SCENES}-{MAX_SCENES}")
     norm_scenes = []
     for i, s in enumerate(scenes):
-        st = str(s.get("type", "")).lower().strip()
-        if st not in SCENE_TYPES:
-            st = "explain"
-        lines = _lines(s.get("lines"), cast) if _names(cast) else []
-        narration = " ".join(x["text"] for x in lines) if lines else " ".join(str(s.get("narration", "")).split())
-        wc = word_count(narration)
-        if wc < 6 or wc > 48:
-            problems.append(f"scene {i + 1} narration has {wc} words")
-        ns = {"type": st, "on_screen": _clip(s.get("on_screen", ""), 58), "narration": narration}
-        if lines:
-            ns["lines"] = lines
-        for key, limit in (("kicker", 28), ("highlight", 40)):
-            if str(s.get(key) or "").strip():
-                ns[key] = _clip(s[key], limit)
-        if st == "explain":
-            bullets = [_clip(b, 40) for b in (s.get("bullets") or []) if str(b).strip()][:4]
-            if not bullets:
-                bullets = [ns["on_screen"] or _clip(narration, 40)]
-            ns["bullets"] = bullets
-        elif st == "diagram":
-            nodes = [_clip(n, 30) for n in (s.get("nodes") or []) if str(n).strip()][:5]
-            if len(nodes) < 2:
-                st = ns["type"] = "explain"
-                ns["bullets"] = [ns["on_screen"] or _clip(narration, 40)]
-            else:
-                ns["nodes"] = nodes
-        elif st == "compare":
-            ns["left_title"] = _clip(s.get("left_title", "Before"), 20)
-            ns["right_title"] = _clip(s.get("right_title", "After"), 20)
-            ns["left"] = [_clip(x, 34) for x in (s.get("left") or [])][:3] or ["—"]
-            ns["right"] = [_clip(x, 34) for x in (s.get("right") or [])][:3] or ["—"]
-        elif st == "code":
-            code = [str(c).rstrip()[:40] for c in (s.get("code") or []) if str(c).strip()][:6]
-            if not code:
-                st = ns["type"] = "fact"
-            else:
-                ns["code"] = code
+        ns, errs = normalize_scene(s, cast)
+        problems += [f"scene {i + 1} {e}" for e in errs]
         norm_scenes.append(ns)
     if norm_scenes:
         norm_scenes[0]["type"] = "title"
@@ -243,7 +253,8 @@ def validate_and_normalize(data: dict, topic: Topic, provider: str, theme: str,
                        sources=[topic.url], topic_id=topic.id, topic_title=topic.title,
                        provider=provider, theme=theme, category=topic.category,
                        extra={"source": topic.source, "published": topic.published or "",
-                              "subject": _clip(data.get("subject") or "", 18), "cast": list(cast or [])})
+                              "subject": _clip(data.get("subject") or "", 18), "cast": list(cast or []),
+                              "comment_prompt": comment_prompt(data.get("comment_prompt")), "format": "short"})
 
 
 # ----------------------------------------------------------------------------- template writer
@@ -340,8 +351,9 @@ def _short_title(title: str) -> str:
 
 
 # ----------------------------------------------------------------------------- entry point
-def write_script(topic: Topic, theme: str, cfg, logger, cast: list[str] | None = None) -> VideoScript:
-    system, user = build_prompt(topic, theme, cast)
+def write_script(topic: Topic, theme: str, cfg, logger, cast: list[str] | None = None,
+                 insights: str = "") -> VideoScript:
+    system, user = build_prompt(topic, theme, cast, insights)
     attempts = int(cfg.llm.max_attempts_per_topic)
     last_err = None
     for attempt in range(attempts):
@@ -360,3 +372,56 @@ def write_script(topic: Topic, theme: str, cfg, logger, cast: list[str] | None =
             user = user + f"\n\nYour previous answer was rejected because: {e}. Fix it and return valid JSON only."
     logger.info("falling back to template writer%s", f" ({last_err})" if last_err else "")
     return template_script(topic, theme, cast)
+
+
+# ----------------------------------------------------------------------------- calls to action
+# Spoken asks are written here, not by the model, so they stay short, varied and never spammy.
+# What works (creator tests and YouTube's own guidance): ask after the video has delivered something,
+# give a reason, ask for one thing at a time, and make the comment ask a real question.
+SHORT_SIGNOFFS = ["Subscribe for one of these every day.",
+                  "If that was new to you, subscribe. There's another one tomorrow.",
+                  "Subscribe, and tomorrow's story lands right here.",
+                  "Send this to someone who needs to see it, and subscribe for tomorrow's."]
+LONG_MID_ASKS = ["Quick one before we go on: if this is useful so far, tap like. It helps more people find it.",
+                 "If you've learned something already, a like really helps this reach more people.",
+                 "Small favour: if this is making sense so far, hit like. That's how YouTube decides who sees it."]
+LONG_END_ASKS = ["If this answered the question you came in with, subscribe. We break down one of these every day.",
+                 "We do a deep dive like this every day, so if you want the next one, subscribe.",
+                 "If you want more explainers like this one, subscribe. There's a new one tomorrow."]
+DEFAULT_COMMENT_PROMPTS = ["Would you trust this? Tell us in the comments.",
+                           "Did you already know this? Tell us in the comments.",
+                           "What should we break down next? Drop it in the comments."]
+
+
+def comment_prompt(raw) -> str:
+    """The model's question to viewers, kept only if it is a short real question."""
+    q = " ".join(str(raw or "").split()).strip()
+    if not q.endswith("?") or not 3 <= word_count(q) <= 14 or any(b in q.lower() for b in BANNED):
+        return ""
+    return q
+
+
+def pick(options: list[str], seed: int) -> str:
+    return options[seed % len(options)]
+
+
+def add_short_cta(script: VideoScript, seed: int) -> VideoScript:
+    """End the Short with a question for the comments and a one-line subscribe ask.
+
+    In a dialogue the guest asks the question and the host signs off; `cta_from` marks the first
+    line of the ask so the renderer can cut to the wide shot with the animated subscribe button."""
+    last = script.scenes[-1]
+    if last.get("cta"):
+        return script
+    q = script.extra.get("comment_prompt") or pick(DEFAULT_COMMENT_PROMPTS, seed)
+    if "comment" not in q.lower():
+        q += " Tell us in the comments."
+    sign = pick(SHORT_SIGNOFFS, seed // 3)
+    if last.get("lines"):
+        last["cta_from"] = len(last["lines"])
+        last["lines"] = last["lines"] + [{"who": "guest", "text": q}, {"who": "host", "text": sign}]
+        last["narration"] = " ".join(x["text"] for x in last["lines"])
+    else:
+        last["narration"] = f"{last['narration']} {q} {sign}"
+    last["cta"] = "end"
+    return script

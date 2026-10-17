@@ -10,7 +10,7 @@ from datetime import datetime, timedelta, timezone
 import feedparser
 import requests
 
-from .config import load_evergreen, load_sources
+from .config import load_evergreen, load_longform, load_sources
 from .state import State
 from .utils import sha1, strip_html
 
@@ -114,20 +114,24 @@ def fetch_excerpt(url: str, timeout: int, max_chars: int = 1800) -> str:
         r = requests.get(url, headers={"User-Agent": UA}, timeout=timeout)
         if r.status_code >= 400 or "html" not in r.headers.get("content-type", ""):
             return ""
-        paras = re.findall(r"<p[^>]*>(.*?)</p>", r.text, flags=re.S | re.I)
-        out = []
-        total = 0
-        for p in paras:
-            t = strip_html(p)
-            if len(t) < 60:
-                continue
-            out.append(t)
-            total += len(t)
-            if total >= max_chars:
-                break
-        return " ".join(out)[:max_chars]
+        return excerpt_from_html(r.text, max_chars)
     except Exception:
         return ""
+
+
+def excerpt_from_html(html: str, max_chars: int = 1800) -> str:
+    paras = re.findall(r"<p[^>]*>(.*?)</p>", html, flags=re.S | re.I)
+    out = []
+    total = 0
+    for p in paras:
+        t = strip_html(p)
+        if len(t) < 60:
+            continue
+        out.append(t)
+        total += len(t)
+        if total >= max_chars:
+            break
+    return " ".join(out)[:max_chars]
 
 
 def _score(t: Topic, now: datetime) -> float:
@@ -162,7 +166,7 @@ def evergreen_topics(seed: str) -> list[Topic]:
     return items
 
 
-def select_candidates(cfg, state: State, logger, date: str) -> list[Topic]:
+def select_candidates(cfg, state: State, logger, date: str, insights: dict | None = None) -> list[Topic]:
     rc = cfg.research
     now = datetime.now(timezone.utc)
     cutoff = now - timedelta(days=rc.news_max_age_days)
@@ -180,8 +184,9 @@ def select_candidates(cfg, state: State, logger, date: str) -> list[Topic]:
         logger.info("feed %-38s fetched=%-3d fresh=%d", src["name"], len(fetched), kept)
         time.sleep(0.2)
 
+    from .analytics import topic_boost
     for t in all_topics:
-        t.score = _score(t, now)
+        t.score = _score(t, now) * topic_boost(t.title, insights)
     all_topics.sort(key=lambda t: t.score, reverse=True)
 
     chosen: list[Topic] = []
@@ -225,3 +230,83 @@ def select_candidates(cfg, state: State, logger, date: str) -> list[Topic]:
 def _similar(a: str, b: str) -> bool:
     import difflib
     return difflib.SequenceMatcher(None, a.lower(), b.lower()).ratio() > 0.75
+
+
+# ----------------------------------------------------------------------------- long-form topics
+WIKI_API = "https://en.wikipedia.org/w/api.php"
+_WIKI_SKIP = re.compile(r"^==+\s*(See also|References|External links|Further reading|Notes|Bibliography|"
+                        r"Sources|Citations|Footnotes)\s*==+", re.M | re.I)
+
+
+def wiki_extract(page: str, timeout: int, max_chars: int = 6000) -> tuple[str, str]:
+    """Plain text of a Wikipedia article (without reference sections) and its canonical URL."""
+    try:
+        r = requests.get(WIKI_API, params={"action": "query", "prop": "extracts|info", "explaintext": 1,
+                                           "inprop": "url", "titles": page, "redirects": 1, "format": "json"},
+                         headers={"User-Agent": UA}, timeout=timeout)
+        r.raise_for_status()
+        info = next(iter(r.json()["query"]["pages"].values()))
+    except Exception:
+        return "", ""
+    text = info.get("extract") or ""
+    m = _WIKI_SKIP.search(text)
+    if m:
+        text = text[:m.start()]
+    text = re.sub(r"\n+==+\s*(.*?)\s*==+\n*", r" \1: ", text)   # keep headings as short labels
+    text = " ".join(text.split())
+    return text[:max_chars], info.get("fullurl", "")
+
+
+def longform_library(seed: str) -> list[Topic]:
+    items = []
+    for e in load_longform():
+        pages = list(e.get("pages") or [])
+        items.append(Topic(
+            id=sha1("long:" + e["title"].lower()), title=e["title"], summary=" ".join(e.get("angle", "").split()),
+            url="https://en.wikipedia.org/wiki/" + pages[0].replace(" ", "_") if pages else "",
+            source="Wikipedia", kind="longform", category=e.get("category", "Technology"),
+            extra={"pages": pages}))
+    random.Random(seed).shuffle(items)
+    return items
+
+
+def long_candidates(cfg, state: State, news: list[Topic], date: str, insights: dict | None = None) -> list[Topic]:
+    """Topics for today's long-form videos: the strongest news stories (one deep dive on the day's
+    news) alternating with evergreen deep dives, the evergreen ones ranked by what is working."""
+    from .analytics import topic_boost
+    # paper abstracts are too thin for 10 minutes; they stay Shorts
+    fresh = [t for t in news if t.kind in ("news", "concepts") and not state.topic_used(t.id)]
+    library = [t for t in longform_library(seed=date) if not state.topic_used(t.id)
+               and not state.similar_title(t.title, int(cfg.research.dedupe_days), 0.7)]
+    library.sort(key=lambda t: -topic_boost(t.title, insights))       # stable: ties keep the daily shuffle
+    out: list[Topic] = []
+    for i in range(max(len(fresh), len(library))):
+        for pool in (fresh, library):
+            if i < len(pool):
+                out.append(pool[i])
+    return out
+
+
+def prepare_long_topic(topic: Topic, cfg, logger) -> bool:
+    """Gather enough source text for an 8-10 minute video. False when there is not enough."""
+    rc, need = cfg.research, int(cfg.long_video.min_source_chars)
+    if topic.kind == "longform":
+        parts, urls = [], []
+        for page in topic.extra.get("pages", []):
+            text, url = wiki_extract(page, int(rc.request_timeout_seconds), max_chars=6500)
+            if text:
+                parts.append(f"[{page}] {text}")
+                urls.append(url)
+        topic.excerpt = " ".join(parts)[:9000]
+        if urls:
+            topic.url = urls[0]
+            topic.extra["sources"] = urls
+        topic.verified = bool(urls)
+    else:
+        full = fetch_excerpt(topic.url, int(rc.request_timeout_seconds), max_chars=9000)
+        if len(full) > len(topic.excerpt):
+            topic.excerpt = full
+    ok = topic.verified and len(topic.source_text()) >= need
+    logger.info("long-form source for %r: %d chars%s", topic.title, len(topic.source_text()),
+                "" if ok else f" (needs {need}, skipping)")
+    return ok

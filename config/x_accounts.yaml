@@ -1,0 +1,44 @@
+# Tech builders to suggest following on X, matched to the day's story by tags.
+# Listed by GitHub username: the X handle is read from their GitHub profile at run time
+# (twitter_username), so a handle is never guessed. Entries without one are skipped.
+# Add or remove freely.
+accounts:
+  - {github: karpathy, tags: [ai, llm, neural, training, education]}
+  - {github: simonw, tags: [llm, ai, python, sqlite, tools, prompt]}
+  - {github: fchollet, tags: [ai, keras, deep learning, agi, benchmark]}
+  - {github: ggerganov, tags: [llama, local, inference, quantization, gguf, on-device]}
+  - {github: jph00, tags: [ai, fastai, education, python, llm]}
+  - {github: rasbt, tags: [llm, training, fine-tuning, research, pytorch]}
+  - {github: chiphuyen, tags: [ml, mlops, production, llm, systems]}
+  - {github: eugeneyan, tags: [ml, evals, recommendation, llm, production]}
+  - {github: hamelsmu, tags: [evals, llm, fine-tuning, production]}
+  - {github: hwchase17, tags: [agents, llm, langchain, tools, rag]}
+  - {github: jxnl, tags: [llm, structured, rag, agents, python]}
+  - {github: AK391, tags: [ai, research, papers, models, hugging face]}
+  - {github: hardmaru, tags: [ai, research, neural, models]}
+  - {github: logankilpatrick, tags: [gemini, google, ai, developers, api]}
+  - {github: steipete, tags: [agents, ai, coding, mac, ios]}
+  - {github: mitsuhiko, tags: [python, rust, agents, coding, tools]}
+  - {github: antirez, tags: [redis, databases, systems, ai, c]}
+  - {github: mitchellh, tags: [terminal, open source, dev tools, zig, infrastructure]}
+  - {github: kelseyhightower, tags: [cloud, kubernetes, infrastructure, devops]}
+  - {github: rauchg, tags: [web, nextjs, vercel, frontend, ai]}
+  - {github: leerob, tags: [web, nextjs, react, frontend]}
+  - {github: shadcn, tags: [ui, react, components, design, frontend]}
+  - {github: t3dotgg, tags: [web, typescript, react, developers]}
+  - {github: ThePrimeagen, tags: [vim, performance, developers, programming]}
+  - {github: addyosmani, tags: [chrome, web, performance, ai, coding]}
+  - {github: paulirish, tags: [chrome, devtools, web, performance]}
+  - {github: yyx990803, tags: [vue, vite, javascript, frontend, tooling]}
+  - {github: Rich-Harris, tags: [svelte, javascript, web, frontend]}
+  - {github: jarred-sumner, tags: [bun, javascript, runtime, performance]}
+  - {github: ry, tags: [deno, node, javascript, runtime]}
+  - {github: charliermarsh, tags: [python, ruff, uv, tooling, rust]}
+  - {github: tiangolo, tags: [python, fastapi, api, web]}
+  - {github: kentcdodds, tags: [testing, react, javascript, education]}
+  - {github: sindresorhus, tags: [open source, node, javascript, mac]}
+  - {github: dhh, tags: [rails, ruby, web, cloud, open source]}
+  - {github: huggingface, tags: [models, open source, hugging face, transformers, datasets]}
+  - {github: ollama, tags: [local, models, inference, llama, open source]}
+  - {github: pytorch, tags: [pytorch, training, deep learning, gpu]}
+  - {github: vercel, tags: [web, nextjs, deploy, ai sdk, frontend]}

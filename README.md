@@ -1,8 +1,10 @@
 # Tech Shorts Factory
 
-Automated pipeline that researches the day's technology news, writes five original scripts,
-narrates them with free text-to-speech, renders 1080x1920 motion-graphics Shorts with burned-in
-word-synced captions, quality-checks every file, and uploads them to YouTube on a schedule.
+Automated pipeline that researches the day's technology news, writes original scripts, narrates
+them with free text-to-speech, renders motion-graphics videos with burned-in word-synced captions,
+quality-checks every file, and uploads them to YouTube on a schedule. Every day: **2 Shorts**
+(1080x1920, under a minute) and **1 long-form video** (1920x1080, about 8-10 minutes). The counts
+are `daily_target` and `long_video.daily_target` in `config/settings.yaml`.
 Runs for ₹0 in the cloud on GitHub Actions, or locally on Windows as a fallback.
 
 This folder is a standalone project. It does not depend on anything outside `trial/`.
@@ -24,6 +26,68 @@ Not done, because each needs your Google or GitHub account in a browser:
    for a dry run) and check the job summary, which now shows the daily report.
 5. Only when you are satisfied: set the repository variables `SHORTS_PUBLISH_MODE=scheduled` and
    `ALLOW_PUBLIC_SCHEDULING=true` to let videos go public on the schedule.
+
+## What steers the content: the channel's own numbers and YouTube's trending charts
+
+Each run starts by reading (read-only, about 5 quota units a day):
+
+- view, like and comment counts of every video the pipeline uploaded, and
+- YouTube's most-popular Science & Technology videos in the US, India and the UK.
+
+Topics whose title words go with more views on this channel, or recur in trending titles, rank
+higher. The script prompts also show the model the channel's best and weakest titles and the
+biggest trending tech videos with their view counts, so titles follow what actually gets clicked.
+The daily report has a "What's working" section, and `python -m shorts_factory insights` prints it
+on demand. The pattern so far (2026-10-17): AI topics framed as a question with a stake for the
+viewer ("Can AI tests outpace human benchmarks?", 158 views) beat obscure paper and product names
+("EliteTable", "Probe-and-Resume", 0-2 views).
+
+## Long-form videos
+
+One a day, 16:9, the same two characters filmed as an 8-10 minute conversation with chapters.
+
+- **Topics**: the strongest news story with enough material for a deep dive (the full article
+  text, 3,000+ characters), otherwise an evergreen deep dive from
+  `config/longform_topics.yaml`. Those are stories in the style of the most-watched tech explainers
+  (the xz backdoor, the CrowdStrike outage, how ChatGPT works...), and their facts come from the
+  linked Wikipedia articles, fetched on the day.
+- **Script**: an outline call (title, thumbnail text, 5-7 chapters), then one call per chapter.
+  This keeps each request inside Groq's free per-minute limit, and a bad chapter is retried on its
+  own. There is no template fallback: if a long video fails, the day simply has fewer.
+- **Video**: a cold-open hook, chapter cards with the guest's question, and cuts between close-ups
+  and the info panel. YouTube chapter timestamps go in the description, and a custom 1280x720
+  thumbnail is uploaded with it.
+
+## Calls to action
+
+Spoken asks are written by code, not by the model, so they stay short and never sound spammy.
+They follow what works in creator tests: ask after the video has delivered something, give a
+reason, and make the comment ask a real question.
+
+- **Shorts**: in the last scene the guest asks the viewers a question about the topic ("...Tell us
+  in the comments."), then the host signs off with one subscribe line. The shot cuts wide to
+  animated LIKE / SHARE / SUBSCRIBE buttons.
+- **Long-form**: a single like ask at about the halfway chapter, once the viewer has got value.
+  At the end come a subscribe ask tied to the benefit, "send this to <someone specific>", and the
+  comment question, over the same animated buttons.
+- **Descriptions**: the comment question and a `?sub_confirmation=1` subscribe link.
+
+YouTube's end-screen elements and the "related video" link on a Short can't be set through the
+API. Add an end-screen template once in YouTube Studio (Settings → Upload defaults); the outro of
+every long video leaves about 10 seconds for it.
+
+## Daily X (Twitter) content, posted by hand
+
+`python -m shorts_factory tweet` writes `tweets/<date>.md`: one tweet from the day's news (plus two
+alternatives, length checked the way X counts it), 5 accounts to follow and a draft reply for each.
+The GitHub workflow runs it every morning before the video job, shows it at the top of the job
+summary and commits the file. In Claude Code, `/x-daily` shows today's content and `/x-engage`
+drafts replies to comments you paste in.
+
+Nothing posts, likes or follows automatically: X's automation rules ban automated likes and
+proactive follows, and the X API is paid per post. Handles are never guessed. They come from
+x.com links on the article pages or from GitHub profiles (`config/x_accounts.yaml` lists builders
+by GitHub username), and an account is not suggested again for 30 days (`state/tweets.json`).
 
 ## What was inspected and decided
 
@@ -119,8 +183,9 @@ YouTube flips them public automatically. Slots already booked in `state.json` ar
 8. `report`: `reports/YYYY-MM-DD.md` and `.json`, `reports/latest.md`; `state/state.json` updated after every video so a crash loses at most one.
 
 A failing topic never blocks the day: the runner moves to the next candidate and a topic that
-fails twice is skipped in future. The run stops starting new videos when less than 15 minutes
-remain and stops everything at 115 minutes; the workflow kills the job at 125.
+fails twice is skipped in future. Shorts are made first; a long video only starts with at least
+24 minutes plus the upload reserve left. Everything stops at 140 minutes; the workflow kills the
+job at 150.
 
 ## Commands
 
@@ -128,8 +193,9 @@ remain and stops everything at 115 minutes; the workflow kills the job at 125.
 |---|---|
 | `python -m shorts_factory doctor` | environment, fonts, providers, credentials, state summary |
 | `python -m shorts_factory research` | list today's candidate topics (no production) |
-| `python -m shorts_factory demo [--limit N] [--upload]` | evergreen topics, no feeds, private upload only with `--upload`; demo videos never count toward the daily target and are not uploaded by `run` |
-| `python -m shorts_factory run [--limit N] [--no-upload]` | the full daily run |
+| `python -m shorts_factory demo [--limit N] [--long N] [--upload]` | evergreen topics, no feeds, private upload only with `--upload`; demo videos never count toward the daily target and are not uploaded by `run` |
+| `python -m shorts_factory run [--limit N] [--long N] [--no-upload]` | the full daily run (`--limit` Shorts, `--long` long-form) |
+| `python -m shorts_factory insights` | refresh view counts and trending videos, print what is working |
 | `python -m shorts_factory upload` | upload previously rendered videos only |
 | `python -m shorts_factory auth` | one-time YouTube OAuth |
 | `python -m shorts_factory report` | print the latest report |
@@ -155,7 +221,7 @@ Change `brand.channel_name` and `brand.handle` before your first upload. Drop a 
 | GitHub Actions (private repo, ~25 min/day) | ₹0 within the 2,000 min/month free tier |
 | Groq API (scripts + Whisper alignment) | ₹0 free tier; ~10 chat and ~35 Whisper requests per day |
 | Piper TTS, FFmpeg, Pillow | ₹0, open source |
-| YouTube Data API | ₹0; 10,000 units/day default quota, 5 uploads use 8,000 |
+| YouTube Data API | ₹0; 10,000 units/day default quota: 3 uploads 4,800, 1 thumbnail 50, analytics ~5 |
 | Optional: Gemini / OpenRouter / Ollama | ₹0 free tiers or local |
 
 ## Limitations and manual steps (read this)
@@ -170,6 +236,9 @@ Change `brand.channel_name` and `brand.handle` before your first upload. Drop a 
 - **Synthetic media flag.** The API field `status.containsSyntheticMedia` is sent; if the API rejects it the upload is retried without it and the description still carries the disclosure. Confirm the "altered or synthetic content" setting in YouTube Studio for the first few uploads.
 - **Monetisation.** YouTube's reused-content and inauthentic-content policies can demonetise automated channels regardless of originality. Every script is original, every voice is synthetic and disclosed, and every source is cited, but acceptance is YouTube's decision.
 - **Groq free-tier limits** (8,000 tokens/min) are handled with retry-after waits; a burst of failures falls back to the template writer, which only rearranges source sentences and is visibly plainer (and flagged in QC warnings).
+- **Custom thumbnails and videos over 15 minutes need a phone-verified channel** (youtube.com/verify).
+  Until then the long-form upload still succeeds, YouTube picks a frame as the thumbnail, and the
+  report says so. Long videos are capped at 14 minutes.
 - **Windows local mode** cannot run while the PC is off; there is no partial hybrid.
 - **GitHub cron lateness** of up to 30 minutes is normal.
 - **Fonts on the runner** are DejaVu/Liberation; locally Segoe UI. Supply your own TTF for a consistent brand.

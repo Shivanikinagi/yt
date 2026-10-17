@@ -3,9 +3,10 @@
 
 project_name: "Tech Shorts Factory"
 timezone: "Asia/Kolkata"
-daily_target: 5
-# Hard stop for a daily run. The GitHub workflow uses 125 min so the report still gets written.
-max_runtime_minutes: 115
+# Shorts per day (long-form videos per day: long_video.daily_target)
+daily_target: 2
+# Hard stop for a daily run. The GitHub workflow uses 150 min so the report still gets written.
+max_runtime_minutes: 140
 # Do not start producing another video when less than this remains.
 per_video_reserve_minutes: 7
 # Keep this much time for uploads + report at the end of the run.
@@ -25,17 +26,44 @@ video:
   transition_seconds: 0.4    # how long a new scene takes to settle into the frame
   # One shared layout; the theme only rotates the accent colours. Options: neon, blueprint, voxel, sunset, terminal
   themes: [neon, voxel, blueprint, sunset, terminal]
-  # Each video is a conversation: [host who explains, guest who asks]. Pairs rotate per video.
+  # Each video is a conversation: [host who explains, guest who asks]. Pairs rotate per video and per day.
   # Anime style: yuki, sora, hana, ren. Cartoon: nova, kai, bit (robot), mochi (cat).
   # One name per pair = a single talking host; [] = plain narrator with no characters.
   cast_pairs: [[yuki, sora], [hana, ren], [nova, kai], [bit, mochi], [ren, hana]]
   # Film the conversation: close-ups/wide shots for the chat, cut to the info panel for the facts.
   cinematic: true
 
+# Long-form videos (16:9). Same characters and look, filmed as chapters. Keys here override `video`.
+long_video:
+  daily_target: 1
+  width: 1920
+  height: 1080
+  min_seconds: 300
+  max_seconds: 840             # stay under 15 min, the upload limit for channels without phone verification
+  crf: 22
+  scene_gap_seconds: 0.4
+  tail_seconds: 1.5
+  target_words: [1250, 1650]   # ~8-10 min of dialogue; 8+ min allows mid-roll ads once monetised
+  chapters: [5, 7]
+  min_source_chars: 3000       # a deep dive needs real material; thinner news topics stay Shorts
+  reserve_minutes: 24          # do not start a long video with less time than this left
+  cast_pairs: [[nova, kai], [hana, ren], [yuki, sora]]
+  schedule_slots_local: ["17:00"]
+  captions_max_words: 5
+  captions_max_chars: 30
+
+# Daily feedback loop: the channel's own view counts and YouTube's most-popular tech videos steer
+# topic ranking and the script prompts. Read-only calls, about 5 quota units a day.
+analytics:
+  enabled: true
+  trend_regions: [US, IN, GB]
+  trend_category_id: "28"
+  min_age_days: 2              # judge a video only once it had time to collect views
+
 brand:
   channel_name: "TechDecoded"      # <- change to your channel name
   handle: "@TechDecoded60-y6b"            # <- change to your handle
-  cta: "Follow for a new tech short every day"
+  cta: "New tech explained every day"
   # Bundled OFL fonts (assets/fonts) so the GitHub runner renders the same as your PC.
   font_candidates_headline:
     - assets/fonts/ArchivoBlack-Regular.ttf
@@ -121,13 +149,16 @@ youtube:
   publish_mode: private
   category_id: "28"              # Science & Technology
   default_language: "en"
-  schedule_slots_local: ["09:00", "12:00", "15:00", "18:00", "21:00"]
+  # Shorts slots (long-form uses long_video.schedule_slots_local)
+  schedule_slots_local: ["09:00", "20:00"]
   schedule_min_lead_minutes: 60
   daily_quota_budget: 9000       # YouTube Data API default quota is 10000 units/day
-  upload_cost_units: 1600
-  upload_captions: false         # +400 units per video; off to keep 5 uploads within quota
+  upload_cost_units: 1600        # documented cost; reports say it dropped to 100 in Dec 2025, kept conservative
+  thumbnail_cost_units: 50
+  upload_captions: false         # +400 units per video; off to keep uploads within quota
+  custom_thumbnails: true        # long-form only; needs a phone-verified channel, otherwise skipped with a warning
   made_for_kids: false
   declare_synthetic_media: true
   description_footer: |
-    This Short was produced by an automated pipeline: AI-written script, synthetic (text-to-speech)
+    This video was produced by an automated pipeline: AI-written script, synthetic (text-to-speech)
     narration and generated motion graphics. Sources are listed above.

@@ -57,6 +57,15 @@ def synth_music(duration: float, sr: int, seed: int) -> np.ndarray:
     return (out / peak * 0.9).astype(np.float32)
 
 
+def moving_average(x: np.ndarray, width: int) -> np.ndarray:
+    """Same as np.convolve(x, ones(width) / width, "same") but O(n): a 10-minute track has 29M samples."""
+    width = max(int(width), 1)
+    c = np.concatenate(([0.0], np.cumsum(x, dtype=np.float64)))
+    end = np.arange(len(x)) + (width - 1) // 2 + 1          # window of output i: x[end - width : end]
+    lo, hi = np.clip(end - width, 0, len(x)), np.clip(end, 0, len(x))
+    return ((c[hi] - c[lo]) / width).astype(np.float32)
+
+
 def db_to_gain(db: float) -> float:
     return float(10 ** (db / 20))
 
@@ -77,9 +86,7 @@ def build_mix(scene_wavs: list, starts: list[float], total: float, sr: int, musi
     if music_enabled:
         music = synth_music(total, sr, seed) * db_to_gain(music_gain_db)
         # duck music a little while speech is present
-        env = np.abs(narration)
-        kernel = np.ones(int(0.15 * sr), dtype=np.float32) / int(0.15 * sr)
-        speech = np.convolve(env, kernel, mode="same")
+        speech = moving_average(np.abs(narration), int(0.15 * sr))
         duck = 1.0 - 0.5 * np.clip(speech / (speech.max() or 1.0) * 3, 0, 1)
         if len(music) < n:
             music = np.pad(music, (0, n - len(music)))

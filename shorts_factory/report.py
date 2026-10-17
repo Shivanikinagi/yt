@@ -6,7 +6,8 @@ from pathlib import Path
 from .utils import REPORT_DIR, write_json
 
 
-def write_report(run: dict, videos: list[dict], failures: list[dict], candidates: list[dict], warnings: list[str]) -> Path:
+def write_report(run: dict, videos: list[dict], failures: list[dict], candidates: list[dict], warnings: list[str],
+                 insights: dict | None = None) -> Path:
     REPORT_DIR.mkdir(parents=True, exist_ok=True)
     date = run["date"]
     demo = bool(run.get("demo"))
@@ -14,7 +15,8 @@ def write_report(run: dict, videos: list[dict], failures: list[dict], candidates
     lines = [f"# {'Demo' if demo else 'Daily'} run {date}", ""]
     lines += [f"- Started: {run['started']}  ", f"- Finished: {run['finished']}  ",
               f"- Elapsed: {run['elapsed_minutes']:.1f} min (budget {run['budget_minutes']:.0f} min)  ",
-              f"- Produced: {run['produced']} / target {run['target']}  ",
+              f"- Produced: {run['produced']} / target {run['target']} "
+              f"(long-form {run.get('produced_long', 0)} / {run.get('target_long', 0)})  ",
               f"- Uploaded: {run['uploaded']}  ", f"- Publish mode: {run.get('publish_mode', 'n/a')}  ",
               f"- LLM providers used: {', '.join(sorted(run.get('providers', []))) or 'none'}  ",
               f"- TTS engines used: {', '.join(sorted(run.get('tts_engines', []))) or 'none'}  ",
@@ -22,16 +24,19 @@ def write_report(run: dict, videos: list[dict], failures: list[dict], candidates
               f"- Recurring cost of this run: ₹0 (free tiers / local compute only)", ""]
     if warnings:
         lines += ["## Warnings", ""] + [f"- {w}" for w in warnings] + [""]
-    lines += ["## Videos", "", "| # | Title | Duration | Theme | Status | YouTube | Publish at | QC warnings |",
-              "|---|---|---|---|---|---|---|---|"]
+    lines += ["## Videos", "", "| # | Format | Title | Duration | Theme | Status | YouTube | Publish at | QC warnings |",
+              "|---|---|---|---|---|---|---|---|---|"]
     for i, v in enumerate(videos, 1):
         yt = f"[{v['youtube_id']}]({v['url']})" if v.get("youtube_id") else "-"
         qcw = "; ".join(v.get("qc_warnings", [])) or "-"
-        lines.append(f"| {i} | {v['title']} | {v.get('duration', 0):.0f}s | {v.get('theme', '')} | {v.get('status', '')} | "
+        d = int(v.get("duration", 0))
+        lines.append(f"| {i} | {v.get('format', 'short')} | {v['title']} | {d // 60}:{d % 60:02d} | {v.get('theme', '')} | {v.get('status', '')} | "
                      f"{yt} | {v.get('publish_at') or '-'} | {qcw} |")
     if not videos:
-        lines.append("| - | no videos | | | | | | |")
+        lines.append("| - | | no videos | | | | | | |")
     lines.append("")
+    from .analytics import report_lines
+    lines += report_lines(insights)
     if failures:
         lines += ["## Failures", ""] + [f"- **{f['topic']}** — {f['stage']}: {f['error']}" for f in failures] + [""]
     lines += ["## Topics considered", ""] + [f"- {c['title']} ({c['source']}, {c['kind']})" for c in candidates] + [""]

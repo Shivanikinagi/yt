@@ -7,7 +7,11 @@ on:
   workflow_dispatch:
     inputs:
       limit:
-        description: "Number of videos (default from settings.yaml)"
+        description: "Number of Shorts (default from settings.yaml)"
+        required: false
+        default: ""
+      long:
+        description: "Number of long-form videos (default from settings.yaml)"
         required: false
         default: ""
       no_upload:
@@ -26,7 +30,7 @@ concurrency:
 jobs:
   produce:
     runs-on: ubuntu-latest
-    timeout-minutes: 125        # hard cap; the app stops itself at max_runtime_minutes (115)
+    timeout-minutes: 150        # hard cap; the app stops itself at max_runtime_minutes (140)
     steps:
       - uses: actions/checkout@v4
         with:
@@ -60,6 +64,17 @@ jobs:
           YOUTUBE_CLIENT_SECRET_JSON: ${{ secrets.YOUTUBE_CLIENT_SECRET_JSON }}
         run: python -m shorts_factory doctor
 
+      # Today's X content (tweet, accounts to follow, draft replies) for posting by hand.
+      # Runs before the long video job and never fails the workflow.
+      - name: Daily X content
+        continue-on-error: true
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python -m shorts_factory tweet
+
       - name: Daily production run
         env:
           CI: "true"
@@ -74,6 +89,7 @@ jobs:
         run: |
           ARGS=""
           if [ -n "${{ inputs.limit }}" ]; then ARGS="$ARGS --limit ${{ inputs.limit }}"; fi
+          if [ -n "${{ inputs.long }}" ]; then ARGS="$ARGS --long ${{ inputs.long }}"; fi
           if [ "${{ inputs.no_upload }}" = "true" ]; then ARGS="$ARGS --no-upload"; fi
           set +e
           python -m shorts_factory run $ARGS
@@ -82,6 +98,8 @@ jobs:
       - name: Publish report to the job summary
         if: always()
         run: |
+          TWEETS="tweets/$(TZ=Asia/Kolkata date +%Y-%m-%d).md"
+          if [ -f "$TWEETS" ]; then cat "$TWEETS" >> "$GITHUB_STEP_SUMMARY"; echo >> "$GITHUB_STEP_SUMMARY"; fi
           if [ -f reports/latest.md ]; then cat reports/latest.md >> "$GITHUB_STEP_SUMMARY"; else echo "no report written" >> "$GITHUB_STEP_SUMMARY"; fi
 
       - name: Upload videos and logs as artifacts
@@ -94,6 +112,7 @@ jobs:
             output/**/*.srt
             output/**/script.json
             output/**/qc.json
+            output/**/thumbnail.jpg
             output/logs/*.log
           retention-days: 7
           if-no-files-found: warn
@@ -104,6 +123,7 @@ jobs:
           git config user.name "shorts-factory-bot"
           git config user.email "shorts-factory-bot@users.noreply.github.com"
           git add state reports
+          if [ -d tweets ]; then git add tweets; fi
           git commit -m "chore: daily run $(date -u +%Y-%m-%d)" || echo "nothing to commit"
           git pull --rebase origin ${{ github.ref_name }} || true
           git push || echo "push failed (check branch protection)"

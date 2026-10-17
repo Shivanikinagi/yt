@@ -29,6 +29,8 @@ class Cfg(dict):
 def _apply_env_overrides(cfg: Cfg) -> None:
     if os.environ.get("SHORTS_DAILY_TARGET"):
         cfg["daily_target"] = int(os.environ["SHORTS_DAILY_TARGET"])
+    if os.environ.get("SHORTS_LONG_TARGET"):
+        cfg["long_video"]["daily_target"] = int(os.environ["SHORTS_LONG_TARGET"])
     if os.environ.get("SHORTS_MAX_RUNTIME_MINUTES"):
         cfg["max_runtime_minutes"] = float(os.environ["SHORTS_MAX_RUNTIME_MINUTES"])
     if os.environ.get("SHORTS_TTS_ENGINES"):
@@ -59,3 +61,31 @@ def load_sources() -> list[dict]:
 def load_evergreen() -> list[dict]:
     with open(CONFIG_DIR / "evergreen_topics.yaml", "r", encoding="utf-8") as f:
         return (yaml.safe_load(f) or {}).get("topics", [])
+
+
+def load_longform() -> list[dict]:
+    with open(CONFIG_DIR / "longform_topics.yaml", "r", encoding="utf-8") as f:
+        return (yaml.safe_load(f) or {}).get("topics", [])
+
+
+# `video` keys that a format section may override
+_FORMAT_VIDEO_KEYS = ("width", "height", "fps", "min_seconds", "max_seconds", "crf", "preset", "lead_in_seconds",
+                      "scene_gap_seconds", "tail_seconds", "transition_seconds", "cast_pairs", "cinematic", "themes")
+
+
+def cfg_for_format(cfg: Cfg, fmt: str) -> Cfg:
+    """Settings for one video format: "short" is the base config, "long" overlays `long_video`."""
+    import copy
+    new = Cfg(copy.deepcopy(dict(cfg)))
+    new["format"] = fmt
+    if fmt != "long":
+        return new
+    lv = new.get("long_video") or {}
+    for k in _FORMAT_VIDEO_KEYS:
+        if k in lv:
+            new["video"][k] = lv[k]
+    if lv.get("schedule_slots_local"):
+        new["youtube"]["schedule_slots_local"] = lv["schedule_slots_local"]
+    new["captions"]["max_words_per_chunk"] = lv.get("captions_max_words", new["captions"]["max_words_per_chunk"])
+    new["captions"]["max_chars_per_chunk"] = lv.get("captions_max_chars", new["captions"]["max_chars_per_chunk"])
+    return new

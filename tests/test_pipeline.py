@@ -205,3 +205,155 @@ def test_cast_pairs_rotate_and_characters_render():
     for key in CAST:
         img = Host(key, (56, 189, 248), scale=1.12).sprite(0.3, "point", 2)
         assert img.mode == "RGBA" and img.getbbox() is not None
+
+
+def test_tweet_length_counts_urls_as_23():
+    from shorts_factory.tweets import compose, fits, tweet_length
+    url = "https://example.com/" + "a" * 200
+    assert tweet_length(compose("hello", url)) == len("hello\n\n") + 23
+    assert fits("x" * 250, url)
+    assert not fits("x" * 260, url)
+    assert not fits("see https://other.example", url)   # the URL is appended by the code, never by the model
+
+
+def test_handles_from_html_skips_share_links_and_dupes():
+    from shorts_factory.tweets import github_owners_from_html, handles_from_html
+    html = ('<a href="https://twitter.com/intent/tweet?text=x">share</a>'
+            '<a href="https://x.com/simonw">Simon</a><a href="https://twitter.com/SimonW/status/1">post</a>'
+            '<a href="https://x.com/home">home</a><a href="https://github.com/ggerganov/llama.cpp">repo</a>'
+            '<a href="https://github.com/features">features</a>')
+    assert handles_from_html(html) == ["simonw"]
+    assert github_owners_from_html(html) == ["ggerganov"]
+
+
+# ----------------------------------------------------------------------------- long-form, CTAs, analytics
+def test_short_cta_adds_question_and_signoff_without_banned_phrases(tmp_path):
+    from shorts_factory.scripting import add_short_cta
+    s = template_script(_topic(), "neon", ["hana", "ren"])
+    n_lines = len(s.scenes[-1]["lines"])
+    add_short_cta(s, seed=5)
+    last = s.scenes[-1]
+    assert last["cta"] == "end" and last["cta_from"] == n_lines
+    assert [x["who"] for x in last["lines"][n_lines:]] == ["guest", "host"]
+    assert "comments" in last["lines"][n_lines]["text"].lower() and "subscribe" in last["narration"].lower()
+    add_short_cta(s, seed=5)                                     # idempotent
+    assert len(last["lines"]) == n_lines + 2
+    qc = check_script(s, _topic(), State(tmp_path / "s.json"), cfg)
+    assert not any("banned" in e for e in qc["errors"])
+
+
+def _fake_long_chat(cfg, system, user, logger):
+    """Stands in for the LLM: an outline, then chapters of the requested size."""
+    import json
+    import re
+    if "Plan a" in user:
+        return json.dumps({"title": "How hackers actually crack your passwords", "thumbnail_text": "Your password is weak",
+                           "hook": "h", "subject": "Passwords", "description": "d", "hashtags": ["#Security"],
+                           "comment_question": "Do you reuse passwords?", "share_with": "a friend who reuses passwords",
+                           "chapters": [{"title": f"Part {i}", "question": f"What about part {i}?", "points": ["p"]}
+                                        for i in range(1, 6)]}), "fake"
+    k = int(re.search(r"Write chapter (\d+) of", user).group(1))
+    lo = int(re.search(r"with (\d+)-(\d+) spoken words", user).group(1))
+    line = " ".join(["word"] * 20) + "."
+    scenes, words = [], 0
+    while words < lo + 20:
+        scenes.append({"type": "explain", "on_screen": f"Point {len(scenes)}", "bullets": ["a b"],
+                       "lines": [{"who": "guest", "text": "So how does that work then?"},
+                                 {"who": "host", "text": line + " " + line}]})
+        words += 46
+    if k == 1:
+        scenes[0]["type"] = "title"
+    return json.dumps({"scenes": scenes}), "fake"
+
+
+def test_long_script_has_chapters_ctas_and_outro(monkeypatch):
+    import logging
+    from shorts_factory import longform
+    from shorts_factory.config import cfg_for_format
+    from shorts_factory.research import Topic
+    monkeypatch.setattr(longform, "chat", _fake_long_chat)
+    lcfg = cfg_for_format(cfg, "long")
+    topic = Topic(id="ab12cd34ef", title="Password cracking", summary="angle", url="https://en.wikipedia.org/wiki/x",
+                  source="Wikipedia", kind="longform", excerpt="text " * 800, verified=True)
+    s = longform.write_long_script(topic, "neon", lcfg, logging.getLogger("t"), ["nova", "kai"], seed=1)
+    types = [x["type"] for x in s.scenes]
+    assert types[0] == "title" and types[-1] == "outro" and types.count("chapter") == 4
+    assert s.scenes[-2]["type"] == "payoff"
+    likes = [x for x in s.scenes if x.get("cta") == "like"]
+    assert len(likes) == 1 and likes[0]["chapter_index"] == 3 and likes[0]["lines"][0]["who"] == "host"
+    assert "subscribe" in s.scenes[-1]["narration"].lower() and "reuses passwords" in s.scenes[-1]["narration"]
+    assert all(x.get("chapter_index") for x in s.scenes) and s.extra["format"] == "long"
+    s.extra["chapter_times"] = longform.chapter_times(s, [i * 20.0 for i in range(len(s.scenes))])
+    assert s.extra["chapter_times"][0]["start"] == 0.0 and len(s.extra["chapter_times"]) == 5
+    body = build_metadata(s, lcfg, "private", None)
+    assert "#Shorts" not in body["snippet"]["title"] and "\n0:00 Part 1\n" in body["snippet"]["description"]
+    assert "sub_confirmation=1" in body["snippet"]["description"]
+
+
+def test_format_config_and_long_publish_slots(tmp_path):
+    from zoneinfo import ZoneInfo
+    from shorts_factory.config import cfg_for_format
+    lcfg = cfg_for_format(cfg, "long")
+    assert (lcfg.video.width, lcfg.video.height) == (1920, 1080) and lcfg.video.max_seconds > 300
+    assert (cfg.video.width, cfg.video.height) == (1080, 1920)            # base config untouched
+    slot = next_publish_slot(lcfg, State(tmp_path / "s.json"))
+    assert slot.astimezone(ZoneInfo(cfg.timezone)).strftime("%H:%M") in cfg.long_video.schedule_slots_local
+
+
+def test_landscape_renderer_every_shot():
+    from shorts_factory.config import cfg_for_format
+    lcfg = cfg_for_format(cfg, "long")
+    scenes = [{"type": t, "on_screen": "A headline for this scene", "bullets": ["one", "two"], "nodes": ["a", "b", "c"],
+               "chapter": "Intro", "chapter_index": 1} for t in ("title", "explain", "diagram", "fact", "payoff")]
+    scenes += [{"type": "chapter", "on_screen": "Part two", "chapter_index": 2, "cta": "like", "cta_from": 0,
+                "_turns": [("host", 0.1, 3.0), ("guest", 3.1, 5.0)]},
+               {"type": "outro", "on_screen": "See you", "chapter_index": 2, "cta": "end", "cta_from": 0,
+                "_turns": [("host", 0.1, 3.0)]}]
+    r = Renderer(lcfg, "sunset", seed=2, scenes=scenes, meta={"cast": ["nova", "kai"], "chapters": ["Intro", "Part two"]})
+    cap = {"words": [("Hello", 0.0, 0.5), ("world", 0.5, 1.0)], "start": 0.0, "end": 1.0}
+    for s in scenes:
+        for t in (0.5, 2.5):
+            assert r.frame(s, t, 6.0, 10 + t, 0.5, "Intro", cap).size == (1920, 1080)
+
+
+def test_thumbnail(tmp_path):
+    from PIL import Image
+    from shorts_factory.thumbnail import make_thumbnail
+    s = template_script(_topic(), "neon", ["nova", "kai"])
+    s.extra["thumbnail_text"] = "Faster than you think"
+    p = make_thumbnail(s, cfg, tmp_path / "t.jpg", seed=1)
+    assert Image.open(p).size == (1280, 720) and p.stat().st_size < 2_000_000
+
+
+def test_analytics_profile_boost_and_notes():
+    from shorts_factory import analytics
+    st = State.__new__(State)
+    st.data = {"videos": [], "trends": {"videos": [
+        {"title": "Which AI is smartest?", "views": 3_000_000, "seconds": 58, "channel": "c", "region": "US"},
+        {"title": "AI cloning is worse than you think", "views": 500_000, "seconds": 1200, "channel": "c", "region": "GB"},
+        {"title": "New AI phone tested", "views": 900_000, "seconds": 600, "channel": "c", "region": "IN"}]}}
+    rows = [("Can AI tests beat human benchmarks?", 158), ("Why AI worms target fridges", 55),
+            ("Can AI design experiments?", 19), ("Probe-and-Resume for agent execution", 0),
+            ("EliteTable rewrites game strategies", 2), ("Magnetar proves programs ran", 0),
+            ("How GPS satellites correct time", 12)]
+    for i, (title, views) in enumerate(rows):
+        st.data["videos"].append({"id": str(i), "title": title, "date": "2026-10-01",
+                                  "stats": {"views": views, "likes": 0, "comments": 0}})
+    prof = analytics.performance_profile(st)
+    assert prof["top"][0]["views"] == 158 and prof["weights"]["ai"] > 0
+    ins = {"profile": prof, "trends": analytics.trend_keywords(st), "trending": st.data["trends"]["videos"]}
+    assert analytics.topic_boost("New AI model explained", ins) > analytics.topic_boost("Quarterly earnings call", ins)
+    notes_long = analytics.prompt_notes(ins, "long")
+    assert "Can AI tests beat human benchmarks? (158)" in notes_long and "AI cloning" in notes_long
+    assert "smartest" not in notes_long and "smartest" in analytics.prompt_notes(ins, "short")
+    assert analytics.iso_seconds("PT1H2M3S") == 3723 and analytics.tokens("Why AI #Shorts") == ["ai"]
+    assert any("What's working" in line for line in analytics.report_lines(ins))
+
+
+def test_moving_average_matches_convolution():
+    import numpy as np
+    from shorts_factory.audio import moving_average
+    x = np.random.default_rng(1).random(5000).astype(np.float32)
+    for w in (1, 2, 7, 64):
+        ref = np.convolve(x, np.ones(w, np.float32) / w, mode="same")
+        assert np.abs(ref - moving_average(x, w)).max() < 1e-5

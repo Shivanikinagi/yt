@@ -64,7 +64,7 @@ def _groq(system, user, cfg):
         return {"reasoning_effort": "low"} if "gpt-oss" in model else {}
     try:
         return _openai_compat(url, key, cfg.llm.groq_model, system, user, cfg, extra_body=extra(cfg.llm.groq_model))
-    except LLMError as e:
+    except (LLMError, requests.RequestException) as e:      # timeouts too: the smaller model is usually free
         fb = cfg.llm.get("groq_fallback_model")
         if fb and fb != cfg.llm.groq_model:
             return _openai_compat(url, key, fb, system, user, cfg, extra_body=extra(fb))

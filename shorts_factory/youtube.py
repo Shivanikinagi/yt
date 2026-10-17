@@ -116,14 +116,29 @@ def effective_publish_mode(cfg, logger) -> str:
     return mode
 
 
+def channel_url(cfg) -> str:
+    return f"https://www.youtube.com/{cfg.brand.handle}"
+
+
 def build_metadata(script: VideoScript, cfg, mode: str, publish_at: datetime | None) -> dict:
+    from .longform import fmt_timestamp
+    extra = script.extra or {}
+    long_form = extra.get("format") == "long"
     title = script.title
-    if "#shorts" not in title.lower() and len(title) + 8 <= 100:
+    if not long_form and "#shorts" not in title.lower() and len(title) + 8 <= 100:
         title = f"{title} #Shorts"
     sources = "\n".join(f"- {u}" for u in script.sources)
-    desc = (f"{script.description}\n\nSources:\n{sources}\n\n{cfg.youtube.description_footer.strip()}\n\n"
-            f"{' '.join(script.hashtags)}")
-    tags = [h.lstrip("#") for h in script.hashtags] + ["shorts", "technology", "explained"]
+    parts = [script.description]
+    chapters = extra.get("chapter_times") or []
+    if long_form and chapters:
+        parts.append("Chapters:\n" + "\n".join(f"{fmt_timestamp(c['start'])} {c['title']}" for c in chapters))
+    if extra.get("comment_prompt"):
+        parts.append(f"{extra['comment_prompt']} Tell us in the comments.")
+    parts.append(f"New tech explained every day. Subscribe: {channel_url(cfg)}?sub_confirmation=1")
+    parts += [f"Sources:\n{sources}", cfg.youtube.description_footer.strip(), " ".join(script.hashtags)]
+    desc = "\n\n".join(p for p in parts if p)
+    tags = [h.lstrip("#") for h in script.hashtags] + (["technology", "explained", "deep dive"] if long_form
+                                                         else ["shorts", "technology", "explained"])
     body = {
         "snippet": {"title": title[:100], "description": desc[:4900], "tags": tags[:30],
                     "categoryId": str(cfg.youtube.category_id),
@@ -191,7 +206,9 @@ def upload_video(service, video: dict, script: VideoScript, cfg, state: State, l
         else:
             raise PipelineError(f"YouTube upload failed: {text[:400]}") from e
     vid = response["id"]
-    result = {"youtube_id": vid, "url": f"https://youtube.com/shorts/{vid}",
+    long_form = (script.extra or {}).get("format") == "long"
+    url = f"https://www.youtube.com/watch?v={vid}" if long_form else f"https://youtube.com/shorts/{vid}"
+    result = {"youtube_id": vid, "url": url,
               "privacy": response.get("status", {}).get("privacyStatus"),
               "publish_at": body["status"].get("publishAt"), "mode": mode}
     if cfg.youtube.upload_captions and video.get("srt") and abs_path(video["srt"]).exists():
@@ -203,7 +220,25 @@ def upload_video(service, video: dict, script: VideoScript, cfg, state: State, l
             result["captions_uploaded"] = True
         except Exception as e:  # not fatal
             logger.warning("caption upload failed: %s", str(e)[:200])
+    thumb = video.get("thumbnail")
+    if long_form and thumb and abs_path(thumb).exists() and cfg.youtube.get("custom_thumbnails", True):
+        result.update(set_thumbnail(service, vid, abs_path(thumb), cfg, state, logger, date))
     return result
+
+
+def set_thumbnail(service, youtube_id: str, path: Path, cfg, state: State, logger, date: str) -> dict:
+    """Custom thumbnail (50 units). Fails on channels without phone verification; never fatal."""
+    from googleapiclient.http import MediaFileUpload
+    state.add_quota(date, int(cfg.youtube.get("thumbnail_cost_units", 50)))
+    try:
+        service.thumbnails().set(videoId=youtube_id,
+                                 media_body=MediaFileUpload(str(path), mimetype="image/jpeg")).execute()
+        logger.info("  thumbnail set")
+        return {"thumbnail_set": True}
+    except Exception as e:
+        msg = str(getattr(e, "content", b"") or e)
+        logger.warning("thumbnail upload failed (custom thumbnails need a phone-verified channel): %s", msg[:200])
+        return {"thumbnail_set": False, "thumbnail_error": msg[:200]}
 
 
 def verify_video(service, youtube_id: str, state: State, date: str) -> dict:

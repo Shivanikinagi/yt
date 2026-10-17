@@ -1,0 +1,205 @@
+# Evergreen deep dives for long-form videos, used when the day's news has no story with enough
+# material for 8-10 minutes. The script may only use facts from the listed Wikipedia articles,
+# which are fetched fresh on the day. Titles follow what performs on the channel and in YouTube's
+# most-popular tech charts: name something people already know and say what is at stake for them.
+topics:
+  - title: "How ChatGPT actually works"
+    category: "AI explained"
+    pages: ["ChatGPT", "Large language model"]
+    angle: "What happens between typing a question and getting an answer, from tokens to training."
+  - title: "Why AI confidently makes things up"
+    category: "AI explained"
+    pages: ["Hallucination (artificial intelligence)", "Large language model"]
+    angle: "Why chatbots invent facts, real cases where it caused trouble, and how people try to fix it."
+  - title: "The backdoor that almost hacked the whole internet"
+    category: "Cybersecurity"
+    pages: ["XZ Utils backdoor"]
+    angle: "A multi-year social engineering plot inside open-source software, caught by accident."
+  - title: "The update that crashed 8 million computers"
+    category: "Cybersecurity"
+    pages: ["2024 CrowdStrike-related IT outages"]
+    angle: "How one faulty security update grounded flights and stopped hospitals in a single morning."
+  - title: "Stuxnet: the first cyberweapon that broke real machines"
+    category: "Cybersecurity"
+    pages: ["Stuxnet"]
+    angle: "A worm built to physically destroy centrifuges, and how researchers figured out what it was."
+  - title: "How hackers actually crack your passwords"
+    category: "Cybersecurity"
+    pages: ["Password cracking", "Phishing"]
+    angle: "Guessing, leaks and phishing: the real ways passwords fall, and what actually protects you."
+  - title: "WannaCry: the ransomware that hit hospitals worldwide"
+    category: "Cybersecurity"
+    pages: ["WannaCry ransomware attack"]
+    angle: "How a leaked exploit spread across the world in hours, and the accidental kill switch."
+  - title: "Log4Shell: the bug hiding in millions of apps"
+    category: "Cybersecurity"
+    pages: ["Log4Shell"]
+    angle: "Why one line of text could take over servers, and why it was so hard to patch everywhere."
+  - title: "Heartbleed: when the internet's padlock leaked secrets"
+    category: "Cybersecurity"
+    pages: ["Heartbleed"]
+    angle: "A tiny bug in OpenSSL that exposed private memory on a huge share of secure websites."
+  - title: "Pegasus: the spyware that needs zero clicks"
+    category: "Cybersecurity"
+    pages: ["Pegasus (spyware)"]
+    angle: "How phones were taken over without the owner doing anything, and who was targeted."
+  - title: "The Morris worm: the day the early internet went down"
+    category: "Cybersecurity"
+    pages: ["Morris worm"]
+    angle: "The first worm to spread across the internet, the student behind it and what changed after."
+  - title: "Spectre and Meltdown: when the chip itself was the bug"
+    category: "Computer science"
+    pages: ["Spectre (security vulnerability)", "Meltdown (security vulnerability)"]
+    angle: "How a speed trick inside nearly every processor could leak secrets between programs."
+  - title: "How your phone knows exactly where you are"
+    category: "How it works"
+    pages: ["Global Positioning System"]
+    angle: "Satellites, atomic clocks and a dose of relativity, from military project to every phone."
+  - title: "Why quantum computers are so hard to build"
+    category: "Future tech"
+    pages: ["Quantum computing", "Quantum supremacy"]
+    angle: "What qubits really do, why they are so fragile, and what has actually been demonstrated."
+  - title: "Will quantum computers break the internet's encryption?"
+    category: "Future tech"
+    pages: ["Shor's algorithm", "Post-quantum cryptography"]
+    angle: "Which locks a quantum computer could open, and the new cryptography being rolled out now."
+  - title: "The cables under the ocean that carry the internet"
+    category: "How it works"
+    pages: ["Submarine communications cable"]
+    angle: "Almost all intercontinental data travels through cables on the sea floor. How they work and break."
+  - title: "The machine that makes every advanced chip"
+    category: "Chips"
+    pages: ["EUV lithography", "TSMC"]
+    angle: "Extreme ultraviolet light, a single supplier and why the whole tech industry depends on it."
+  - title: "How Nvidia went from gaming to running the AI boom"
+    category: "Tech business"
+    pages: ["Nvidia", "Graphics processing unit"]
+    angle: "Why chips designed for video games turned out to be what AI needed."
+  - title: "Moore's law: the prediction that ran tech for 60 years"
+    category: "Chips"
+    pages: ["Moore's law"]
+    angle: "The doubling that made computers cheap and fast, and why it is getting harder to keep up."
+  - title: "How self-driving cars actually see the road"
+    category: "AI explained"
+    pages: ["Self-driving car", "Waymo"]
+    angle: "Sensors, maps and software, the levels of autonomy, and where robotaxis really stand."
+  - title: "Deepfakes: how fake videos are made and caught"
+    category: "AI explained"
+    pages: ["Deepfake", "Generative adversarial network"]
+    angle: "The technique behind face swaps, real harms it caused, and how detection works."
+  - title: "How AI image generators turn noise into pictures"
+    category: "AI explained"
+    pages: ["Diffusion model"]
+    angle: "Why diffusion models start from static and how text steers the picture."
+  - title: "The idea behind every modern AI: transformers"
+    category: "AI explained"
+    pages: ["Transformer (deep learning)"]
+    angle: "Attention, parallel training and why one 2017 paper reshaped the field."
+  - title: "AlphaGo: the match that shocked the AI world"
+    category: "AI history"
+    pages: ["AlphaGo"]
+    angle: "How a program beat a world champion at Go, a decade earlier than experts expected."
+  - title: "AlphaFold: the AI that solved a 50-year biology puzzle"
+    category: "AI explained"
+    pages: ["AlphaFold"]
+    angle: "Predicting protein shapes, why it matters for medicine, and the Nobel Prize that followed."
+  - title: "Deep Blue vs Kasparov: when a computer beat the champion"
+    category: "AI history"
+    pages: ["Deep Blue (chess computer)"]
+    angle: "The rematch, the controversy and what the machine was really doing."
+  - title: "Can a machine think? The Turing test explained"
+    category: "AI history"
+    pages: ["Turing test"]
+    angle: "Turing's imitation game, the arguments against it, and whether chatbots pass it today."
+  - title: "Inside OpenAI: from nonprofit lab to AI giant"
+    category: "Tech business"
+    pages: ["OpenAI"]
+    angle: "The founding, the shift to a capped-profit company, and the boardroom crisis."
+  - title: "What is AGI, and how would we even know?"
+    category: "AI explained"
+    pages: ["Artificial general intelligence", "AI alignment"]
+    angle: "The definitions, the disagreements, and why alignment researchers worry."
+  - title: "How Bitcoin works without a bank"
+    category: "Crypto"
+    pages: ["Bitcoin", "Blockchain"]
+    angle: "Blocks, mining and the double-spend problem, explained from the ground up."
+  - title: "The FTX collapse: billions gone in days"
+    category: "Tech business"
+    pages: ["FTX"]
+    angle: "How a top crypto exchange imploded and what investigators found."
+  - title: "Theranos: the blood test that never worked"
+    category: "Tech business"
+    pages: ["Theranos"]
+    angle: "A celebrated startup, the technology claims, and how the truth came out."
+  - title: "The dot-com bubble: when the internet crashed the market"
+    category: "Tech business"
+    pages: ["Dot-com bubble"]
+    angle: "The hype, the crash and what it says about tech booms, including today's."
+  - title: "How Nokia lost the phone war"
+    category: "Tech business"
+    pages: ["Nokia"]
+    angle: "From the world's biggest phone maker to selling its phone business."
+  - title: "How BlackBerry went from everywhere to gone"
+    category: "Tech business"
+    pages: ["BlackBerry Limited"]
+    angle: "The secure keyboard phone everyone used, and why the touchscreen era left it behind."
+  - title: "Y2K: the bug that cost billions and almost nobody noticed"
+    category: "Computer science"
+    pages: ["Year 2000 problem", "Year 2038 problem"]
+    angle: "Why two-digit years were a real threat, the fix, and the next date bug in 2038."
+  - title: "The computer that landed humans on the Moon"
+    category: "Computer science"
+    pages: ["Apollo Guidance Computer"]
+    angle: "Tiny memory, woven wires and the alarms during the Apollo 11 landing."
+  - title: "How the internet began: ARPANET to the web"
+    category: "Computer science"
+    pages: ["ARPANET", "World Wide Web"]
+    angle: "A research network, packet switching and the invention that put it in everyone's hands."
+  - title: "What really happens when you type a website address"
+    category: "How it works"
+    pages: ["Domain Name System", "Content delivery network"]
+    angle: "DNS lookups, servers near you and why a single outage can take half the web offline."
+  - title: "How Wi-Fi sends data through thin air"
+    category: "How it works"
+    pages: ["Wi-Fi"]
+    angle: "Radio waves, frequency bands and why your signal drops in the next room."
+  - title: "Starlink: internet from thousands of satellites"
+    category: "Future tech"
+    pages: ["Starlink"]
+    angle: "How low-orbit satellites deliver internet, and the problems they bring for astronomy and space."
+  - title: "Neuralink and the race to read the brain"
+    category: "Future tech"
+    pages: ["Neuralink", "Brain–computer interface"]
+    angle: "What brain-computer interfaces can do today, the first human implants, and the open questions."
+  - title: "Why AI needs so much electricity"
+    category: "AI explained"
+    pages: ["Data center"]
+    angle: "What data centers are, how much power and water they use, and why AI pushes demand up."
+  - title: "Inside your phone's battery: why it wears out"
+    category: "How it works"
+    pages: ["Lithium-ion battery"]
+    angle: "How lithium-ion cells store energy, why they degrade and why they sometimes catch fire."
+  - title: "Fusion power: always 30 years away?"
+    category: "Future tech"
+    pages: ["Fusion power"]
+    angle: "How fusion works, the records set so far and why it is so hard to make practical."
+  - title: "Humanoid robots: hype or the next big thing?"
+    category: "Future tech"
+    pages: ["Humanoid robot", "Boston Dynamics"]
+    angle: "Why build robots shaped like people, what they can really do, and who is building them."
+  - title: "How Linux quietly runs the world"
+    category: "Computer science"
+    pages: ["Linux"]
+    angle: "A student's hobby kernel that now runs servers, phones and supercomputers."
+  - title: "How recommendation algorithms decide what you see"
+    category: "AI explained"
+    pages: ["Recommender system", "Algorithmic radicalization"]
+    angle: "How feeds learn your taste, and the debate over where that leads people."
+  - title: "Enigma: how codebreakers cracked the unbreakable"
+    category: "Computer science"
+    pages: ["Cryptanalysis of the Enigma"]
+    angle: "The machine, the Polish breakthrough and Bletchley Park's work in the war."
+  - title: "How Apple's own chips changed laptops"
+    category: "Chips"
+    pages: ["Apple silicon"]
+    angle: "Why Apple left Intel, what is different about its chips, and the effect on battery life."

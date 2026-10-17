@@ -1,11 +1,12 @@
-"""Procedural motion-graphics renderer (Pillow). Produces one 1080x1920 RGB frame per call.
+"""Procedural motion-graphics renderer (Pillow). Produces one RGB frame per call.
 
 One consistent "field notes" HUD design instead of rotating looks: the header, progress bar, framed
 visual panel, caption bar and footer stay put for the whole video, so it reads as one edited piece.
 Only the panel contents change between scenes, and they keep moving (slow camera push, orbiting
 labels, pulses travelling along connectors, typing, count-ups, ticking checklists) rather than
 fading in and sitting still. Light film grain and a vignette take the edge off the flat synthetic
-look. No GPU and no assets besides the OFL fonts bundled in assets/fonts. Laid out for 1080x1920.
+look. No GPU and no assets besides the OFL fonts bundled in assets/fonts. Laid out for 1080x1920
+Shorts and 1920x1080 long-form (same panel, with the characters and speech bubble beside it).
 """
 from __future__ import annotations
 
@@ -42,9 +43,11 @@ CAP_BG = (6, 10, 12)
 AMBER = (251, 191, 36)
 
 DEFAULT_KICKERS = {"title": "Today in tech", "explain": "The core idea", "diagram": "How it works",
-                   "compare": "What changed", "code": "Try it", "fact": "Worth knowing", "payoff": "The takeaway"}
+                   "compare": "What changed", "code": "Try it", "fact": "Worth knowing", "payoff": "The takeaway",
+                   "chapter": "Chapter", "outro": "Before you go"}
 PANEL_LABELS = {"title": "TODAY'S TOPIC", "explain": "THE BREAKDOWN", "diagram": "HOW IT FLOWS",
-                "compare": "SIDE BY SIDE", "code": "IN PRACTICE", "fact": "KEY FACT", "payoff": "RECAP"}
+                "compare": "SIDE BY SIDE", "code": "IN PRACTICE", "fact": "KEY FACT", "payoff": "RECAP",
+                "chapter": "UP NEXT", "outro": "RECAP"}
 CODE_KEYWORDS = {"def", "return", "if", "else", "for", "while", "in", "import", "from", "print", "const", "let",
                  "var", "function", "class", "await", "async", "pip", "npm", "git", "curl", "true", "false",
                  "none", "null", "new", "with", "as", "and", "or", "not", "sudo", "docker", "python"}
@@ -176,11 +179,33 @@ class Renderer:
         self.intro = max(float(cfg.video.get("transition_seconds", 0.4)), 0.2)
         self.margin = 64
         self.content_w = self.W - 2 * self.margin
+        # 16:9 long-form: header across the top, headline + characters + speech bubble on the left,
+        # the same 952x766 info panel on the right (so every panel scene draws exactly as in a Short)
+        self.landscape = self.W > self.H
+        L = self.landscape
+        self.header_y, self.rule_y, self.bar_y = (52, 82, 92) if L else (72, 112, 124)
+        self.kicker_y, self.headline_y = (150, 182) if L else (168, 210)
+        self.head_x, self.head_w = self.margin, (792 if L else self.content_w)
+        self.head_h, self.head_lines = (300, 4) if L else (236, 3)
+        self.sub_y = self.H - 96 if L else 300
+        self.chapters = [clean(c) for c in self.meta.get("chapters") or []]
         cast = [k for k in (self.meta.get("cast") or []) if k in CAST] or pick_cast(cfg, seed)
-        scale = 1.12 if len(cast) >= 2 else 1.3
+        scale = (1.0 if len(cast) >= 2 else 1.3) if L else (1.12 if len(cast) >= 2 else 1.3)
         self.cast = [Host(k, self.accent, seed + i, scale=scale) for i, k in enumerate(cast[:2])]
         self.host = self.cast[0] if self.cast else None
-        if len(self.cast) == 2:
+        if L:
+            self.panel_box = (904, 150, 1856, 916)
+            if len(self.cast) == 2:
+                w, h = self.cast[0].size
+                self.cap_box = (self.margin, 512, 856, 690)
+                self.cast_pos = [(80, self.H - h + 6), (846 - w, self.H - h + 6)]
+            elif self.host:
+                w, h = self.host.size
+                self.cap_box = (470, 640, 856, 880)
+                self.cast_pos = [(20, self.H - h + 10)]
+            else:
+                self.cap_box = (self.margin, 600, 856, 780)
+        elif len(self.cast) == 2:
             # two characters below the panel; the caption bubble points at whoever is talking.
             # The right one stays clear of the Shorts like/comment buttons.
             self.panel_box = (self.margin, 470, self.W - self.margin, 1236)
@@ -200,8 +225,9 @@ class Renderer:
         self.cinematic = len(self.cast) == 2 and bool(cfg.video.get("cinematic", True))
         if self.cinematic:
             keys = [h.key for h in self.cast]
-            self.close = [Host(k, self.accent, seed + i, scale=3.3, cache_size=16, tall=True) for i, k in enumerate(keys)]
-            self.wide = [Host(k, self.accent, seed + i, scale=1.9, cache_size=40) for i, k in enumerate(keys)]
+            close_s, wide_s = (2.0, 1.45) if L else (3.3, 1.9)
+            self.close = [Host(k, self.accent, seed + i, scale=close_s, cache_size=16, tall=True) for i, k in enumerate(keys)]
+            self.wide = [Host(k, self.accent, seed + i, scale=wide_s, cache_size=40) for i, k in enumerate(keys)]
             self.bokeh = self._bokeh(seed)
         self.edge = lerp_rgb(LINE, self.accent, 0.45)
         self.base = self._base()
@@ -317,16 +343,26 @@ class Renderer:
         if not self.cinematic:
             return "panel"
         kind, turns = scene.get("type"), scene.get("_turns") or []
+        if kind in ("chapter", "outro"):
+            return "wide"
+        k = turn_at(turns, t)
+        if scene.get("cta_from") is not None and k is not None and k >= scene["cta_from"]:
+            return "wide"                           # the ask is filmed wide, with the subscribe button
         if kind == "title":
             return "wide" if t < 2.4 else "close"
         if kind == "payoff":
             done = bool(turns) and t > turns[-1][2] + 0.2
             return "wide" if done or who == "guest" else "close"
-        return "close" if who == "guest" else "panel"
+        if who == "guest":
+            return "close"
+        if self.landscape and k is not None and turns[k][2] - turns[k][1] > 7 and t - turns[k][1] < 1.6:
+            return "close"                          # long-form: cut to the host's face before each long answer
+        return "panel"
 
-    def _subtitle(self, draw, chunk: dict | None, y: float = 300):
+    def _subtitle(self, draw, chunk: dict | None, y: float | None = None):
         if not chunk:
             return
+        y = self.sub_y if y is None else y
         text = " ".join(clean(w) for w, _, _ in chunk["words"])
         font, lines = self._fit(text, "bold", 52, self.content_w - 120, 38, max_lines=2)
         for i, line in enumerate(lines):
@@ -334,9 +370,9 @@ class Renderer:
                       stroke_width=4, stroke_fill=(8, 8, 12))
 
     def _progress(self, draw, progress: float):
-        m = self.margin
-        draw.rectangle([m, 124, self.W - m, 128], fill=(40, 44, 56))
-        draw.rectangle([m, 124, m + int(self.content_w * clamp01(progress)), 128], fill=self.accent)
+        m, y = self.margin, self.bar_y
+        draw.rectangle([m, y, self.W - m, y + 4], fill=(40, 44, 56))
+        draw.rectangle([m, y, m + int(self.content_w * clamp01(progress)), y + 4], fill=self.accent)
 
     @staticmethod
     def _expression(text: str, talking_pose: str = "idle") -> str:
@@ -354,7 +390,8 @@ class Renderer:
         sprite = host.sprite(t + speaker * 1.3, self._expression(line), mouth, look=(0.7, 0.05))
         if speaker == 1:
             sprite = ImageOps.mirror(sprite)
-        face_x = 440 if speaker == 0 else self.W - 440
+        inset = 640 if self.landscape else 440
+        face_x = inset if speaker == 0 else self.W - inset
         side = 1 if speaker == 0 else -1                # which way the speaker faces
         x0 = face_x - sprite.width / 2
         y0 = self.H - sprite.height + 10 + 5 * math.sin(t * 1.8) + (3 * math.sin(t * 9) if mouth else 0)
@@ -363,8 +400,10 @@ class Renderer:
         img.paste(sprite, (int(x0), int(y0)), sprite)
         self._screen(img, self._glow_sprite(420, (90, 130, 255), 0.12), face_x - side * 320, face_y - 260)  # cool rim
         back = self.close[1 - speaker].back()
-        head_x = self.W + 70 if speaker == 0 else -70
-        img.paste(back, (int(head_x - back.width / 2), int(1640 - back.height * 160 / self.close[1 - speaker].h)), back)
+        out = 150 if self.landscape else 70
+        head_x = self.W + out if speaker == 0 else -out
+        head_y = self.H * 0.84 if self.landscape else 1640
+        img.paste(back, (int(head_x - back.width / 2), int(head_y - back.height * 160 / self.close[1 - speaker].h)), back)
         draw = ImageDraw.Draw(img)
         self._subtitle(draw, caption)
         return img
@@ -379,25 +418,83 @@ class Renderer:
             sprite = host.sprite(t + i * 1.3, pose, mouth if talking else 0, look=(1.0, 0.1))
             if i == 1:
                 sprite = ImageOps.mirror(sprite)
-            x = 6 if i == 0 else self.W - 6 - sprite.width
+            edge = 40 if self.landscape else 6
+            x = edge if i == 0 else self.W - edge - sprite.width
             y = self.H - sprite.height + 36 + 4 * math.sin(t * 2.2 + i * 1.7) + (2 * math.sin(t * 9) if talking and mouth else 0)
             if talking:
                 self._screen(img, self._glow_sprite(320, host.color, 0.28), x + sprite.width / 2, y + sprite.height * 0.45)
             img.paste(sprite, (int(x), int(y)), sprite)
         draw = ImageDraw.Draw(img)
-        self._kicker(draw, index, scene, t_local, y=560)
-        self._headline(draw, scene, t_local, y=600)
-        if kind == "payoff":
+        # text column: between the two characters in 16:9, above them in 9:16
+        tx, tw, ky, hy, fy = (540, 840, 250, 282, 700) if self.landscape else (self.margin, self.content_w, 560, 600, 900)
+        if kind == "chapter":
+            self._chapter_dots(draw, tx, ky - 70, scene.get("chapter_index") or 1, t_local)
+        self._kicker(draw, index, scene, t_local, y=ky, x=tx)
+        self._headline(draw, scene, t_local, y=hy, x=tx, width=tw)
+        cta = scene.get("cta")
+        if kind in ("payoff", "outro") or cta:
             a = ease_out((t_local - 0.4) / 0.5)
             fh = self.fonts.get("mono_bold", 30)
             handle = clean(self.cfg.brand.handle).upper()
-            self._tracked(draw, self.margin, 900, handle, fh, lerp_rgb((10, 12, 24), self.accent, a), 3)
+            self._tracked(draw, tx, fy, handle, fh, lerp_rgb((10, 12, 24), self.accent, a), 3)
         else:
             domain = clean(self.meta.get("domain")).upper()
             if domain:
-                self._tracked(draw, self.margin, 900, f"SOURCE: {domain}"[:40], self.fonts.get("mono", 24), MUTED, 2)
+                self._tracked(draw, tx, fy, f"SOURCE: {domain}"[:40], self.fonts.get("mono", 24), MUTED, 2)
+        turns = scene.get("_turns") or []
+        if cta and turns:
+            k0 = min(int(scene.get("cta_from") or 0), len(turns) - 1)
+            self._cta_buttons(draw, tx + tw / 2, fy + 110, t_local - turns[k0][1], like_only=cta == "like")
         self._subtitle(draw, caption)
         return img
+
+    def _chapter_dots(self, draw, x, y, k: int, t: float):
+        """A row of chapter markers with the current one lit: where we are in the video."""
+        n = max(len(self.chapters), k)
+        f = self.fonts.get("mono_bold", 22)
+        for i in range(n):
+            a = ease_out((t - 0.1 * i) / 0.3)
+            cx = x + 12 + i * 46
+            on, done = i + 1 == k, i + 1 < k
+            col = self.accent if on else (lerp_rgb(DIM, self.accent, 0.45) if done else DIM)
+            r = 11 if on else 7
+            draw.ellipse([cx - r, y - r, cx + r, y + r], fill=lerp_rgb((10, 12, 24), col, a))
+        self._tracked(draw, x + n * 46 + 10, y, f"{k:02d} / {n:02d}", f, MUTED, 3)
+
+    def _cta_buttons(self, draw, cx: float, cy: float, t: float, like_only: bool = False):
+        """LIKE / SHARE / SUBSCRIBE pills that pop in and get tapped one after another, in time with the ask."""
+        if t < 0:
+            return
+        items = [("LIKE", 0.7)] if like_only else [("LIKE", 0.8), ("SHARE", 1.6), ("SUBSCRIBE", 2.4)]
+        f = self.fonts.get("mono_bold", 30 if self.landscape else 34)
+        widths = [self._tracked_len(lab if lab != "SUBSCRIBE" else "SUBSCRIBED", f, 3) + 64 for lab, _ in items]
+        gap, h = 26, 72
+        x = cx - (sum(widths) + gap * (len(items) - 1)) / 2
+        red, grey = (229, 45, 39), (64, 70, 82)
+        for (lab, tap), w in zip(items, widths):
+            a = ease_out((t - (tap - 0.6)) / 0.35)
+            if a <= 0:
+                x += w + gap
+                continue
+            pressed = t >= tap
+            pop = 1 + 0.12 * math.exp(-((t - tap) * 7) ** 2)          # a quick bounce on the tap
+            hw, hh = w / 2 * pop, h / 2 * pop
+            mx, my = x + w / 2, cy + (1 - a) * 30
+            if lab == "SUBSCRIBE":
+                fill = grey if pressed else red
+                text = "SUBSCRIBED" if pressed else "SUBSCRIBE"
+            else:
+                fill = self.accent if pressed else (24, 28, 36)
+                text = lab
+            fill = lerp_rgb((10, 12, 24), fill, a)
+            draw.rounded_rectangle([mx - hw, my - hh, mx + hw, my + hh], radius=int(hh), fill=fill,
+                                   outline=lerp_rgb((10, 12, 24), INK if not pressed else fill, a * 0.8), width=3)
+            ink = (10, 12, 16) if pressed and lab != "SUBSCRIBE" else INK
+            self._tracked(draw, mx - self._tracked_len(text, f, 3) / 2, my, text, f, lerp_rgb(fill, ink, a), 3)
+            if 0 <= t - tap < 0.45:                                   # tap ripple
+                r = 20 + 90 * (t - tap) / 0.45
+                draw.ellipse([mx - r, my - r, mx + r, my + r], outline=lerp_rgb((10, 12, 24), INK, 1 - (t - tap) / 0.45), width=3)
+            x += w + gap
 
     # ------------------------------------------------------------------ background
     def background(self, t: float) -> Image.Image:
@@ -435,16 +532,18 @@ class Renderer:
                 return font, lines[:max_lines]
             size -= 2
 
-    def _fit_headline(self, text):
-        if text not in self._head_cache:
+    def _fit_headline(self, text, width: int | None = None):
+        width = int(width or self.head_w)
+        key = f"{width}|{text}"
+        if key not in self._head_cache:
             for size in range(84, 50, -4):
                 font = self.fonts.get("headline", size)
-                lines = wrap_text(text, font, self.content_w)
-                if (len(lines) <= 3 and len(lines) * size * 1.04 <= 236
-                        and all(font.getlength(l) <= self.content_w for l in lines)):
+                lines = wrap_text(text, font, width)
+                if (len(lines) <= self.head_lines and len(lines) * size * 1.04 <= self.head_h
+                        and all(font.getlength(l) <= width for l in lines)):
                     break
-            self._head_cache[text] = (font, lines[:3])
-        return self._head_cache[text]
+            self._head_cache[key] = (font, lines[:self.head_lines])
+        return self._head_cache[key]
 
     @staticmethod
     def _highlight(scene, lines) -> set:
@@ -467,47 +566,55 @@ class Renderer:
     def _reveal_times(self, scene, n: int, dur: float) -> list[float]:
         cues = scene.get("_cues")
         if cues and len(cues) == n:
-            return [max(0.2, c - 0.15) for c in cues]
+            times = [max(0.2, c - 0.15) for c in cues]
+            times[0] = min(times[0], 1.2)          # never leave the panel empty while the voice warms up
+            return times
         span = max(dur * 0.72 - 0.25, 0.6)
         return [0.25 + i * span / max(n, 1) for i in range(n)]
 
     # ------------------------------------------------------------------ persistent chrome
     def _header(self, draw, progress: float, label: str, t: float):
-        m, y = self.margin, 72
+        m, y = self.margin, self.header_y
         f, fr = self.fonts.get("mono_bold", 26), self.fonts.get("mono", 26)
         x = self._tracked(draw, m, y, clean(self.cfg.brand.channel_name).upper(), f, INK, 3)
         x = self._tracked(draw, x + 8, y, "/", fr, DIM, 3)
-        self._tracked(draw, x + 12, y, clean(label).upper()[:22], fr, MUTED, 3)
-        status = "DAILY BRIEF"
+        self._tracked(draw, x + 12, y, clean(label).upper()[:40 if self.landscape else 22], fr, MUTED, 3)
+        status = "DEEP DIVE" if self.landscape else "DAILY BRIEF"
         xr = self.W - m - self._tracked_len(status, f, 3)
         self._tracked(draw, xr, y, status, f, self.accent2, 3)
         pulse = 0.5 + 0.5 * math.sin(t * 4)
         draw.ellipse([xr - 28, y - 7, xr - 14, y + 7], fill=lerp_rgb(BG_TOP, self.accent2, 0.35 + 0.65 * pulse))
-        draw.line([(m, 112), (self.W - m, 112)], fill=LINE, width=2)
-        draw.rectangle([m, 124, self.W - m, 128], fill=LINE)
-        draw.rectangle([m, 124, m + int(self.content_w * clamp01(progress)), 128], fill=self.accent)
+        draw.line([(m, self.rule_y), (self.W - m, self.rule_y)], fill=LINE, width=2)
+        b = self.bar_y
+        draw.rectangle([m, b, self.W - m, b + 4], fill=LINE)
+        draw.rectangle([m, b, m + int(self.content_w * clamp01(progress)), b + 4], fill=self.accent)
 
-    def _kicker(self, draw, index: int, scene: dict, t: float, y: float = 168):
+    def _kicker(self, draw, index: int, scene: dict, t: float, y: float | None = None, x: float | None = None):
+        y = self.kicker_y if y is None else y
         text = clean(scene.get("kicker") or DEFAULT_KICKERS.get(scene.get("type"), "")).upper()[:32]
-        full = f"{index + 1:02d} // {text}"
+        num = scene.get("chapter_index") or index + 1          # long-form numbers chapters, not scenes
+        full = f"{num:02d} // {text}"
         shown = int(len(full) * clamp01(t / 0.45))
         f = self.fonts.get("mono_bold", 28)
-        x = self._tracked(draw, self.margin, y, full[:5][:shown], f, MUTED, 3)
+        x = self._tracked(draw, self.head_x if x is None else x, y, full[:5][:shown], f, MUTED, 3)
         x = self._tracked(draw, x, y, full[5:shown], f, self.accent, 3)
         if shown < len(full):
             draw.rectangle([x + 2, y - 14, x + 18, y + 14], fill=self.accent)
 
-    def _headline(self, draw, scene: dict, t: float, y: float = 210):
+    def _headline(self, draw, scene: dict, t: float, y: float | None = None, x: float | None = None,
+                  width: int | None = None):
         text = clean(scene.get("on_screen")).upper()
         if not text:
             return
-        font, lines = self._fit_headline(text)
+        y = self.headline_y if y is None else y
+        x0 = self.head_x if x is None else x
+        font, lines = self._fit_headline(text, width)
         hl = self._highlight(scene, lines)
         lh = font.size * 1.04
         y = y + font.size * 0.86
         k = 0
         for li, line in enumerate(lines):
-            x = self.margin
+            x = x0
             for wi, word in enumerate(line.split()):
                 a = ease_out((t - 0.05 - 0.045 * k) / 0.35)
                 k += 1
@@ -609,16 +716,23 @@ class Renderer:
                 self._screen(img, self._glow_sprite(260, host.color, 0.30), x + sprite.width / 2, y + sprite.height * 0.47)
             img.paste(sprite, (int(x), int(y + bob)), sprite)
 
-    def _footer(self, index: int, draw):
-        if len(self.cast) == 2:
-            return                                  # the characters stand where the footer would be
+    def _footer(self, index: int, draw, scene: dict | None = None):
         f = self.fonts.get("mono", 22)
-        x, y = (self.cap_box[0], self.cap_box[3] + 40) if self.host else (self.margin, 1648)
+        if self.landscape:                          # under the panel
+            x, y = self.panel_box[0], self.panel_box[3] + 50
+        elif len(self.cast) == 2:
+            return                                  # the characters stand where the footer would be
+        else:
+            x, y = (self.cap_box[0], self.cap_box[3] + 40) if self.host else (self.margin, 1648)
         domain = clean(self.meta.get("domain")).upper()
         if domain:
             self._tracked(draw, x, y, f"SOURCE: {domain}"[:30], f, DIM, 2)
-        n = max(len(self.scenes), index + 1)
-        right = f"{index + 1:02d} / {n:02d}"
+        k = (scene or {}).get("chapter_index")
+        if k and self.chapters:
+            right = f"CHAPTER {k:02d} / {len(self.chapters):02d}"
+        else:
+            n = max(len(self.scenes), index + 1)
+            right = f"{index + 1:02d} / {n:02d}"
         self._tracked(draw, self.W - self.margin - self._tracked_len(right, f, 2), y, right, f, DIM, 2)
 
     # ------------------------------------------------------------------ panel scenes (drawn in panel coordinates)
@@ -670,7 +784,7 @@ class Renderer:
 
     def _satellites(self) -> list[str]:
         out = []
-        for s in self.scenes[1:-1]:
+        for s in [{"on_screen": c} for c in self.chapters[1:]] or self.scenes[1:-1]:
             words, lab = clean(s.get("on_screen")).upper().split(), ""
             for w in words:
                 if len(lab) + len(w) + 1 > 18:
@@ -921,8 +1035,8 @@ class Renderer:
 
     def _s_payoff(self, layer, d, scene, t, dur):
         pw, ph = layer.size
-        items = []
-        for s in self.scenes[1:-1]:
+        items = list(self.chapters)
+        for s in self.scenes[1:-1] if not items else []:
             txt = clean(s.get("on_screen"))
             if txt and txt not in items:
                 items.append(txt)
@@ -959,7 +1073,7 @@ class Renderer:
             d.text((pw / 2, y0 + 96), lc[0] if lc else "", font=fc, fill=lerp_rgb(fill, INK, a), anchor="mm")
 
     SCENES = {"title": _s_title, "explain": _s_explain, "diagram": _s_diagram, "compare": _s_compare,
-              "code": _s_code, "fact": _s_fact, "payoff": _s_payoff}
+              "code": _s_code, "fact": _s_fact, "payoff": _s_payoff, "chapter": _s_title, "outro": _s_payoff}
 
     # ------------------------------------------------------------------ frame
     def _index_of(self, scene: dict) -> int:
@@ -1011,7 +1125,7 @@ class Renderer:
         self._captions(draw, caption, t_global, speaker)
         if self.cast:
             self._draw_cast(img, scene, caption, t_global, speaker)
-        self._footer(index, draw)
+        self._footer(index, draw, scene)
         return ImageChops.add(img, grain, offset=-self.GRAIN_BIAS)
 
 
@@ -1024,4 +1138,4 @@ def source_meta(script) -> dict:
     extra = script.extra or {}
     return {"domain": domain, "source": extra.get("source", ""), "published": extra.get("published") or "",
             "subject": extra.get("subject", ""), "topic_title": script.topic_title, "category": script.category,
-            "cast": extra.get("cast") or []}
+            "cast": extra.get("cast") or [], "chapters": extra.get("chapters") or []}
