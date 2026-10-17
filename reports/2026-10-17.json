@@ -1,0 +1,254 @@
+{
+  "run": {
+    "date": "2026-10-17",
+    "started": "2026-10-17T11:21:56+05:30",
+    "finished": "2026-10-17T11:30:22+05:30",
+    "elapsed_minutes": 8.436197591433334,
+    "budget_minutes": 115.0,
+    "produced": 5,
+    "target": 5,
+    "uploaded": 5,
+    "publish_mode": "scheduled",
+    "providers": [
+      "groq"
+    ],
+    "tts_engines": [
+      "piper"
+    ],
+    "quota_used": 8000,
+    "failures": 0,
+    "demo": false
+  },
+  "videos": [
+    {
+      "id": "2026-10-17-01-e04d6fe6",
+      "date": "2026-10-17",
+      "title": "When Reality Moves Faster Than AI Can Think",
+      "topic_id": "e04d6fe6e25760630f49d6cc613a2a6697a06d8e",
+      "topic_title": "When Reality Outpaces Cognition: A New Scaling Principle for Reliable Intelligence",
+      "source": "arXiv cs.AI",
+      "sources": [
+        "https://arxiv.org/abs/2610.20764"
+      ],
+      "theme": "neon",
+      "provider": "groq",
+      "tts_engine": "piper",
+      "duration": 54.04,
+      "path": "output/2026-10-17/01-when-reality-outpaces-cognition-a-new-scaling-pr/video.mp4",
+      "srt": "output/2026-10-17/01-when-reality-outpaces-cognition-a-new-scaling-pr/captions.srt",
+      "captions": 46,
+      "caption_method": "whisper",
+      "status": "uploaded",
+      "qc_warnings": [],
+      "created": "2026-10-17T05:53:41",
+      "render_seconds": 75,
+      "youtube_id": "0N8Z7ZCXaac",
+      "url": "https://youtube.com/shorts/0N8Z7ZCXaac",
+      "privacy": "private",
+      "publish_at": "2026-10-17T09:30:00Z",
+      "mode": "scheduled"
+    },
+    {
+      "id": "2026-10-17-02-679a3916",
+      "date": "2026-10-17",
+      "title": "How Probe‑and‑Resume Lets AI Agents Fix Their Mistakes on the Fly",
+      "topic_id": "679a3916a066643be48f73481df745f7d722cb29",
+      "topic_title": "Probe-and-Resume: When and How to Evaluate Agent Execution",
+      "source": "arXiv cs.AI",
+      "sources": [
+        "https://arxiv.org/abs/2610.21088"
+      ],
+      "theme": "voxel",
+      "provider": "groq",
+      "tts_engine": "piper",
+      "duration": 54.88,
+      "path": "output/2026-10-17/02-probe-and-resume-when-and-how-to-evaluate-agent/video.mp4",
+      "srt": "output/2026-10-17/02-probe-and-resume-when-and-how-to-evaluate-agent/captions.srt",
+      "captions": 39,
+      "caption_method": "proportional+whisper",
+      "status": "uploaded",
+      "qc_warnings": [],
+      "created": "2026-10-17T05:55:19",
+      "render_seconds": 76,
+      "youtube_id": "Uvz82Go8ltg",
+      "url": "https://youtube.com/shorts/Uvz82Go8ltg",
+      "privacy": "private",
+      "publish_at": "2026-10-17T12:30:00Z",
+      "mode": "scheduled"
+    },
+    {
+      "id": "2026-10-17-03-e86f92ef",
+      "date": "2026-10-17",
+      "title": "When OpenAI's Own Models Hack Websites and a Crypto Wallet",
+      "topic_id": "e86f92efb2651db53d684299bf466ba2775c2d91",
+      "topic_title": "OpenAI models hacked a crypto wallet and breached more websites",
+      "source": "Ars Technica - Technology Lab",
+      "sources": [
+        "https://arstechnica.com/security/2026/10/openai-models-hacked-a-crypto-wallet-and-breached-more-websites/"
+      ],
+      "theme": "blueprint",
+      "provider": "groq",
+      "tts_engine": "piper",
+      "duration": 53.6,
+      "path": "output/2026-10-17/03-openai-models-hacked-a-crypto-wallet-and-breache/video.mp4",
+      "srt": "output/2026-10-17/03-openai-models-hacked-a-crypto-wallet-and-breache/captions.srt",
+      "captions": 42,
+      "caption_method": "whisper",
+      "status": "uploaded",
+      "qc_warnings": [
+        "numbers not found in source: ['2026']"
+      ],
+      "created": "2026-10-17T05:56:53",
+      "render_seconds": 71,
+      "youtube_id": "W1hQbtCGjcA",
+      "url": "https://youtube.com/shorts/W1hQbtCGjcA",
+      "privacy": "private",
+      "publish_at": "2026-10-17T15:30:00Z",
+      "mode": "scheduled"
+    },
+    {
+      "id": "2026-10-17-04-f9423b9e",
+      "date": "2026-10-17",
+      "title": "How a tiny eye implant restores sight for macular degeneration",
+      "topic_id": "f9423b9e0078d0b471e49b6d57dc7df7bd84839e",
+      "topic_title": "This implant can restore sight for patients with macular degeneration",
+      "source": "MIT Technology Review",
+      "sources": [
+        "https://www.technologyreview.com/2026/10/16/1145840/prima-implant-restores-sight-macular-degeneration-patients/"
+      ],
+      "theme": "sunset",
+      "provider": "groq",
+      "tts_engine": "piper",
+      "duration": 53.1,
+      "path": "output/2026-10-17/04-this-implant-can-restore-sight-for-patients-with/video.mp4",
+      "srt": "output/2026-10-17/04-this-implant-can-restore-sight-for-patients-with/captions.srt",
+      "captions": 43,
+      "caption_method": "whisper",
+      "status": "uploaded",
+      "qc_warnings": [],
+      "created": "2026-10-17T05:58:27",
+      "render_seconds": 76,
+      "youtube_id": "0pkvNz4lYpA",
+      "url": "https://youtube.com/shorts/0pkvNz4lYpA",
+      "privacy": "private",
+      "publish_at": "2026-10-18T03:30:00Z",
+      "mode": "scheduled"
+    },
+    {
+      "id": "2026-10-17-05-5692d96d",
+      "date": "2026-10-17",
+      "title": "When Love Becomes Infrastructure: The Battle of Barnabas and Mainspring",
+      "topic_id": "5692d96d64e98ad2dfe61a22e952eee9f6f54e7b",
+      "topic_title": "Love is infrastructure",
+      "source": "MIT Technology Review",
+      "sources": [
+        "https://www.technologyreview.com/2026/10/16/1145845/love-is-infrastructure-fiction-charlie-jane-anders/"
+      ],
+      "theme": "terminal",
+      "provider": "groq",
+      "tts_engine": "piper",
+      "duration": 57.92,
+      "path": "output/2026-10-17/05-love-is-infrastructure/video.mp4",
+      "srt": "output/2026-10-17/05-love-is-infrastructure/captions.srt",
+      "captions": 50,
+      "caption_method": "whisper",
+      "status": "uploaded",
+      "qc_warnings": [],
+      "created": "2026-10-17T06:00:12",
+      "render_seconds": 78,
+      "youtube_id": "x2xpZYiuOWo",
+      "url": "https://youtube.com/shorts/x2xpZYiuOWo",
+      "privacy": "private",
+      "publish_at": "2026-10-18T06:30:00Z",
+      "mode": "scheduled"
+    }
+  ],
+  "failures": [],
+  "candidates": [
+    {
+      "title": "When Reality Outpaces Cognition: A New Scaling Principle for Reliable Intelligence",
+      "source": "arXiv cs.AI",
+      "kind": "research",
+      "url": "https://arxiv.org/abs/2610.20764"
+    },
+    {
+      "title": "Probe-and-Resume: When and How to Evaluate Agent Execution",
+      "source": "arXiv cs.AI",
+      "kind": "research",
+      "url": "https://arxiv.org/abs/2610.21088"
+    },
+    {
+      "title": "OpenAI models hacked a crypto wallet and breached more websites",
+      "source": "Ars Technica - Technology Lab",
+      "kind": "news",
+      "url": "https://arstechnica.com/security/2026/10/openai-models-hacked-a-crypto-wallet-and-breached-more-websites/"
+    },
+    {
+      "title": "This implant can restore sight for patients with macular degeneration",
+      "source": "MIT Technology Review",
+      "kind": "news",
+      "url": "https://www.technologyreview.com/2026/10/16/1145840/prima-implant-restores-sight-macular-degeneration-patients/"
+    },
+    {
+      "title": "Love is infrastructure",
+      "source": "MIT Technology Review",
+      "kind": "news",
+      "url": "https://www.technologyreview.com/2026/10/16/1145845/love-is-infrastructure-fiction-charlie-jane-anders/"
+    },
+    {
+      "title": "A week with RTX Spark: everything we’ve learned using Nvidia’s new laptops",
+      "source": "The Verge - AI",
+      "kind": "news",
+      "url": "https://www.theverge.com/tech/1012748/nvidia-rtx-spark-windows-arm-laptops-asus-hp-lenovo-impressions"
+    },
+    {
+      "title": "Meta’s new terms may allow it to train AI on news sites for free",
+      "source": "The Verge - AI",
+      "kind": "news",
+      "url": "https://www.theverge.com/tech/1012846/meta-business-terms-scrape-news-publishers"
+    },
+    {
+      "title": "He Wants AI Benchmarking To Be a Science, Not a Dark Art",
+      "source": "Quanta Magazine",
+      "kind": "concepts",
+      "url": "https://www.quantamagazine.org/he-wants-ai-benchmarking-to-be-a-science-not-a-dark-art-20261016/"
+    },
+    {
+      "title": "How Itaú is building generative AI for its entire customer base",
+      "source": "OpenAI News",
+      "kind": "news",
+      "url": "https://openai.com/index/itau-generative-ai"
+    },
+    {
+      "title": "How Do Fungi Keep the Planet Healthy?",
+      "source": "Quanta Magazine",
+      "kind": "concepts",
+      "url": "https://www.quantamagazine.org/how-do-fungi-keep-the-planet-healthy-20261015/"
+    },
+    {
+      "title": "Anthropic tells investors quarterly revenue up nearly 50% to $16.8bn ahead of IPO",
+      "source": "Simon Willison",
+      "kind": "news",
+      "url": "https://simonwillison.net/2026/Oct/15/anthropic-tells-investors/"
+    },
+    {
+      "title": "Quoting Addy Osmani, Morgan Westlee Lunt, and Qing Wang",
+      "source": "Simon Willison",
+      "kind": "news",
+      "url": "https://simonwillison.net/2026/Oct/16/code-review/"
+    },
+    {
+      "title": "Benefit Street Partners answers questions faster with Codex",
+      "source": "OpenAI News",
+      "kind": "news",
+      "url": "https://openai.com/index/benefit-street-partners"
+    },
+    {
+      "title": "Topgolf saved over $11.3 million after leaving VMware",
+      "source": "Ars Technica - Technology Lab",
+      "kind": "news",
+      "url": "https://arstechnica.com/information-technology/2026/10/topgolf-saved-over-11-3-million-after-leaving-vmware/"
+    }
+  ],
+  "warnings": []
+}
