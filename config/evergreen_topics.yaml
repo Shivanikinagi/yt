@@ -217,3 +217,100 @@ topics:
       users with the same password get different hashes and attackers cannot use precomputed
       tables. Deliberately slow algorithms such as bcrypt, scrypt and Argon2 make guessing
       billions of passwords per second impractical even after a database leak.
+  - title: "How UPI moves money between banks in seconds"
+    category: "How it works"
+    url: "https://en.wikipedia.org/wiki/Unified_Payments_Interface"
+    summary: >
+      UPI, the Unified Payments Interface, was launched in India in 2016 by the National Payments
+      Corporation of India (NPCI). A UPI ID such as name@bank points to your bank account, so you can
+      be paid without sharing your account number. When you pay, your app sends the request through
+      NPCI's central switch to your bank, you approve it with your UPI PIN, and the receiving bank is
+      told to credit the other person, usually within seconds. The banks settle what they owe each
+      other later, in batches through the day. UPI has handled more than 10 billion transactions a
+      month since 2023, making it one of the largest real-time payment systems in the world.
+  - title: "How Chandrayaan-3 landed where no one had landed before"
+    category: "Space tech"
+    url: "https://en.wikipedia.org/wiki/Chandrayaan-3"
+    summary: >
+      On 23 August 2023, ISRO's Chandrayaan-3 mission put its Vikram lander down near the Moon's south
+      pole, the first landing in that region. India became the fourth country to soft-land on the Moon,
+      after the Soviet Union, the United States and China. The mission followed Chandrayaan-2, whose
+      lander crashed in 2019; the new lander was built to survive more errors, with stronger legs and
+      a larger landing zone. Vikram carried a small rover, Pragyan, which drove across the surface and
+      studied the lunar soil.
+  - title: "How India reached Mars on its very first try"
+    category: "Space tech"
+    url: "https://en.wikipedia.org/wiki/Mars_Orbiter_Mission"
+    summary: >
+      ISRO's Mars Orbiter Mission, also called Mangalyaan, launched on 5 November 2013 and entered orbit
+      around Mars on 24 September 2014. India became the first Asian nation to reach Mars orbit and the
+      first nation in the world to do it on its first attempt. The mission cost about 74 million US
+      dollars, famously less than the budget of some Hollywood space films. The spacecraft first circled
+      Earth while raising its orbit step by step, then fired its engine to head for Mars.
+  - title: "How Wi-Fi sends your data through thin air"
+    category: "How it works"
+    url: "https://en.wikipedia.org/wiki/Wi-Fi"
+    summary: >
+      Wi-Fi carries data on radio waves, mostly in the 2.4 GHz and 5 GHz bands, with newer routers
+      also using 6 GHz. Data is encoded by changing the wave's strength and timing many millions of
+      times a second, and devices sharing a channel take turns to talk so they do not drown each other
+      out. Lower frequencies like 2.4 GHz pass through walls better and reach further, while higher
+      frequencies carry more data but fade faster, which is why the fastest Wi-Fi is often the one
+      closest to the router.
+  - title: "Does closing apps really save your battery?"
+    category: "Myth-busting"
+    url: "https://support.apple.com/en-us/HT201330"
+    summary: >
+      Many people swipe away every open app to save battery, but phone makers do not recommend it.
+      Apple's own support page says you should close an app only if it is unresponsive. Modern phones
+      already pause apps that are in the background, so a paused app uses little or no power.
+      Force-closing it means the phone must load it from scratch next time, which takes more work
+      than resuming it. Apps that genuinely drain power in the background, such as navigation or
+      music, show up in the phone's battery settings.
+  - title: "The hack that turned cameras and routers into an army"
+    category: "Famous hacks"
+    url: "https://en.wikipedia.org/wiki/Mirai_(malware)"
+    summary: >
+      Mirai was malware that spread in 2016 by logging into internet-connected cameras, routers and
+      other devices that still used factory-default usernames and passwords. It turned hundreds of
+      thousands of them into a botnet that could flood a target with traffic. On 21 October 2016 it
+      hit Dyn, a company that runs DNS, the internet's address book, and sites such as Twitter,
+      Netflix, Reddit and GitHub became unreachable for many users in the US and Europe. Its authors
+      turned out to be college-age students, who later pleaded guilty.
+  - title: "How your phone knows where you are without GPS"
+    category: "How it works"
+    url: "https://en.wikipedia.org/wiki/Wi-Fi_positioning_system"
+    summary: >
+      Your phone can find its location even indoors, where GPS signals are weak. Every Wi-Fi router
+      broadcasts a unique hardware address, and companies keep huge databases of where those routers
+      are. Your phone lists the networks it can hear and how strong each signal is, and the database
+      works out where you must be. Mobile towers give a rougher fix the same way. Phones combine these
+      with GPS, which is why your blue dot often appears instantly and then sharpens.
+  - title: "SIM swapping: how hackers steal your phone number"
+    category: "Famous hacks"
+    url: "https://en.wikipedia.org/wiki/SIM_swap_scam"
+    summary: >
+      In a SIM swap, an attacker convinces a mobile carrier to move your phone number onto a SIM card
+      they control, often by pretending to be you. From then on your calls and text messages go to
+      them, including the one-time codes many accounts send by SMS. In August 2019 the Twitter account
+      of Twitter's own CEO, Jack Dorsey, was taken over this way. Authenticator apps and hardware
+      security keys are safer than SMS codes because they are not tied to your phone number.
+  - title: "Why a QR code still works when part of it is torn"
+    category: "How it works"
+    url: "https://en.wikipedia.org/wiki/QR_code"
+    summary: >
+      The QR code was invented in 1994 by Denso Wave, a Japanese company, to track car parts in
+      factories. The three big squares in the corners tell a scanner where the code is and which way
+      up it is. QR codes use Reed-Solomon error correction, the same family of maths used on CDs, so
+      extra data is stored alongside the message. At the highest setting, about 30 percent of a code
+      can be damaged or covered and it still scans, which is why some QR codes have logos in the middle.
+  - title: "The day Facebook, Instagram and WhatsApp vanished for six hours"
+    category: "Famous outages"
+    url: "https://en.wikipedia.org/wiki/2021_Facebook_outage"
+    summary: >
+      On 4 October 2021, Facebook, Instagram and WhatsApp went offline worldwide for about six hours.
+      During routine maintenance, a command accidentally cut the connections in Facebook's backbone
+      network. Its DNS servers then withdrew the routes that tell the rest of the internet how to
+      reach Facebook, so to the outside world the company simply disappeared. Engineers' own internal
+      tools ran on the same network, so they had to get physical access to data centre hardware to
+      bring things back.

@@ -134,6 +134,26 @@ def excerpt_from_html(html: str, max_chars: int = 1800) -> str:
     return " ".join(out)[:max_chars]
 
 
+# What a general audience already cares about. A story about these gets watched; the same idea framed
+# as a paper or an internal product name gets swiped. The script writer reframes the title, so this only
+# picks the story, and jargon is a mild penalty rather than a filter (some arXiv topics do very well).
+APPEAL = re.compile(
+    r"\b(hack\w*|breach\w*|leak\w*|scam\w*|spy\w*|surveillance|password\w*|privacy|stol\w+|steal\w*|bans?|banned|"
+    r"crash\w*|outage|broke|bug|virus|malware|ransomware|wallet|crypto|bitcoin|money|price\w*|free|jobs?|"
+    r"iphone|android|apple|google|samsung|whatsapp|instagram|youtube|chatgpt|openai|gemini|claude|"
+    r"musk|tesla|nvidia|microsoft|meta|amazon|phones?|laptops?|battery|wi-?fi|5g|games?|gaming|"
+    r"robots?|space|moon|mars|nasa|isro|india\w*|upi|brain|implant|sight|cancer|health|cars?|self-driving)\b",
+    re.I)
+JARGON = re.compile(r"\b(position paper|empirical study|survey|benchmark\w*|framework|towards|via|quantization|"
+                    r"metrics?|ablation|optimi[sz]ation|stochastic|theorem|heuristic\w*|paradigm)\b", re.I)
+
+
+def appeal(title: str) -> float:
+    """Multiplier for how broadly interesting a story is, judged from its title."""
+    hits = len({m.lower() for m in APPEAL.findall(title)})
+    return (1.0 + 0.15 * min(3, hits)) * (0.8 if JARGON.search(title) else 1.0)
+
+
 def _score(t: Topic, now: datetime) -> float:
     score = t.extra.get("weight", 1.0)
     if t.published:
@@ -145,6 +165,7 @@ def _score(t: Topic, now: datetime) -> float:
              "surprising", "secret", "why", "how", "beats", "outperforms", "released", "launch")
     tl = t.title.lower()
     score *= 1.0 + 0.08 * sum(1 for h in hooks if h in tl)
+    score *= appeal(t.title)
     if re.search(r"\b(lawsuit|earnings|stock|shares|layoffs|hiring)\b", tl):
         score *= 0.6
     # newsletters, digests and roundups mix several stories and make poor single-idea Shorts
@@ -163,6 +184,7 @@ def evergreen_topics(seed: str) -> list[Topic]:
             published=None, verified=True))
     rnd = random.Random(seed)
     rnd.shuffle(items)
+    items.sort(key=lambda t: -appeal(t.title))      # stable: ties keep the daily shuffle
     return items
 
 
@@ -217,14 +239,13 @@ def select_candidates(cfg, state: State, logger, date: str, insights: dict | Non
         seen_titles.append(t.title)
 
     logger.info("fresh verified candidates: %d", len(chosen))
-    # pad with evergreen topics so the day never runs dry
-    for t in evergreen_topics(seed=date):
-        if len(chosen) >= rc.candidates:
-            break
-        if state.topic_used(t.id):
-            continue
-        chosen.append(t)
-    return chosen
+    # Alternate news and evergreen, so a day's Shorts are one story from the news and one "how it works"
+    # topic that keeps being found through search for months. Evergreen also pads a thin news day.
+    evergreen = [t for t in evergreen_topics(seed=date) if not state.topic_used(t.id)]
+    mixed: list[Topic] = []
+    for i in range(max(len(chosen), len(evergreen))):
+        mixed += [pool[i] for pool in (chosen, evergreen) if i < len(pool)]
+    return mixed[:max(rc.candidates, len(chosen))]
 
 
 def _similar(a: str, b: str) -> bool:
@@ -271,8 +292,9 @@ def longform_library(seed: str) -> list[Topic]:
 
 
 def long_candidates(cfg, state: State, news: list[Topic], date: str, insights: dict | None = None) -> list[Topic]:
-    """Topics for today's long-form videos: the strongest news stories (one deep dive on the day's
-    news) alternating with evergreen deep dives, the evergreen ones ranked by what is working."""
+    """Topics for today's long-form videos: evergreen deep dives first (they keep being found through
+    search for months, which is where watch hours come from), alternating with the strongest news
+    stories. The evergreen ones are ranked by what is working."""
     from .analytics import topic_boost
     # paper abstracts are too thin for 10 minutes; they stay Shorts
     fresh = [t for t in news if t.kind in ("news", "concepts") and not state.topic_used(t.id)]
@@ -281,7 +303,7 @@ def long_candidates(cfg, state: State, news: list[Topic], date: str, insights: d
     library.sort(key=lambda t: -topic_boost(t.title, insights))       # stable: ties keep the daily shuffle
     out: list[Topic] = []
     for i in range(max(len(fresh), len(library))):
-        for pool in (fresh, library):
+        for pool in (library, fresh):
             if i < len(pool):
                 out.append(pool[i])
     return out

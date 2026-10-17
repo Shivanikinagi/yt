@@ -11,9 +11,11 @@ from .research import Topic
 from .utils import extract_json, word_count
 
 SCENE_TYPES = {"title", "explain", "diagram", "compare", "code", "fact", "payoff", "chapter", "outro"}
-MIN_SCENES, MAX_SCENES = 5, 8
-MIN_WORDS, MAX_WORDS = 95, 165          # ~35-60 s at 165 wpm
-DIALOGUE_MIN_WORDS = 112                # plus the ~15-word sign-off from add_short_cta: about 48 s
+MIN_SCENES, MAX_SCENES = 4, 8
+# Short and hook-first: most viewers decide in the first second, and a 30-40 s Short that is watched
+# to the end (or loops) beats a 55 s one abandoned halfway. Measured pace incl. pauses: ~2.6 words/s.
+MIN_WORDS, MAX_WORDS = 60, 110          # ~25-42 s including the ~15-word sign-off
+DIALOGUE_MIN_WORDS = 65                 # plus the sign-off from add_short_cta: about 30 s
 BANNED = ("as an ai", "i cannot", "i can't", "as a language model", "as an ai language", "subscribe now", "smash that",
           "http://", "https://", "www.", "like and subscribe")
 
@@ -67,13 +69,17 @@ Source: {source} ({url})
 Text: {text}{insights}
 
 TASK
-Write a {style} YouTube Short (35-58 seconds, {min_w}-{max_w} narration words total).
-Structure: 5 to 7 scenes. Scene 1 must be type "title" (a bold hook, 12-22 words). The last scene
-must be type "payoff" (a satisfying conclusion or twist, no call to action). Middle scenes mix
+Write a {style} YouTube Short (25-40 seconds, {min_w}-{max_w} narration words total).
+Structure: 4 to 6 scenes. Scene 1 must be type "title": the hook, 8-16 words. Viewers decide to stay
+or swipe in the first second, so open on the single most surprising fact, claim or stake in the story,
+said plainly (e.g. "OpenAI's own AI just broke into a crypto wallet."). Never open with a greeting,
+the topic's name, "Today", "Did you know" or "In this video". The last scene must be type "payoff"
+(a satisfying conclusion or twist, no call to action) whose final sentence leads naturally back into
+the hook, so the Short loops when it replays. Middle scenes mix
 these types: "explain" (headline + 2-4 short bullets), "diagram" (3-5 node labels showing a flow),
 "compare" (left vs right, 2-3 items each), "code" (3-6 short lines of pseudo-code or commands,
 only if natural), "fact" (one striking phrase).
-Each scene narration is 12-40 words and must flow when read aloud in order.
+Each scene narration is 8-25 words and must flow when read aloud in order.
 on_screen text is short (max 55 characters). Bullets/nodes/items max 36 characters each.
 Bullets and nodes should reuse a key word the narration says, so they can appear as it is spoken.
 For a "fact" scene, if the source gives a striking number, put it in on_screen as digits
@@ -84,7 +90,7 @@ Every scene may add "kicker" (2-4 word label shown above the headline, e.g. "The
 
 Return exactly this JSON shape:
 {{
-  "title": "YouTube title, max 90 chars, curiosity-driven, no clickbait lies, no ALL CAPS",
+  "title": "YouTube title, max 55 chars: a concrete stake the viewer already cares about (their phone, money, job, privacy, a famous company), curiosity-driven, no paper or product jargon, no clickbait lies, no ALL CAPS",
   "hook": "one-sentence hook",
   "subject": "...",
   "scenes": [
@@ -109,11 +115,12 @@ DIALOGUE_TEMPLATE = """
 DIALOGUE
 This Short is a conversation between two characters: {host} (the host, who knows the topic and
 explains it) and {guest} (the guest, who is curious, asks short questions and reacts).
+Scene 1 opens with the hook itself as the very first line, no greetings or names before it.
 Replace "narration" in every scene with "lines": 1-3 spoken lines in order, each
 {{"who": "host" or "guest", "text": "..."}}. The host carries the facts. The guest speaks in at least
-3 scenes with short lines (3-14 words): a question, surprise, or a quick recap in their own words.
+2 scenes with short lines (3-10 words): a question, surprise, or a quick recap in their own words.
 They may use each other's names now and then. The scene and total word limits count all lines.
-Aim for 120-138 words in total: pauses between speakers make dialogue slower, and a short sign-off
+Aim for 70-85 words in total: pauses between speakers make dialogue slower, and a short sign-off
 is added after your last scene.
 Example scene: {{"type": "explain", "on_screen": "...", "bullets": ["..."], "lines": [
   {{"who": "guest", "text": "Wait, so how does it actually work?"}},
@@ -130,7 +137,7 @@ def build_prompt(topic: Topic, theme: str, cast: list[str] | None = None, insigh
     text = topic.source_text()[:2600]
     user = USER_TEMPLATE.format(title=topic.title, source=topic.source, url=topic.url, text=text,
                                 style=STYLE, insights=insights,
-                                min_w=MIN_WORDS + 5, max_w=MAX_WORDS - 33)    # + sign-off ≈ 145 words ≈ 53 s
+                                min_w=MIN_WORDS + 5, max_w=MAX_WORDS - 25)    # + sign-off ≈ 100 words ≈ 38 s
     names = _names(cast)
     if names:
         user += DIALOGUE_TEMPLATE.format(host=names[0], guest=names[1])
@@ -208,6 +215,8 @@ def validate_and_normalize(data: dict, topic: Topic, provider: str, theme: str,
     title = _clip(data.get("title", ""), 95)
     if len(title) < 10:
         problems.append("title too short")
+    if provider != "template" and len(title) > 70:
+        problems.append(f"title has {len(title)} characters, keep it under 55")
     if title.isupper():
         title = title.title()
     scenes = data.get("scenes") or []
@@ -279,10 +288,10 @@ GUEST_QUESTIONS = {"explain": "Okay, so what is the core idea?", "diagram": "How
 def template_script(topic: Topic, theme: str, cast: list[str] | None = None) -> VideoScript:
     """Deterministic writer that only rearranges verified source sentences. Always succeeds."""
     sents = _sentences(" ".join(x for x in [topic.summary, topic.excerpt] if x)) or [topic.title + "."]
-    sents = [_trim_words(s, 32) for s in sents]
+    sents = [_trim_words(s, 22) for s in sents]
     hook = f"Here is something most people get wrong about {topic.title.rstrip('.')}."
     if topic.kind in ("news", "research"):
-        hook = f"{topic.title.rstrip('.')}. Here is why it matters in under a minute."
+        hook = f"{topic.title.rstrip('.')}. Here is why it matters."
     body = sents[:6]
     while word_count(hook + " " + " ".join(body)) < MIN_WORDS + 10 and len(body) < len(sents):
         body.append(sents[len(body)])
@@ -312,11 +321,14 @@ def template_script(topic: Topic, theme: str, cast: list[str] | None = None) -> 
             "It sounds small, but it changes everything downstream."]
     while total() < MIN_WORDS and pads:
         scenes[-2]["narration"] += " " + pads.pop(0)
-    while total() > MAX_WORDS and len(scenes) > 5:
+    while total() > MAX_WORDS - 15 and len(scenes) > MIN_SCENES + 1:
         scenes.pop(-2)
-    for s in scenes:
-        if word_count(s["narration"]) > 44:
-            s["narration"] = _trim_words(s["narration"], 40)
+    for cap in (30, 24, 18):
+        if total() <= MAX_WORDS - 15:       # room for the sign-off added later
+            break
+        for s in scenes:
+            if word_count(s["narration"]) > cap:
+                s["narration"] = _trim_words(s["narration"], cap)
     if _names(cast):
         # the guest asks a short question before the host's part, while the word budget allows
         for s in scenes:
